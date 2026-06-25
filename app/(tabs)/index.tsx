@@ -14,6 +14,7 @@ import { SAVINGS_OPTIONS, SavingsOption } from '@/constants/savings';
 import { fetchBCRPData, BCRPData } from '@/services/bcrp';
 import OptionCard from '@/components/OptionCard';
 import BCRPWidget from '@/components/BCRPWidget';
+import { useAuth } from '@/context/auth';
 
 const CATEGORIES = ['Todos', 'Depósito a plazo', 'Cuenta de ahorros', 'Fondo mutuo', 'Beneficio laboral', 'Pensiones'];
 const SORT_OPTIONS = ['Mayor tasa', 'Menor riesgo', 'Mayor liquidez'];
@@ -23,6 +24,7 @@ const RISK_ORDER = ['muy bajo', 'bajo', 'medio', 'alto'];
 
 export default function ComparadorScreen() {
   const router = useRouter();
+  const { user, signOut } = useAuth();
   const [bcrpData, setBcrpData] = useState<BCRPData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -66,8 +68,21 @@ export default function ComparadorScreen() {
         ListHeaderComponent={
           <>
             <View style={styles.header}>
-              <Text style={styles.appTitle}>💰 AhorraPeru</Text>
-              <Text style={styles.subtitle}>¿Dónde hacer crecer tu dinero?</Text>
+              <View style={styles.headerRow}>
+                <View>
+                  <Text style={styles.appTitle}>💰 AhorraPeru</Text>
+                  <Text style={styles.subtitle}>¿Dónde hacer crecer tu dinero?</Text>
+                </View>
+                {user ? (
+                  <TouchableOpacity style={styles.accountBtn} onPress={signOut}>
+                    <Text style={styles.accountBtnText}>Salir</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.accountBtn} onPress={() => router.push('/login')}>
+                    <Text style={styles.accountBtnText}>Entrar</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
 
             <BCRPWidget data={bcrpData} loading={loading} />
@@ -120,8 +135,16 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   list: { padding: 16, paddingBottom: 32 },
   header: { marginBottom: 20 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   appTitle: { fontSize: 26, fontWeight: '800', color: Colors.primary },
   subtitle: { fontSize: 14, color: Colors.textSecondary, marginTop: 2 },
+  accountBtn: {
+    backgroundColor: Colors.primary,
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  accountBtnText: { fontSize: 13, fontWeight: '700', color: '#FFF' },
   sectionLabel: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 },
   chips: { paddingBottom: 12, gap: 8 },
   chip: {

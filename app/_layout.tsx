@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { Platform } from 'react-native';
+import { AuthProvider } from '@/context/auth';
 
 // Head solo disponible en web
 let Head: React.ComponentType<{ children: React.ReactNode }> | null = null;
@@ -9,6 +10,7 @@ if (Platform.OS === 'web') {
 
 export default function RootLayout() {
   return (
+    <AuthProvider>
     <>
       {Head && (
         <Head>
@@ -36,7 +38,15 @@ export default function RootLayout() {
             headerTintColor: '#1A5276',
           }}
         />
+        <Stack.Screen
+          name="login"
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+          }}
+        />
       </Stack>
     </>
+    </AuthProvider>
   );
 }
