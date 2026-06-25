@@ -39,9 +39,9 @@ export default function LoginScreen() {
     if (err) {
       setError(err);
     } else if (mode === 'signup') {
-      setSuccess('Revisa tu correo para confirmar tu cuenta.');
+      setSuccess('Revisa tu correo para confirmar tu cuenta y luego inicia sesión.');
     } else {
-      router.back();
+      router.replace('/');
     }
   };
 
