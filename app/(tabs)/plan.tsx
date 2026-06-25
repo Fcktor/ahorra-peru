@@ -10,6 +10,8 @@ import {
   StatusBar,
 } from 'react-native';
 import { Colors } from '@/constants/colors';
+import { useAuth } from '@/context/auth';
+import PaywallBanner from '@/components/PaywallBanner';
 
 const SAVINGS_RATES = [
   { label: '10%', value: 10, desc: 'Mínimo recomendado' },
@@ -105,6 +107,7 @@ const fmt = (n: number) =>
   'S/ ' + Math.round(n).toLocaleString('es-PE');
 
 export default function PlanScreen() {
+  const { isPro } = useAuth();
   const [ingreso, setIngreso] = useState('3000');
   const [gastos, setGastos] = useState('2000');
   const [savingsRate, setSavingsRate] = useState(20);
@@ -325,6 +328,15 @@ export default function PlanScreen() {
             </View>
           </View>
         </View>
+
+        {/* FEATURES PRO */}
+        {isPro ? null : (
+          <View style={{ gap: 0 }}>
+            <PaywallBanner feature="Guardar múltiples planes" />
+            <PaywallBanner feature="Alertas de cambio de tasa" />
+            <PaywallBanner feature="Exportar plan a PDF" />
+          </View>
+        )}
 
         {/* REGLA DE ORO */}
         <View style={styles.goldCard}>
