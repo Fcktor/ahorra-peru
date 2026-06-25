@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
+import { supabase } from '@/services/supabase';
+import { loadCulqiScript, openCulqiCheckout } from '@/services/culqi';
 
 const FEATURES_FREE = [
   'Comparador de tasas',
@@ -30,10 +34,32 @@ const FEATURES_PRO = [
 export default function UpgradeScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleUpgrade = () => {
-    // Aquí irá la integración con Culqi
-    alert('Próximamente: pago con Culqi');
+  useEffect(() => {
+    if (Platform.OS === 'web') loadCulqiScript();
+  }, []);
+
+  const handleUpgrade = async () => {
+    if (!user) { router.push('/login'); return; }
+    setError('');
+
+    openCulqiCheckout(async (token) => {
+      setLoading(true);
+      try {
+        const { error: fnError } = await supabase.functions.invoke('charge-culqi', {
+          body: { token, userId: user.id },
+        });
+        if (fnError) throw fnError;
+        // Actualizar plan localmente recargando la sesión
+        router.replace('/');
+      } catch {
+        setError('Error al procesar el pago. Intenta nuevamente.');
+      } finally {
+        setLoading(false);
+      }
+    });
   };
 
   return (
@@ -78,13 +104,18 @@ export default function UpgradeScreen() {
           ))}
         </View>
 
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+
         {!user ? (
           <TouchableOpacity style={styles.ctaSecondary} onPress={() => router.push('/login')}>
             <Text style={styles.ctaSecondaryText}>Primero crea una cuenta gratis</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.cta} onPress={handleUpgrade}>
-            <Text style={styles.ctaText}>Suscribirme por S/ 12/mes</Text>
+          <TouchableOpacity style={styles.cta} onPress={handleUpgrade} disabled={loading}>
+            {loading
+              ? <ActivityIndicator color="#FFF" />
+              : <Text style={styles.ctaText}>Suscribirme por S/ 12/mes</Text>
+            }
           </TouchableOpacity>
         )}
 
@@ -167,4 +198,5 @@ const styles = StyleSheet.create({
   },
   ctaSecondaryText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
   disclaimer: { fontSize: 11, color: Colors.textMuted, textAlign: 'center', marginTop: 16 },
+  error: { fontSize: 13, color: Colors.danger, textAlign: 'center', marginTop: 8 },
 });
