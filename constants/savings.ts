@@ -17,6 +17,7 @@ export interface SavingsOption {
   pros: string[];
   cons: string[];
   howToStart: string;
+  websiteUrl?: string;
   isFromBCRP?: boolean;
 }
 
@@ -38,6 +39,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Respaldado por el FSD hasta S/ 124,000', 'Tasa garantizada', 'Sin riesgo de mercado'],
     cons: ['No puedes retirar antes del vencimiento sin penalidad', 'Tasa menor que fondos mutuos'],
     howToStart: 'Descarga la app BCP, ve a "Inversiones" → "Depósito a plazo"',
+    websiteUrl: 'https://www.viabcp.com/inversiones/deposito-a-plazo',
   },
   {
     id: 'deposito-interbank',
@@ -54,6 +56,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Tasas competitivas', 'App sencilla', 'FSD hasta S/ 124,000'],
     cons: ['Sin retiro anticipado', 'Requiere cuenta Interbank'],
     howToStart: 'App Interbank → "Ahorro e Inversión" → "Depósito a plazo"',
+    websiteUrl: 'https://interbank.pe/ahorro-e-inversion/deposito-a-plazo',
   },
   {
     id: 'deposito-financiera',
@@ -70,6 +73,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Tasas más altas', 'FSD los cubre igual', 'Montos mínimos bajos'],
     cons: ['Menos canales de atención', 'Apps menos pulidas'],
     howToStart: 'Comparar en el portal de la SBS o ir a una agencia de CMAC Arequipa, Piura, etc.',
+    websiteUrl: 'https://www.sbs.gob.pe/app/retasas/pages/tasa-pasiva.aspx',
   },
   {
     id: 'cuenta-ahorros',
@@ -86,6 +90,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Dinero disponible siempre', 'Sin riesgo', 'FSD te protege'],
     cons: ['Tasa casi insignificante', 'Puede perder valor real ante la inflación'],
     howToStart: 'Cualquier banco grande. Abre una cuenta de forma digital en minutos.',
+    websiteUrl: 'https://www.sbs.gob.pe/app/retasas/pages/tasa-pasiva.aspx',
   },
   {
     id: 'fondo-mutuo-conservador',
@@ -103,6 +108,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Mejor tasa que cuentas de ahorro', 'Profesionales gestionan tu dinero', 'Puedes entrar con poco'],
     cons: ['No garantizado', 'Retiros en 1-3 días hábiles', 'Cobra comisión de gestión'],
     howToStart: 'App Credifondos (BCP) o abrir cuenta en Interfondos online',
+    websiteUrl: 'https://www.credifondos.com.pe',
   },
   {
     id: 'fondo-mutuo-moderado',
@@ -120,6 +126,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Mayor potencial de rentabilidad', 'Diversificación automática'],
     cons: ['Puede bajar temporalmente', 'No garantizado'],
     howToStart: 'SURA inversiones, Interfondos o directamente con tu banco',
+    websiteUrl: 'https://www.interfondos.com.pe',
   },
   {
     id: 'cts',
@@ -136,6 +143,7 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Dinero que acumulas sin esfuerzo', 'Genera intereses', 'Protegido por ley'],
     cons: ['No puedes usarlo libremente', 'Solo para trabajadores en planilla'],
     howToStart: 'Tu empleador lo deposita automáticamente. Solo elige en qué banco quieres tenerlo.',
+    websiteUrl: 'https://www.sbs.gob.pe/app/cts/index.html',
   },
   {
     id: 'afp',
@@ -153,5 +161,6 @@ export const SAVINGS_OPTIONS: SavingsOption[] = [
     pros: ['Inversión automática', 'Rentabilidad histórica buena a largo plazo', 'Para tu futuro'],
     cons: ['No puedes retirarlo fácilmente', 'Comisión de la AFP'],
     howToStart: 'Si trabajas en planilla, ya estás afiliado. Puedes cambiar de fondo o AFP.',
+    websiteUrl: 'https://www.spp.gob.pe',
   },
 ];

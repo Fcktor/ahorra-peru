@@ -6,6 +6,8 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
+  Linking,
 } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { Colors } from '@/constants/colors';
@@ -86,6 +88,17 @@ export default function DetalleScreen() {
             <Text style={styles.bodyText}>{option.howToStart}</Text>
           </View>
         </Section>
+
+        {option.websiteUrl && (
+          <TouchableOpacity
+            style={styles.ctaButton}
+            onPress={() => Linking.openURL(option.websiteUrl!)}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.ctaText}>Ir al sitio oficial</Text>
+            <Text style={styles.ctaArrow}>→</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -160,4 +173,16 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: Colors.accent,
   },
+  ctaButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: 14,
+    padding: 18,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  ctaText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
+  ctaArrow: { fontSize: 18, color: '#FFF' },
 });
