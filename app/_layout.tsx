@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Platform } from 'react-native';
 import { AuthProvider } from '@/context/auth';
+import { Colors } from '@/constants/colors';
 
 // Head solo disponible en web
 let Head: React.ComponentType<{ children: React.ReactNode }> | null = null;
@@ -51,6 +52,14 @@ export default function RootLayout() {
           options={{
             presentation: 'modal',
             headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="comparar"
+          options={{
+            title: 'Comparar',
+            headerBackTitle: 'Volver',
+            headerTintColor: Colors.primary,
           }}
         />
       </Stack>

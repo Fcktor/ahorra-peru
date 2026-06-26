@@ -21,9 +21,12 @@ const LIQUIDITY_ICONS: Record<string, string> = {
 interface Props {
   option: SavingsOption;
   onPress: (option: SavingsOption) => void;
+  onSelect?: (option: SavingsOption) => void;
+  selected?: boolean;
+  selectable?: boolean;
 }
 
-export default function OptionCard({ option, onPress }: Props) {
+export default function OptionCard({ option, onPress, onSelect, selected, selectable }: Props) {
   const riskColor = RISK_COLORS[option.risk] ?? Colors.textMuted;
   const liquidityIcon = LIQUIDITY_ICONS[option.liquidity] ?? '📅';
   const rateDisplay =
@@ -32,15 +35,32 @@ export default function OptionCard({ option, onPress }: Props) {
       : `${option.rateMin}% – ${option.rateMax}%`;
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => onPress(option)} activeOpacity={0.85}>
+    <TouchableOpacity
+      style={[styles.card, selected && styles.cardSelected]}
+      onPress={() => onPress(option)}
+      activeOpacity={0.85}
+    >
       <View style={styles.header}>
         <View style={styles.titleBlock}>
           <Text style={styles.institution}>{option.institution}</Text>
           <Text style={styles.name}>{option.name}</Text>
         </View>
-        <View style={styles.rateBlock}>
-          <Text style={styles.rate}>{rateDisplay}</Text>
-          <Text style={styles.rateLabel}>{option.rateLabel ?? 'TREA anual'}</Text>
+        <View style={styles.rightBlock}>
+          <View style={styles.rateBlock}>
+            <Text style={styles.rate}>{rateDisplay}</Text>
+            <Text style={styles.rateLabel}>{option.rateLabel ?? 'TREA anual'}</Text>
+          </View>
+          {selectable && (
+            <TouchableOpacity
+              style={[styles.selectBtn, selected && styles.selectBtnActive]}
+              onPress={(e) => { e.stopPropagation?.(); onSelect?.(option); }}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={[styles.selectBtnText, selected && styles.selectBtnTextActive]}>
+                {selected ? '✓' : '+'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
@@ -49,16 +69,12 @@ export default function OptionCard({ option, onPress }: Props) {
           <View style={[styles.dot, { backgroundColor: riskColor }]} />
           <Text style={[styles.badgeText, { color: riskColor }]}>Riesgo {option.risk}</Text>
         </View>
-
         <View style={styles.liquidityBadge}>
           <Text style={styles.liquidityIcon}>{liquidityIcon}</Text>
           <Text style={styles.liquidityText}>{option.liquidity}</Text>
         </View>
-
         {option.minAmount > 0 && (
-          <Text style={styles.minAmount}>
-            Desde S/ {option.minAmount.toLocaleString()}
-          </Text>
+          <Text style={styles.minAmount}>Desde S/ {option.minAmount.toLocaleString()}</Text>
         )}
       </View>
     </TouchableOpacity>
@@ -79,50 +95,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
+  cardSelected: {
+    borderColor: Colors.primary,
+    borderWidth: 2,
+    backgroundColor: Colors.primary + '05',
   },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
   titleBlock: { flex: 1, marginRight: 12 },
-  institution: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: Colors.primaryLight,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 2,
-  },
+  institution: { fontSize: 12, fontWeight: '600', color: Colors.primaryLight, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
   name: { fontSize: 16, fontWeight: '700', color: Colors.textPrimary },
+  rightBlock: { alignItems: 'flex-end', gap: 8 },
   rateBlock: { alignItems: 'flex-end' },
   rate: { fontSize: 22, fontWeight: '800', color: Colors.accent },
   rateLabel: { fontSize: 10, color: Colors.textMuted, marginTop: 1 },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 8,
+  selectBtn: {
+    width: 28, height: 28, borderRadius: 14,
+    borderWidth: 2, borderColor: Colors.border,
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: Colors.background,
   },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 20,
-    gap: 4,
-  },
+  selectBtnActive: { borderColor: Colors.primary, backgroundColor: Colors.primary },
+  selectBtnText: { fontSize: 14, fontWeight: '800', color: Colors.textMuted },
+  selectBtnTextActive: { color: '#FFF' },
+  footer: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
+  badge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 20, gap: 4 },
   dot: { width: 6, height: 6, borderRadius: 3 },
   badgeText: { fontSize: 11, fontWeight: '600' },
-  liquidityBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.background,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 20,
-    gap: 4,
-  },
+  liquidityBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.background, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 20, gap: 4 },
   liquidityIcon: { fontSize: 11 },
   liquidityText: { fontSize: 11, color: Colors.textSecondary, fontWeight: '500' },
   minAmount: { fontSize: 11, color: Colors.textMuted, marginLeft: 'auto' },
