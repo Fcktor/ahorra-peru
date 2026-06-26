@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 
 const PRESETS = [
@@ -28,26 +29,68 @@ const GOAL_PRESETS = [
   { label: '5 años', months: 60 },
 ];
 
-function getRecommendation(months: number): { where: string; trea: number; tip: string } {
-  if (months <= 3)
-    return { where: 'Cuenta de ahorros (BCP, Interbank)', trea: 2, tip: 'Plazo muy corto: prioriza liquidez sobre rentabilidad.' };
-  if (months <= 6)
-    return { where: 'Depósito a plazo 90-180 días (BCP o Interbank)', trea: 7.5, tip: 'Tasa garantizada, sin riesgo. Ideal para este plazo.' };
-  if (months <= 12)
-    return { where: 'Depósito a plazo (CMAC Arequipa o Piura)', trea: 10, tip: 'Las cajas municipales dan las mejores tasas para 6-12 meses.' };
-  if (months <= 36)
-    return { where: 'CMAC ladder + Fondo mutuo conservador', trea: 9, tip: 'Mezcla depósitos escalonados con un fondo conservador para maximizar sin mucho riesgo.' };
-  return { where: 'Fondo mutuo moderado (Interfondos o SURA)', trea: 10.5, tip: 'A más de 3 años, el interés compuesto en fondos moderados supera a los depósitos.' };
+interface Option {
+  label: string;
+  trea: number;
+  risk: string;
+  riskColor: string;
+  category: string;
+  steps: string[];
 }
 
-const fmt = (n: number) =>
-  'S/ ' + Math.round(n).toLocaleString('es-PE');
+function getOptions(months: number): Option[] {
+  if (months <= 3) return [
+    { label: 'Cuenta de ahorros', trea: 2, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Cuenta de ahorros', steps: ['Abre o usa tu cuenta de ahorros existente en BCP, Interbank o BBVA', 'Configura una transferencia automática el día que cobras tu sueldo', 'No toques este dinero hasta alcanzar la meta'] },
+    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Descarga la app Credifondos (BCP) o entra a interfondos.com.pe', 'Abre tu cuenta en 10 minutos con tu DNI', 'Configura aportes automáticos mensuales', 'Los retiros tardan 1-3 días hábiles'] },
+  ];
+  if (months <= 6) return [
+    { label: 'Depósito a plazo 90-180 días', trea: 7.5, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Entra a la app del BCP o Interbank', 'Ve a "Inversiones" → "Depósito a plazo"', 'Elige 90 o 180 días según tu plazo exacto', 'Al vencer, renueva automáticamente hasta llegar a tu meta'] },
+    { label: 'CMAC (Caja Municipal)', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Visita una agencia de CMAC Arequipa o CMAC Piura', 'Lleva tu DNI y el monto inicial (desde S/ 250)', 'Abre un depósito a 180 días', 'Renueva al vencimiento añadiendo tu ahorro mensual'] },
+    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Entra a credifondos.com.pe o interfondos.com.pe', 'Crea tu cuenta con DNI en 10 minutos', 'Haz aportes mensuales automáticos', 'Rescata cuando llegues a tu meta (1-3 días hábiles)'] },
+  ];
+  if (months <= 12) return [
+    { label: 'CMAC Depósito a plazo', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Ve a una agencia de CMAC Arequipa o CMAC Piura', 'Abre depósito a 360 días (mejor tasa)', 'Al vencer, renueva y añade tus ahorros acumulados', 'Activa la renovación automática para no perder días'] },
+    { label: 'Fondo mutuo conservador', trea: 6.5, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Descarga Credifondos o entra a Interfondos', 'Abre cuenta con tu DNI', 'Configura aporte automático mensual', 'Deja que el interés compuesto trabaje para ti'] },
+    { label: 'Depósito a plazo BCP/Interbank', trea: 8.5, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Usa la app de tu banco de confianza', 'Elige 360 días para la mejor tasa', 'Renueva automáticamente al vencimiento', 'Acumula tus aportes en cuenta de ahorros y deposita en bloque'] },
+  ];
+  if (months <= 36) return [
+    { label: 'CMAC ladder (escalonado)', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Divide tu ahorro en 3 partes iguales', 'Deposita la 1ra a 90 días, 2da a 180 días, 3ra a 360 días en CMAC', 'Al vencer cada tramo, renueva añadiendo tu ahorro mensual', 'Así tienes liquidez parcial cada 3 meses con tasa alta'] },
+    { label: 'Fondo mutuo conservador', trea: 7, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Abre cuenta en Credifondos, Interfondos o BBVA AM', 'Configura aporte automático el día que cobras', 'No rescates ante pequeñas caídas — son temporales', 'Rescata todo al llegar a tu meta'] },
+    { label: 'Mix CMAC 60% + Fondo 40%', trea: 9, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Abre depósito en CMAC con el 60% de tu ahorro mensual', 'Invierte el 40% restante en fondo mutuo conservador', 'El CMAC da tasa garantizada, el fondo añade potencial extra', 'Revisa el balance cada 6 meses'] },
+  ];
+  return [
+    { label: 'Fondo mutuo moderado', trea: 10.5, risk: 'Medio', riskColor: Colors.warning, category: 'Fondo mutuo', steps: ['Abre cuenta en Interfondos, SURA o Credifondos', 'Elige el fondo moderado (mezcla bonos + acciones)', 'Configura aporte automático mensual', 'No retires ante caídas — a 3+ años el mercado siempre sube', 'Rescata gradualmente cuando te acerques a la meta'] },
+    { label: 'CMAC 360 días renovable', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Ve a CMAC Arequipa o Piura', 'Abre depósito a 360 días con renovación automática', 'Cada año al renovar, añade tus ahorros acumulados del año', 'La tasa garantizada protege tu capital'] },
+    { label: 'Mix Fondo moderado 70% + CMAC 30%', trea: 10.2, risk: 'Medio', riskColor: Colors.warning, category: 'Fondo mutuo', steps: ['Destina 70% de tu ahorro mensual a fondo moderado', 'El 30% restante a CMAC para protección', 'El fondo crece más a largo plazo, CMAC estabiliza', 'Revisa y rebalancea cada 12 meses'] },
+  ];
+}
 
-const fmt2 = (n: number) =>
-  'S/ ' + n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function calcPMT(FV: number, PV: number, n: number, annualRate: number): number {
+  const r = annualRate / 100 / 12;
+  const pvFuture = PV * Math.pow(1 + r, n);
+  const remaining = Math.max(0, FV - pvFuture);
+  if (r === 0) return remaining / n;
+  return remaining * r / (Math.pow(1 + r, n) - 1);
+}
+
+function monthsToReach(FV: number, PV: number, pmt: number, annualRate: number): number {
+  const r = annualRate / 100 / 12;
+  if (r === 0) return Math.ceil((FV - PV) / pmt);
+  let acc = PV;
+  for (let i = 0; i < 600; i++) {
+    acc = acc * (1 + r) + pmt;
+    if (acc >= FV) return i + 1;
+  }
+  return 600;
+}
+
+const fmt = (n: number) => 'S/ ' + Math.round(n).toLocaleString('es-PE');
+const fmt2 = (n: number) => 'S/ ' + n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function CalculadoraScreen() {
+  const router = useRouter();
   const [mode, setMode] = useState<'interes' | 'meta'>('interes');
+  const [selectedOption, setSelectedOption] = useState(0);
 
   // Modo interés
   const [capital, setCapital] = useState('10000');
@@ -79,27 +122,34 @@ export default function CalculadoraScreen() {
     const n = goalMonths;
     if (FV <= 0 || n <= 0) return null;
 
-    const rec = getRecommendation(n);
-    const r = rec.trea / 100 / 12;
+    const options = getOptions(n);
+    const opt = options[selectedOption] ?? options[0];
+    const r = opt.trea / 100 / 12;
 
-    // Valor futuro del ahorro actual
     const pvFuture = PV * Math.pow(1 + r, n);
     const remaining = Math.max(0, FV - pvFuture);
-
-    // PMT para llegar al restante
-    let pmt: number;
-    if (r === 0) {
-      pmt = remaining / n;
-    } else {
-      pmt = remaining * r / (Math.pow(1 + r, n) - 1);
-    }
-
+    const pmt = calcPMT(FV, PV, n, opt.trea);
     const totalAportado = pmt * n + PV;
     const totalIntereses = FV - totalAportado;
     const progress = Math.min(100, (PV / FV) * 100);
 
-    return { pmt, totalAportado, totalIntereses, rec, pvFuture, remaining, progress };
-  }, [meta, ahorroActual, goalMonths]);
+    // Escenarios ahorro más/menos
+    const pmtPlus25 = pmt * 1.25;
+    const pmtMinus25 = pmt * 0.75;
+    const monthsPlus25 = monthsToReach(FV, PV, pmtPlus25, opt.trea);
+    const monthsMinus25 = monthsToReach(FV, PV, pmtMinus25, opt.trea);
+
+    // Gráfico de crecimiento por hitos
+    const checkpoints = [0.25, 0.5, 0.75, 1.0].map((pct) => {
+      const target = FV * pct;
+      const m = monthsToReach(target, PV, pmt, opt.trea);
+      return { pct, label: `${Math.round(pct * 100)}%`, months: m, amount: target };
+    });
+
+    return { pmt, totalAportado, totalIntereses, pvFuture, remaining, progress, options, pmtPlus25, pmtMinus25, monthsPlus25, monthsMinus25, checkpoints };
+  }, [meta, ahorroActual, goalMonths, selectedOption]);
+
+  const options = useMemo(() => getOptions(goalMonths), [goalMonths]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -113,71 +163,40 @@ export default function CalculadoraScreen() {
             style={[styles.modeBtn, mode === 'interes' && styles.modeBtnActive]}
             onPress={() => setMode('interes')}
           >
-            <Text style={[styles.modeBtnText, mode === 'interes' && styles.modeBtnTextActive]}>
-              ¿Cuánto ganaré?
-            </Text>
+            <Text style={[styles.modeBtnText, mode === 'interes' && styles.modeBtnTextActive]}>¿Cuánto ganaré?</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.modeBtn, mode === 'meta' && styles.modeBtnActive]}
             onPress={() => setMode('meta')}
           >
-            <Text style={[styles.modeBtnText, mode === 'meta' && styles.modeBtnTextActive]}>
-              ¿Cómo llego a mi meta?
-            </Text>
+            <Text style={[styles.modeBtnText, mode === 'meta' && styles.modeBtnTextActive]}>¿Cómo llego a mi meta?</Text>
           </TouchableOpacity>
         </View>
 
-        {/* MODO INTERÉS */}
+        {/* ── MODO INTERÉS ── */}
         {mode === 'interes' && (
           <>
             <Text style={styles.subtitle}>Simula cuánto ganarás según el tipo de ahorro</Text>
             <View style={styles.card}>
               <Label text="¿Cuánto tienes para invertir? (S/)" />
-              <TextInput
-                style={styles.input}
-                value={capital}
-                onChangeText={setCapital}
-                keyboardType="numeric"
-                placeholder="Ej: 5000"
-                placeholderTextColor={Colors.textMuted}
-              />
+              <TextInput style={styles.input} value={capital} onChangeText={setCapital} keyboardType="numeric" placeholder="Ej: 5000" placeholderTextColor={Colors.textMuted} />
               <Label text="Tasa anual (TREA %)" />
-              <TextInput
-                style={styles.input}
-                value={trea}
-                onChangeText={setTrea}
-                keyboardType="numeric"
-                placeholder="Ej: 8"
-                placeholderTextColor={Colors.textMuted}
-              />
+              <TextInput style={styles.input} value={trea} onChangeText={setTrea} keyboardType="numeric" placeholder="Ej: 8" placeholderTextColor={Colors.textMuted} />
               <Label text="Plazo" />
               <View style={styles.presets}>
                 {PRESETS.map((p) => (
-                  <TouchableOpacity
-                    key={p.months}
-                    style={[styles.preset, months === p.months && styles.presetActive]}
-                    onPress={() => setMonths(p.months)}
-                  >
-                    <Text style={[styles.presetText, months === p.months && styles.presetTextActive]}>
-                      {p.label}
-                    </Text>
+                  <TouchableOpacity key={p.months} style={[styles.preset, months === p.months && styles.presetActive]} onPress={() => setMonths(p.months)}>
+                    <Text style={[styles.presetText, months === p.months && styles.presetTextActive]}>{p.label}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
               <View style={styles.switchRow}>
                 <Text style={styles.switchLabel}>Interés compuesto</Text>
-                <TouchableOpacity
-                  style={[styles.toggle, compound && styles.toggleOn]}
-                  onPress={() => setCompound(!compound)}
-                >
+                <TouchableOpacity style={[styles.toggle, compound && styles.toggleOn]} onPress={() => setCompound(!compound)}>
                   <View style={[styles.toggleThumb, compound && styles.toggleThumbOn]} />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.switchHint}>
-                {compound
-                  ? 'Los intereses que ganas también generan intereses'
-                  : 'Los intereses no se reinvierten (interés simple)'}
-              </Text>
+              <Text style={styles.switchHint}>{compound ? 'Los intereses que ganas también generan intereses' : 'Los intereses no se reinvierten (interés simple)'}</Text>
             </View>
 
             {interesResult && (
@@ -189,9 +208,7 @@ export default function CalculadoraScreen() {
                 </View>
                 <View style={styles.resultRow}>
                   <Text style={styles.resultLabel}>Intereses ganados</Text>
-                  <Text style={[styles.resultValue, { color: Colors.accent }]}>
-                    +{fmt2(interesResult.ganancia)}
-                  </Text>
+                  <Text style={[styles.resultValue, { color: Colors.accent }]}>+{fmt2(interesResult.ganancia)}</Text>
                 </View>
                 <View style={[styles.resultRow, styles.resultTotal]}>
                   <Text style={styles.resultTotalLabel}>Total final</Text>
@@ -206,60 +223,32 @@ export default function CalculadoraScreen() {
                   </Text>
                 </View>
                 {interesResult.gananciaReal < 0 && (
-                  <Text style={styles.warning}>
-                    ⚠️ Con esta tasa pierdes poder adquisitivo frente a la inflación. Busca opciones por encima del 3.5%.
-                  </Text>
+                  <Text style={styles.warning}>⚠️ Con esta tasa pierdes poder adquisitivo frente a la inflación. Busca opciones por encima del 3.5%.</Text>
                 )}
               </View>
             )}
-
             <View style={styles.infoCard}>
               <Text style={styles.infoTitle}>¿Qué es la TREA?</Text>
-              <Text style={styles.infoText}>
-                La TREA (Tasa de Rendimiento Efectivo Anual) es el porcentaje real que ganas al año.
-                Ya incluye la capitalización de intereses. Es el número que debes comparar entre bancos — no te dejes engañar por tasas nominales.
-              </Text>
+              <Text style={styles.infoText}>La TREA (Tasa de Rendimiento Efectivo Anual) es el porcentaje real que ganas al año. Ya incluye la capitalización de intereses. Es el número que debes comparar entre bancos.</Text>
             </View>
           </>
         )}
 
-        {/* MODO META */}
+        {/* ── MODO META ── */}
         {mode === 'meta' && (
           <>
             <Text style={styles.subtitle}>Dime tu meta y te digo cuánto ahorrar por mes y dónde</Text>
 
             <View style={styles.card}>
               <Label text="¿Cuánto quieres ahorrar? (S/)" />
-              <TextInput
-                style={styles.input}
-                value={meta}
-                onChangeText={setMeta}
-                keyboardType="numeric"
-                placeholder="Ej: 20000"
-                placeholderTextColor={Colors.textMuted}
-              />
-
+              <TextInput style={styles.input} value={meta} onChangeText={(v) => { setMeta(v); setSelectedOption(0); }} keyboardType="numeric" placeholder="Ej: 20000" placeholderTextColor={Colors.textMuted} />
               <Label text="¿Ya tienes algo ahorrado? (S/)" />
-              <TextInput
-                style={styles.input}
-                value={ahorroActual}
-                onChangeText={setAhorroActual}
-                keyboardType="numeric"
-                placeholder="Ej: 2000 (pon 0 si no tienes)"
-                placeholderTextColor={Colors.textMuted}
-              />
-
+              <TextInput style={styles.input} value={ahorroActual} onChangeText={setAhorroActual} keyboardType="numeric" placeholder="Ej: 2000 (pon 0 si no tienes)" placeholderTextColor={Colors.textMuted} />
               <Label text="¿En cuánto tiempo?" />
               <View style={styles.presets}>
                 {GOAL_PRESETS.map((p) => (
-                  <TouchableOpacity
-                    key={p.months}
-                    style={[styles.preset, goalMonths === p.months && styles.presetActive]}
-                    onPress={() => setGoalMonths(p.months)}
-                  >
-                    <Text style={[styles.presetText, goalMonths === p.months && styles.presetTextActive]}>
-                      {p.label}
-                    </Text>
+                  <TouchableOpacity key={p.months} style={[styles.preset, goalMonths === p.months && styles.presetActive]} onPress={() => { setGoalMonths(p.months); setSelectedOption(0); }}>
+                    <Text style={[styles.presetText, goalMonths === p.months && styles.presetTextActive]}>{p.label}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -267,29 +256,107 @@ export default function CalculadoraScreen() {
 
             {metaResult && (
               <>
-                {/* RESULTADO PRINCIPAL */}
+                {/* 1. RESULTADO PRINCIPAL */}
                 <View style={styles.metaHero}>
                   <Text style={styles.metaHeroLabel}>Necesitas ahorrar</Text>
                   <Text style={styles.metaHeroAmount}>{fmt(metaResult.pmt)}</Text>
                   <Text style={styles.metaHeroPer}>por mes durante {goalMonths} meses</Text>
                 </View>
 
-                {/* PROGRESO ACTUAL */}
-                {parseFloat(ahorroActual) > 0 && (
-                  <View style={styles.card}>
-                    <Text style={styles.cardTitle}>Tu avance actual</Text>
-                    <View style={styles.progressBarBg}>
-                      <View style={[styles.progressBarFill, { width: `${metaResult.progress}%` as any }]} />
+                {/* 2. MÚLTIPLES OPCIONES */}
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Dónde invertir — elige tu estrategia</Text>
+                  <Text style={styles.cardHint}>Toca una opción para ver el plan de acción</Text>
+                  {options.map((opt, i) => (
+                    <TouchableOpacity
+                      key={i}
+                      style={[styles.optionRow, selectedOption === i && styles.optionRowActive]}
+                      onPress={() => setSelectedOption(i)}
+                    >
+                      <View style={styles.optionLeft}>
+                        <Text style={[styles.optionName, selectedOption === i && styles.optionNameActive]}>{opt.label}</Text>
+                        <View style={styles.optionMeta}>
+                          <View style={[styles.riskBadge, { backgroundColor: opt.riskColor + '20' }]}>
+                            <Text style={[styles.riskText, { color: opt.riskColor }]}>{opt.risk}</Text>
+                          </View>
+                        </View>
+                      </View>
+                      <View style={styles.optionRight}>
+                        <Text style={[styles.optionTrea, selectedOption === i && { color: Colors.accent }]}>{opt.trea}%</Text>
+                        <Text style={styles.optionTreaLabel}>TREA</Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                  <TouchableOpacity style={styles.verComparadorBtn} onPress={() => router.push('/')}>
+                    <Text style={styles.verComparadorText}>Ver todas las opciones en el comparador →</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* 3. PLAN DE ACCIÓN PASO A PASO */}
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Plan de acción — {options[selectedOption]?.label}</Text>
+                  {options[selectedOption]?.steps.map((step, i) => (
+                    <View key={i} style={styles.stepRow}>
+                      <View style={styles.stepNum}>
+                        <Text style={styles.stepNumText}>{i + 1}</Text>
+                      </View>
+                      <Text style={styles.stepText}>{step}</Text>
                     </View>
-                    <View style={styles.progressLabels}>
-                      <Text style={styles.progressCurrent}>{fmt(parseFloat(ahorroActual))} ahorrado</Text>
-                      <Text style={styles.progressGoal}>Meta: {fmt(parseFloat(meta))}</Text>
+                  ))}
+                </View>
+
+                {/* 4. ESCENARIOS */}
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>¿Qué pasa si ahorro más o menos?</Text>
+                  <View style={styles.scenarioRow}>
+                    <View style={[styles.scenarioBox, { borderColor: Colors.danger + '40' }]}>
+                      <Text style={styles.scenarioLabel}>−25% menos</Text>
+                      <Text style={[styles.scenarioAmount, { color: Colors.danger }]}>{fmt(metaResult.pmtMinus25)}/mes</Text>
+                      <Text style={styles.scenarioMonths}>Llegas en {metaResult.monthsMinus25} meses</Text>
                     </View>
-                    <Text style={styles.progressNote}>
-                      Tu ahorro actual crecerá a {fmt(metaResult.pvFuture)} al {metaResult.rec.trea}% anual
-                    </Text>
+                    <View style={[styles.scenarioBox, styles.scenarioCurrent]}>
+                      <Text style={styles.scenarioLabel}>Tu plan</Text>
+                      <Text style={[styles.scenarioAmount, { color: Colors.primary }]}>{fmt(metaResult.pmt)}/mes</Text>
+                      <Text style={styles.scenarioMonths}>{goalMonths} meses</Text>
+                    </View>
+                    <View style={[styles.scenarioBox, { borderColor: Colors.accent + '40' }]}>
+                      <Text style={styles.scenarioLabel}>+25% más</Text>
+                      <Text style={[styles.scenarioAmount, { color: Colors.accent }]}>{fmt(metaResult.pmtPlus25)}/mes</Text>
+                      <Text style={styles.scenarioMonths}>Llegas en {metaResult.monthsPlus25} meses</Text>
+                    </View>
                   </View>
-                )}
+                </View>
+
+                {/* 5. GRÁFICO DE CRECIMIENTO */}
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Tu camino a {fmt(parseFloat(meta))}</Text>
+                  <Text style={styles.cardHint}>Hitos del recorrido</Text>
+                  {metaResult.checkpoints.map((cp) => (
+                    <View key={cp.pct} style={styles.checkpointRow}>
+                      <View style={styles.checkpointLeft}>
+                        <Text style={styles.checkpointPct}>{cp.label}</Text>
+                        <Text style={styles.checkpointAmount}>{fmt(cp.amount)}</Text>
+                      </View>
+                      <View style={styles.checkpointBarBg}>
+                        <View style={[styles.checkpointBarFill, { width: `${cp.pct * 100}%` as any, backgroundColor: cp.pct === 1 ? Colors.accent : Colors.primaryLight }]} />
+                      </View>
+                      <Text style={styles.checkpointMonths}>mes {cp.months}</Text>
+                    </View>
+                  ))}
+
+                  {parseFloat(ahorroActual) > 0 && (
+                    <View style={styles.progressBox}>
+                      <Text style={styles.progressLabel}>Tu avance actual</Text>
+                      <View style={styles.progressBarBg}>
+                        <View style={[styles.progressBarFill, { width: `${metaResult.progress}%` as any }]} />
+                      </View>
+                      <View style={styles.progressLabels}>
+                        <Text style={styles.progressCurrent}>{fmt(parseFloat(ahorroActual))}</Text>
+                        <Text style={styles.progressGoal}>{fmt(parseFloat(meta))}</Text>
+                      </View>
+                    </View>
+                  )}
+                </View>
 
                 {/* DESGLOSE */}
                 <View style={styles.card}>
@@ -300,25 +367,12 @@ export default function CalculadoraScreen() {
                   </View>
                   <View style={styles.resultRow}>
                     <Text style={styles.resultLabel}>Intereses que ganarás</Text>
-                    <Text style={[styles.resultValue, { color: Colors.accent }]}>
-                      +{fmt(metaResult.totalIntereses)}
-                    </Text>
+                    <Text style={[styles.resultValue, { color: Colors.accent }]}>+{fmt(metaResult.totalIntereses)}</Text>
                   </View>
                   <View style={[styles.resultRow, styles.resultTotal]}>
                     <Text style={styles.resultTotalLabel}>Total final</Text>
                     <Text style={styles.resultTotalValue}>{fmt(parseFloat(meta))}</Text>
                   </View>
-                </View>
-
-                {/* RECOMENDACIÓN */}
-                <View style={styles.recCard}>
-                  <Text style={styles.recTitle}>Dónde invertir para este plazo</Text>
-                  <Text style={styles.recWhere}>{metaResult.rec.where}</Text>
-                  <View style={styles.recTreaRow}>
-                    <Text style={styles.recTreaLabel}>TREA estimada</Text>
-                    <Text style={styles.recTrea}>{metaResult.rec.trea}% anual</Text>
-                  </View>
-                  <Text style={styles.recTip}>{metaResult.rec.tip}</Text>
                 </View>
               </>
             )}
@@ -339,49 +393,19 @@ const styles = StyleSheet.create({
   title: { fontSize: 24, fontWeight: '800', color: Colors.primary, marginBottom: 12 },
   subtitle: { fontSize: 14, color: Colors.textSecondary, marginBottom: 16 },
 
-  modeToggle: {
-    flexDirection: 'row',
-    backgroundColor: Colors.surface,
-    borderRadius: 14,
-    padding: 4,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
+  modeToggle: { flexDirection: 'row', backgroundColor: Colors.surface, borderRadius: 14, padding: 4, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   modeBtn: { flex: 1, paddingVertical: 10, borderRadius: 10, alignItems: 'center' },
   modeBtnActive: { backgroundColor: Colors.primary },
   modeBtnText: { fontSize: 13, fontWeight: '600', color: Colors.textMuted },
   modeBtnTextActive: { color: '#FFF', fontWeight: '700' },
 
-  card: {
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  cardTitle: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary, marginBottom: 12 },
+  card: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: Colors.border },
+  cardTitle: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary, marginBottom: 4 },
+  cardHint: { fontSize: 12, color: Colors.textMuted, marginBottom: 12 },
   label: { fontSize: 13, fontWeight: '600', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
-  input: {
-    backgroundColor: Colors.background,
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 18,
-    fontWeight: '700',
-    color: Colors.textPrimary,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
+  input: { backgroundColor: Colors.background, borderRadius: 10, padding: 12, fontSize: 18, fontWeight: '700', color: Colors.textPrimary, borderWidth: 1, borderColor: Colors.border },
   presets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  preset: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
-    backgroundColor: Colors.background,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
+  preset: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, backgroundColor: Colors.background, borderWidth: 1, borderColor: Colors.border },
   presetActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
   presetText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '500' },
   presetTextActive: { color: '#FFF', fontWeight: '700' },
@@ -393,14 +417,7 @@ const styles = StyleSheet.create({
   toggleThumbOn: { alignSelf: 'flex-end' },
   switchHint: { fontSize: 11, color: Colors.textMuted, marginTop: 4 },
 
-  resultsCard: {
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: Colors.accent + '40',
-  },
+  resultsCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 2, borderColor: Colors.accent + '40' },
   resultsTitle: { fontSize: 16, fontWeight: '800', color: Colors.textPrimary, marginBottom: 12 },
   resultRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   resultLabel: { fontSize: 14, color: Colors.textSecondary },
@@ -411,46 +428,54 @@ const styles = StyleSheet.create({
   separator: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
   realLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 8 },
   warning: { fontSize: 12, color: Colors.danger, marginTop: 6, lineHeight: 18 },
-  infoCard: {
-    backgroundColor: Colors.primaryLight + '15',
-    borderRadius: 12,
-    padding: 14,
-    borderLeftWidth: 3,
-    borderLeftColor: Colors.primaryLight,
-  },
+  infoCard: { backgroundColor: Colors.primaryLight + '15', borderRadius: 12, padding: 14, borderLeftWidth: 3, borderLeftColor: Colors.primaryLight },
   infoTitle: { fontSize: 13, fontWeight: '700', color: Colors.primary, marginBottom: 6 },
   infoText: { fontSize: 12, color: Colors.textSecondary, lineHeight: 18 },
 
-  metaHero: {
-    backgroundColor: Colors.primary,
-    borderRadius: 20,
-    padding: 24,
-    alignItems: 'center',
-    marginBottom: 14,
-  },
+  metaHero: { backgroundColor: Colors.primary, borderRadius: 20, padding: 24, alignItems: 'center', marginBottom: 14 },
   metaHeroLabel: { fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
   metaHeroAmount: { fontSize: 48, fontWeight: '900', color: '#A8E6CF', marginTop: 4 },
   metaHeroPer: { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 4 },
 
-  progressBarBg: { height: 12, backgroundColor: Colors.border, borderRadius: 6, marginBottom: 8, overflow: 'hidden' },
-  progressBarFill: { height: 12, backgroundColor: Colors.accent, borderRadius: 6 },
-  progressLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  progressCurrent: { fontSize: 13, fontWeight: '700', color: Colors.accent },
-  progressGoal: { fontSize: 13, color: Colors.textMuted },
-  progressNote: { fontSize: 12, color: Colors.textMuted, marginTop: 4 },
+  optionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 8, backgroundColor: Colors.background },
+  optionRowActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '08' },
+  optionLeft: { flex: 1 },
+  optionName: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, marginBottom: 4 },
+  optionNameActive: { color: Colors.primary, fontWeight: '700' },
+  optionMeta: { flexDirection: 'row', gap: 6 },
+  riskBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
+  riskText: { fontSize: 11, fontWeight: '700' },
+  optionRight: { alignItems: 'flex-end' },
+  optionTrea: { fontSize: 20, fontWeight: '900', color: Colors.textMuted },
+  optionTreaLabel: { fontSize: 10, color: Colors.textMuted },
+  verComparadorBtn: { marginTop: 8, padding: 10, alignItems: 'center' },
+  verComparadorText: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
 
-  recCard: {
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 2,
-    borderColor: Colors.primaryLight + '40',
-    marginBottom: 14,
-  },
-  recTitle: { fontSize: 13, fontWeight: '700', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 },
-  recWhere: { fontSize: 16, fontWeight: '700', color: Colors.primary, marginBottom: 10 },
-  recTreaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  recTreaLabel: { fontSize: 13, color: Colors.textSecondary },
-  recTrea: { fontSize: 16, fontWeight: '800', color: Colors.accent },
-  recTip: { fontSize: 13, color: Colors.textSecondary, lineHeight: 19 },
+  stepRow: { flexDirection: 'row', gap: 12, marginBottom: 12, alignItems: 'flex-start' },
+  stepNum: { width: 26, height: 26, borderRadius: 13, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },
+  stepNumText: { fontSize: 12, fontWeight: '800', color: '#FFF' },
+  stepText: { fontSize: 13, color: Colors.textSecondary, lineHeight: 20, flex: 1 },
+
+  scenarioRow: { flexDirection: 'row', gap: 8 },
+  scenarioBox: { flex: 1, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, padding: 10, alignItems: 'center', backgroundColor: Colors.background },
+  scenarioCurrent: { borderColor: Colors.primary, backgroundColor: Colors.primary + '08' },
+  scenarioLabel: { fontSize: 11, color: Colors.textMuted, marginBottom: 4, fontWeight: '600' },
+  scenarioAmount: { fontSize: 14, fontWeight: '800', textAlign: 'center' },
+  scenarioMonths: { fontSize: 10, color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
+
+  checkpointRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
+  checkpointLeft: { width: 68 },
+  checkpointPct: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary },
+  checkpointAmount: { fontSize: 11, color: Colors.textMuted },
+  checkpointBarBg: { flex: 1, height: 10, backgroundColor: Colors.border, borderRadius: 5, overflow: 'hidden' },
+  checkpointBarFill: { height: 10, borderRadius: 5 },
+  checkpointMonths: { fontSize: 11, color: Colors.textMuted, width: 44, textAlign: 'right' },
+
+  progressBox: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Colors.border },
+  progressLabel: { fontSize: 12, fontWeight: '600', color: Colors.textSecondary, marginBottom: 6 },
+  progressBarBg: { height: 10, backgroundColor: Colors.border, borderRadius: 5, marginBottom: 6, overflow: 'hidden' },
+  progressBarFill: { height: 10, backgroundColor: Colors.accent, borderRadius: 5 },
+  progressLabels: { flexDirection: 'row', justifyContent: 'space-between' },
+  progressCurrent: { fontSize: 12, fontWeight: '700', color: Colors.accent },
+  progressGoal: { fontSize: 12, color: Colors.textMuted },
 });
