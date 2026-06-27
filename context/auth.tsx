@@ -13,6 +13,7 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  refreshPlan: () => Promise<Plan>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -30,6 +31,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq('id', userId)
       .single();
     if (data?.plan) setPlan(data.plan as Plan);
+  };
+
+  const refreshPlan = async (): Promise<Plan> => {
+    if (!user) return 'free';
+    const { data } = await supabase
+      .from('profiles')
+      .select('plan')
+      .eq('id', user.id)
+      .single();
+    const newPlan = (data?.plan as Plan) ?? 'free';
+    setPlan(newPlan);
+    return newPlan;
   };
 
   useEffect(() => {
@@ -66,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, plan, isPro: plan === 'pro' || plan === 'b2b', loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, plan, isPro: plan === 'pro' || plan === 'b2b', loading, signUp, signIn, signOut, refreshPlan }}>
       {children}
     </AuthContext.Provider>
   );

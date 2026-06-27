@@ -62,6 +62,8 @@ export default function RootLayout() {
             headerTintColor: Colors.primary,
           }}
         />
+        <Stack.Screen name="pago-exitoso" options={{ headerShown: false }} />
+        <Stack.Screen name="pago-cancelado" options={{ headerShown: false }} />
       </Stack>
     </>
     </AuthProvider>

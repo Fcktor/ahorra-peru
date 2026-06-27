@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,12 @@ import {
   StatusBar,
   ActivityIndicator,
   Platform,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
 import { supabase } from '@/services/supabase';
-import { loadCulqiScript, openCulqiCheckout } from '@/services/culqi';
 
 const FEATURES_FREE = [
   'Comparador de tasas',
@@ -37,29 +37,28 @@ export default function UpgradeScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (Platform.OS === 'web') loadCulqiScript();
-  }, []);
-
   const handleUpgrade = async () => {
     if (!user) { router.push('/login'); return; }
     setError('');
+    setLoading(true);
 
-    openCulqiCheckout(async (token) => {
-      setLoading(true);
-      try {
-        const { error: fnError } = await supabase.functions.invoke('charge-culqi', {
-          body: { token, userId: user.id },
-        });
-        if (fnError) throw fnError;
-        // Actualizar plan localmente recargando la sesión
-        router.replace('/');
-      } catch {
-        setError('Error al procesar el pago. Intenta nuevamente.');
-      } finally {
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke('create-mp-preference', {
+        body: { userId: user.id, userEmail: user.email },
+      });
+      if (fnError) throw fnError;
+
+      const initPoint: string = data.init_point;
+      if (Platform.OS === 'web') {
+        window.location.href = initPoint;
+      } else {
+        Linking.openURL(initPoint);
         setLoading(false);
       }
-    });
+    } catch {
+      setError('Error al conectar con el sistema de pago. Intenta nuevamente.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -120,7 +119,7 @@ export default function UpgradeScreen() {
         )}
 
         <Text style={styles.disclaimer}>
-          Pago seguro con Culqi. Sin compromisos de permanencia.
+          Pago seguro con Mercado Pago. Sin compromisos de permanencia.
         </Text>
       </ScrollView>
     </SafeAreaView>
