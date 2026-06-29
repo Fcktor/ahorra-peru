@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Modal,
   TextInput, ScrollView, KeyboardAvoidingView, Platform,
-  ActivityIndicator, Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -105,7 +105,12 @@ export default function ChatBot() {
 
   return (
     <>
-      <TouchableOpacity style={styles.fab} onPress={() => setOpen(true)} activeOpacity={0.85}>
+      <TouchableOpacity
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        style={[styles.fab, Platform.OS === 'web' && { position: 'fixed' as any }]}
+        onPress={() => setOpen(true)}
+        activeOpacity={0.85}
+      >
         <Ionicons name="chatbubble-ellipses" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -212,7 +217,7 @@ export default function ChatBot() {
 
 const styles = StyleSheet.create({
   fab: {
-    position: Platform.OS === 'web' ? ('fixed' as any) : 'absolute',
+    position: 'absolute',
     bottom: 80,
     right: 16,
     width: 52,

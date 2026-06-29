@@ -30,7 +30,7 @@ export default function RootLayout() {
           <title>AhorraPeru — Haz crecer tus soles</title>
         </Head>
       )}
-      <Stack style={{ flex: 1 }}>
+      <Stack>
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
