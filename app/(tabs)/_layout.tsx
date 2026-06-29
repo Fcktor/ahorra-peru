@@ -1,9 +1,12 @@
+import { View } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
+import ChatBot from '@/components/ChatBot';
 
 export default function TabLayout() {
   return (
+    <View style={{ flex: 1 }}>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -45,6 +48,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="historial"
+        options={{
+          title: 'Tasas',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="stats-chart-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="glosario"
         options={{
           title: 'Glosario',
@@ -54,5 +66,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    <ChatBot />
+    </View>
   );
 }
