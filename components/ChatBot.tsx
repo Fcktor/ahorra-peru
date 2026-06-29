@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Modal,
   TextInput, ScrollView, KeyboardAvoidingView, Platform,
-  ActivityIndicator,
+  ActivityIndicator, Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -212,7 +212,7 @@ export default function ChatBot() {
 
 const styles = StyleSheet.create({
   fab: {
-    position: 'absolute',
+    position: Platform.OS === 'web' ? ('fixed' as any) : 'absolute',
     bottom: 80,
     right: 16,
     width: 52,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 8,
-    zIndex: 100,
+    zIndex: 9999,
   },
 
   overlay: {
