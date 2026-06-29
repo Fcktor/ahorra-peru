@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { AuthProvider } from '@/context/auth';
 import { Colors } from '@/constants/colors';
+import ChatBot from '@/components/ChatBot';
 
 // Head solo disponible en web
 let Head: React.ComponentType<{ children: React.ReactNode }> | null = null;
@@ -12,7 +13,7 @@ if (Platform.OS === 'web') {
 export default function RootLayout() {
   return (
     <AuthProvider>
-    <>
+    <View style={{ flex: 1 }}>
       {Head && (
         <Head>
           <meta charSet="utf-8" />
@@ -29,7 +30,7 @@ export default function RootLayout() {
           <title>AhorraPeru — Haz crecer tus soles</title>
         </Head>
       )}
-      <Stack>
+      <Stack style={{ flex: 1 }}>
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -65,7 +66,8 @@ export default function RootLayout() {
         <Stack.Screen name="pago-exitoso" options={{ headerShown: false }} />
         <Stack.Screen name="pago-cancelado" options={{ headerShown: false }} />
       </Stack>
-    </>
+      <ChatBot />
+    </View>
     </AuthProvider>
   );
 }

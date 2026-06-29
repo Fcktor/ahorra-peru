@@ -213,7 +213,7 @@ export default function ChatBot() {
 const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
-    bottom: 76,
+    bottom: 80,
     right: 16,
     width: 52,
     height: 52,
