@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
@@ -47,11 +48,13 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
           <Text style={styles.closeText}>✕</Text>
         </TouchableOpacity>
 
+        <Text style={styles.logo}>AhorraPeru</Text>
         <Text style={styles.title}>
           {mode === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta'}
         </Text>
@@ -88,7 +91,7 @@ export default function LoginScreen() {
 
           <TouchableOpacity style={styles.btn} onPress={handle} disabled={loading}>
             {loading
-              ? <ActivityIndicator color="#FFF" />
+              ? <ActivityIndicator color={Colors.background} />
               : <Text style={styles.btnText}>{mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}</Text>
             }
           </TouchableOpacity>
@@ -108,22 +111,24 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   container: { flex: 1, padding: 24, justifyContent: 'center' },
   closeBtn: { position: 'absolute', top: 16, right: 24 },
-  closeText: { fontSize: 20, color: Colors.textMuted },
-  title: { fontSize: 26, fontWeight: '800', color: Colors.primary, marginBottom: 6 },
-  subtitle: { fontSize: 14, color: Colors.textSecondary, marginBottom: 32 },
+  closeText: { fontSize: 20, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  logo: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 24 },
+  title: { fontSize: 26, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, marginBottom: 6 },
+  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 32 },
   form: { gap: 8 },
-  label: { fontSize: 13, fontWeight: '600', color: Colors.textSecondary, marginTop: 8 },
+  label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginTop: 8 },
   input: {
     backgroundColor: Colors.surface,
     borderRadius: 12,
     padding: 14,
     fontSize: 15,
+    fontFamily: 'Inter_400Regular',
     color: Colors.textPrimary,
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  error: { fontSize: 13, color: Colors.danger, marginTop: 4 },
-  successText: { fontSize: 13, color: Colors.accent, marginTop: 4, fontWeight: '600' },
+  error: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.danger, marginTop: 4 },
+  successText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.accent, marginTop: 4 },
   btn: {
     backgroundColor: Colors.primary,
     borderRadius: 14,
@@ -131,6 +136,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   },
-  btnText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
-  toggle: { fontSize: 14, color: Colors.primary, textAlign: 'center', marginTop: 16, fontWeight: '600' },
+  btnText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  toggle: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.primary, textAlign: 'center', marginTop: 16 },
 });

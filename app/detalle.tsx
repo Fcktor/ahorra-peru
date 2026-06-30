@@ -15,7 +15,7 @@ import { SAVINGS_OPTIONS } from '@/constants/savings';
 
 const RISK_COLORS: Record<string, string> = {
   'muy bajo': Colors.riskLow,
-  bajo: '#5DADE2',
+  bajo: Colors.riskBajo,
   medio: Colors.riskMedium,
   alto: Colors.riskHigh,
 };
@@ -41,7 +41,7 @@ export default function DetalleScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <Stack.Screen options={{ title: option.institution }} />
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
         <View style={styles.heroCard}>
@@ -53,7 +53,7 @@ export default function DetalleScreen() {
 
         <View style={styles.statsRow}>
           <StatBox label="Riesgo" value={option.risk} color={riskColor} />
-          <StatBox label="Liquidez" value={option.liquidity} color={Colors.primaryLight} />
+          <StatBox label="Liquidez" value={option.liquidity} color={Colors.riskBajo} />
           <StatBox
             label="Mínimo"
             value={option.minAmount > 0 ? `S/ ${option.minAmount.toLocaleString()}` : 'Sin mínimo'}
@@ -125,18 +125,26 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 16, paddingBottom: 40 },
-  error: { fontSize: 16, color: Colors.danger, padding: 20 },
+  error: { fontSize: 16, fontFamily: 'Inter_400Regular', color: Colors.danger, padding: 20 },
   heroCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
-    padding: 20,
+    padding: 24,
     marginBottom: 16,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.primary + '40',
   },
-  institution: { fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
-  name: { fontSize: 20, fontWeight: '800', color: '#FFF', marginTop: 4, textAlign: 'center' },
-  rate: { fontSize: 44, fontWeight: '900', color: '#A8E6CF', marginTop: 8 },
-  rateLabel: { fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
+  institution: {
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  name: { fontSize: 20, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginTop: 4, textAlign: 'center' },
+  rate: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginTop: 12 },
+  rateLabel: { fontSize: 12, fontFamily: 'Inter_500Medium', color: Colors.textMuted, marginTop: 4 },
   statsRow: {
     flexDirection: 'row',
     gap: 10,
@@ -151,8 +159,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  statValue: { fontSize: 13, fontWeight: '700', textAlign: 'center' },
-  statLabel: { fontSize: 10, color: Colors.textMuted, marginTop: 2, textTransform: 'uppercase' },
+  statValue: { fontSize: 13, fontFamily: 'Inter_700Bold', textAlign: 'center' },
+  statLabel: { fontSize: 10, fontFamily: 'Inter_500Medium', color: Colors.textMuted, marginTop: 2, textTransform: 'uppercase' },
   section: {
     backgroundColor: Colors.surface,
     borderRadius: 14,
@@ -161,17 +169,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary, marginBottom: 10 },
-  bodyText: { fontSize: 14, color: Colors.textSecondary, lineHeight: 21 },
+  sectionTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 10 },
+  bodyText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21 },
   listRow: { flexDirection: 'row', marginBottom: 6, gap: 8 },
-  bullet: { fontSize: 14, color: Colors.primaryLight, marginTop: 1 },
-  listText: { fontSize: 14, color: Colors.textSecondary, lineHeight: 21, flex: 1 },
+  bullet: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary, marginTop: 1 },
+  listText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21, flex: 1 },
   howToBox: {
-    backgroundColor: Colors.accent + '15',
+    backgroundColor: Colors.primary + '15',
     borderRadius: 8,
     padding: 12,
     borderLeftWidth: 3,
-    borderLeftColor: Colors.accent,
+    borderLeftColor: Colors.primary,
   },
   ctaButton: {
     backgroundColor: Colors.primary,
@@ -183,6 +191,6 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  ctaText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
-  ctaArrow: { fontSize: 18, color: '#FFF' },
+  ctaText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaArrow: { fontSize: 18, color: Colors.background },
 });

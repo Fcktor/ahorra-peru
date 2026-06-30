@@ -3,6 +3,19 @@ import { Platform, View } from 'react-native';
 import { AuthProvider } from '@/context/auth';
 import { Colors } from '@/constants/colors';
 import ChatBot from '@/components/ChatBot';
+import { useFonts } from 'expo-font';
+import {
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_500Medium,
+  SpaceGrotesk_600SemiBold,
+  SpaceGrotesk_700Bold,
+} from '@expo-google-fonts/space-grotesk';
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
 
 // Head solo disponible en web
 let Head: React.ComponentType<{ children: React.ReactNode }> | null = null;
@@ -11,18 +24,31 @@ if (Platform.OS === 'web') {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    SpaceGrotesk_400Regular,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_600SemiBold,
+    SpaceGrotesk_700Bold,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
+
+  if (!fontsLoaded) return null;
+
   return (
     <AuthProvider>
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.background }}>
       {Head && (
         <Head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
           <meta name="description" content="Descubre dónde hacer crecer tus ahorros en soles. Compara tasas, calcula intereses y crea tu plan de ahorro con datos en tiempo real del BCRP." />
-          <meta name="theme-color" content="#1A5276" />
+          <meta name="theme-color" content="#0E1621" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <meta name="apple-mobile-web-app-title" content="AhorraPeru" />
           <meta property="og:title" content="AhorraPeru — Haz crecer tus soles" />
           <meta property="og:description" content="Compara cuentas, depósitos y fondos mutuos en Perú. Datos reales del BCRP." />
@@ -38,7 +64,9 @@ export default function RootLayout() {
           options={{
             title: 'Detalle',
             headerBackTitle: 'Volver',
-            headerTintColor: '#1A5276',
+            headerTintColor: Colors.primary,
+            headerStyle: { backgroundColor: Colors.surface },
+            headerTitleStyle: { color: Colors.textPrimary },
           }}
         />
         <Stack.Screen
@@ -61,6 +89,8 @@ export default function RootLayout() {
             title: 'Comparar',
             headerBackTitle: 'Volver',
             headerTintColor: Colors.primary,
+            headerStyle: { backgroundColor: Colors.surface },
+            headerTitleStyle: { color: Colors.textPrimary },
           }}
         />
         <Stack.Screen name="pago-exitoso" options={{ headerShown: false }} />

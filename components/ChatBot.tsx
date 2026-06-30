@@ -111,7 +111,7 @@ export default function ChatBot() {
         onPress={() => setOpen(true)}
         activeOpacity={0.85}
       >
-        <Ionicons name="chatbubble-ellipses" size={24} color="#FFF" />
+        <Ionicons name="chatbubble-ellipses" size={22} color={Colors.background} />
       </TouchableOpacity>
 
       <Modal visible={open} animationType="slide" transparent statusBarTranslucent>
@@ -127,7 +127,7 @@ export default function ChatBot() {
               <View style={styles.header}>
                 <View style={styles.headerLeft}>
                   <View style={styles.avatar}>
-                    <Ionicons name="sparkles" size={14} color="#FFF" />
+                    <Ionicons name="sparkles" size={14} color={Colors.background} />
                   </View>
                   <View>
                     <Text style={styles.headerTitle}>Asesor AhorraPeru</Text>
@@ -204,7 +204,7 @@ export default function ChatBot() {
                   onPress={handleSend}
                   disabled={!input.trim() || loading}
                 >
-                  <Ionicons name="send" size={18} color="#FFF" />
+                  <Ionicons name="send" size={18} color={Colors.background} />
                 </TouchableOpacity>
               </View>
             </SafeAreaView>
@@ -223,13 +223,13 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
     elevation: 8,
     zIndex: 9999,
   },
@@ -239,8 +239,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
 
   panel: {
@@ -250,7 +254,7 @@ const styles = StyleSheet.create({
     maxHeight: '85%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 20,
   },
@@ -273,8 +277,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 15, fontWeight: '800', color: Colors.textPrimary },
-  headerSub: { fontSize: 11, color: Colors.textMuted, marginTop: 1 },
+  headerTitle: {
+    fontSize: 15,
+    fontFamily: 'Inter_700Bold',
+    color: Colors.textPrimary,
+  },
+  headerSub: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textMuted,
+    marginTop: 1,
+  },
   closeBtn: { padding: 4 },
 
   messages: { flex: 1 },
@@ -288,7 +301,7 @@ const styles = StyleSheet.create({
   },
   bubbleBot: {
     alignSelf: 'flex-start',
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.surfaceHigh,
     borderBottomLeftRadius: 4,
   },
   bubbleUser: {
@@ -296,32 +309,41 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderBottomRightRadius: 4,
   },
-  bubbleText: { fontSize: 14, lineHeight: 20 },
+  bubbleText: {
+    fontSize: 14,
+    fontFamily: 'Inter_400Regular',
+    lineHeight: 20,
+  },
   bubbleTextBot: { color: Colors.textPrimary },
-  bubbleTextUser: { color: '#FFF' },
+  bubbleTextUser: { color: Colors.background },
   loadingBubble: { paddingVertical: 14, paddingHorizontal: 20 },
 
   faqBlock: { marginTop: 8, gap: 6 },
   faqTitle: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
     marginBottom: 4,
   },
   faqChip: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderWidth: 1,
     borderColor: Colors.border,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
-  faqChipText: { fontSize: 13, color: Colors.primary, fontWeight: '600', flex: 1 },
+  faqChipText: {
+    fontSize: 13,
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textPrimary,
+    flex: 1,
+  },
 
   inputRow: {
     flexDirection: 'row',
@@ -335,11 +357,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     color: Colors.textPrimary,
     maxHeight: 100,
   },
@@ -347,7 +370,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

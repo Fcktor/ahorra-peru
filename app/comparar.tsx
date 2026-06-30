@@ -12,7 +12,7 @@ const LIQUIDITY_ORDER = ['inmediata', '1-3 días', 'al vencimiento', 'restringid
 
 const RISK_COLORS: Record<string, string> = {
   'muy bajo': Colors.riskLow,
-  bajo: '#5DADE2',
+  bajo: Colors.riskBajo,
   medio: Colors.riskMedium,
   alto: Colors.riskHigh,
 };
@@ -25,7 +25,7 @@ export default function CompararScreen() {
   if (!optA || !optB) {
     return (
       <SafeAreaView style={styles.safe}>
-        <Text style={{ padding: 20, color: Colors.danger }}>Opciones no encontradas.</Text>
+        <Text style={{ padding: 20, fontFamily: 'Inter_400Regular', color: Colors.danger }}>Opciones no encontradas.</Text>
       </SafeAreaView>
     );
   }
@@ -45,7 +45,7 @@ export default function CompararScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <Stack.Screen options={{ title: 'Comparar', headerBackTitle: 'Volver', headerTintColor: Colors.primary }} />
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
         {/* CABECERA */}
@@ -71,7 +71,7 @@ export default function CompararScreen() {
           </View>
         </View>
 
-        {/* GANADOR GENERAL */}
+        {/* GANADOR */}
         {overallWinner ? (
           <View style={styles.winnerBanner}>
             <Text style={styles.winnerBannerText}>🏆 {overallWinner} gana en más criterios</Text>
@@ -85,32 +85,9 @@ export default function CompararScreen() {
         {/* CRITERIOS */}
         <View style={styles.criteriaBlock}>
           <Text style={styles.blockTitle}>Criterios clave</Text>
-          <CompareRow
-            label="TREA anual"
-            valA={rateA}
-            valB={rateB}
-            winner={betterRate}
-            colorA={Colors.accent}
-            colorB={Colors.accent}
-            sizeA={22}
-            sizeB={22}
-          />
-          <CompareRow
-            label="Riesgo"
-            valA={optA.risk}
-            valB={optB.risk}
-            winner={betterRisk}
-            colorA={RISK_COLORS[optA.risk]}
-            colorB={RISK_COLORS[optB.risk]}
-          />
-          <CompareRow
-            label="Liquidez"
-            valA={optA.liquidity}
-            valB={optB.liquidity}
-            winner={betterLiquidity}
-            colorA={Colors.primaryLight}
-            colorB={Colors.primaryLight}
-          />
+          <CompareRow label="TREA anual" valA={rateA} valB={rateB} winner={betterRate} colorA={Colors.primary} colorB={Colors.primary} sizeA={22} sizeB={22} />
+          <CompareRow label="Riesgo" valA={optA.risk} valB={optB.risk} winner={betterRisk} colorA={RISK_COLORS[optA.risk]} colorB={RISK_COLORS[optB.risk]} />
+          <CompareRow label="Liquidez" valA={optA.liquidity} valB={optB.liquidity} winner={betterLiquidity} colorA={Colors.riskBajo} colorB={Colors.riskBajo} />
           <CompareRow
             label="Mínimo"
             valA={optA.minAmount > 0 ? `S/ ${optA.minAmount.toLocaleString()}` : 'Sin mínimo'}
@@ -121,7 +98,7 @@ export default function CompararScreen() {
           />
         </View>
 
-        {/* PROS */}
+        {/* VENTAJAS */}
         <View style={styles.section}>
           <Text style={styles.blockTitle}>Ventajas</Text>
           <View style={styles.twoCol}>
@@ -137,7 +114,7 @@ export default function CompararScreen() {
           </View>
         </View>
 
-        {/* CONTRAS */}
+        {/* DESVENTAJAS */}
         <View style={styles.section}>
           <Text style={styles.blockTitle}>Desventajas</Text>
           <View style={styles.twoCol}>
@@ -200,7 +177,7 @@ function CompareRow({ label, valA, valB, winner, colorA, colorB, sizeA = 14, siz
   return (
     <View style={styles.row}>
       <View style={[styles.rowSide, winner === 'a' && styles.rowWinnerBg]}>
-        <Text style={[styles.rowVal, { color: colorA, fontSize: sizeA, fontWeight: winner === 'a' ? '900' : '600' }]}>
+        <Text style={[styles.rowVal, { color: colorA, fontSize: sizeA, fontFamily: winner === 'a' ? 'SpaceGrotesk_700Bold' : 'Inter_600SemiBold' }]}>
           {valA}
         </Text>
         {winner === 'a' && (
@@ -218,7 +195,7 @@ function CompareRow({ label, valA, valB, winner, colorA, colorB, sizeA = 14, siz
             <Text style={styles.badgeText}>Mejor ✓</Text>
           </View>
         )}
-        <Text style={[styles.rowVal, { color: colorB, fontSize: sizeB, fontWeight: winner === 'b' ? '900' : '600', textAlign: 'right' }]}>
+        <Text style={[styles.rowVal, { color: colorB, fontSize: sizeB, fontFamily: winner === 'b' ? 'SpaceGrotesk_700Bold' : 'Inter_600SemiBold', textAlign: 'right' }]}>
           {valB}
         </Text>
       </View>
@@ -249,64 +226,64 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { paddingBottom: 48 },
 
-  /* Header */
   header: {
     flexDirection: 'row',
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     padding: 16,
     paddingBottom: 20,
     alignItems: 'flex-start',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   headerCol: { flex: 1 },
   headerColRight: { alignItems: 'flex-end' },
   headerInstitution: {
     fontSize: 10,
-    color: 'rgba(255,255,255,0.55)',
-    fontWeight: '700',
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
-  headerName: { fontSize: 13, fontWeight: '800', color: '#FFF', marginTop: 3, lineHeight: 18 },
+  headerName: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginTop: 3, lineHeight: 18 },
   headerCenter: { width: 40, alignItems: 'center', paddingTop: 6 },
-  vsText: { fontSize: 11, fontWeight: '900', color: 'rgba(255,255,255,0.35)', letterSpacing: 1 },
+  vsText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, letterSpacing: 1 },
   scoreChip: {
     flexDirection: 'row',
     alignItems: 'baseline',
     marginTop: 10,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: Colors.primary + '20',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: Colors.primary + '40',
   },
   scoreChipRight: { alignSelf: 'flex-end' },
-  scoreNum: { fontSize: 20, fontWeight: '900', color: Colors.accent },
-  scoreLabel: { fontSize: 11, fontWeight: '600', color: 'rgba(255,255,255,0.6)' },
+  scoreNum: { fontSize: 20, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  scoreLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted },
 
-  /* Winner banner */
   winnerBanner: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
   },
-  tieBanner: { backgroundColor: Colors.primaryLight },
-  winnerBannerText: { fontSize: 13, fontWeight: '800', color: '#FFF' },
+  tieBanner: { backgroundColor: Colors.surfaceHigh },
+  winnerBannerText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.background },
 
-  /* Criteria block */
   criteriaBlock: { backgroundColor: Colors.surface, marginTop: 8 },
   blockTitle: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    letterSpacing: 1,
     paddingHorizontal: 16,
     paddingTop: 14,
     paddingBottom: 4,
   },
 
-  /* Row */
   row: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -320,12 +297,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   rowSideRight: { alignItems: 'flex-end' },
-  rowWinnerBg: { backgroundColor: 'rgba(22, 196, 127, 0.08)' },
+  rowWinnerBg: { backgroundColor: Colors.primary + '10' },
   rowCenter: {
     width: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.surfaceHigh,
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: Colors.border,
@@ -333,7 +310,7 @@ const styles = StyleSheet.create({
   },
   rowCenterText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: 'Inter_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     textAlign: 'center',
@@ -342,20 +319,19 @@ const styles = StyleSheet.create({
   rowVal: { color: Colors.textPrimary },
   badge: {
     marginTop: 4,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 6,
     paddingHorizontal: 6,
     paddingVertical: 2,
     alignSelf: 'flex-start',
   },
   badgeRight: { alignSelf: 'flex-end' },
-  badgeText: { fontSize: 10, fontWeight: '800', color: '#FFF' },
+  badgeText: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.background },
 
-  /* Sections */
   section: { backgroundColor: Colors.surface, marginTop: 8, padding: 16 },
   colHeader: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
     color: Colors.primary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -366,28 +342,23 @@ const styles = StyleSheet.create({
   colDivider: { width: 1, backgroundColor: Colors.border },
   bulletRow: { flexDirection: 'row', gap: 6, marginBottom: 6 },
   bullet: { fontSize: 14, marginTop: 1 },
-  bulletText: { fontSize: 12, color: Colors.textSecondary, lineHeight: 18, flex: 1 },
-  howToText: { fontSize: 12, color: Colors.textSecondary, lineHeight: 18 },
+  bulletText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18, flex: 1 },
+  howToText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
 
-  /* Verdict */
   verdictCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     margin: 16,
     borderRadius: 16,
     padding: 18,
+    borderWidth: 1,
+    borderColor: Colors.primary + '30',
   },
-  verdictTitle: { fontSize: 13, fontWeight: '800', color: '#FFF', marginBottom: 12 },
-  verdictRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
-  },
+  verdictTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 12 },
+  verdictRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
   verdictIcon: { fontSize: 16 },
-  verdictLabel: { fontSize: 13, color: 'rgba(255,255,255,0.65)', flex: 1 },
-  verdictWinner: { fontSize: 13, fontWeight: '800', color: Colors.accent },
+  verdictLabel: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1 },
+  verdictWinner: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.primary },
 
-  /* CTAs */
   ctaRow: { flexDirection: 'row', gap: 10, marginHorizontal: 16 },
   ctaBtn: {
     flex: 1,
@@ -396,6 +367,6 @@ const styles = StyleSheet.create({
     padding: 14,
     alignItems: 'center',
   },
-  ctaBtnB: { backgroundColor: Colors.primaryLight },
-  ctaBtnText: { fontSize: 14, fontWeight: '800', color: '#FFF' },
+  ctaBtnB: { backgroundColor: Colors.surfaceHigh, borderWidth: 1, borderColor: Colors.primary },
+  ctaBtnText: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.background },
 });

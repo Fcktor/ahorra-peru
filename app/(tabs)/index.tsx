@@ -64,7 +64,7 @@ export default function ComparadorScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
@@ -83,7 +83,7 @@ export default function ComparadorScreen() {
             <View style={styles.header}>
               <View style={styles.headerRow}>
                 <View>
-                  <Text style={styles.appTitle}>💰 AhorraPeru</Text>
+                  <Text style={styles.appTitle}>AhorraPeru</Text>
                   <Text style={styles.subtitle}>¿Dónde hacer crecer tu dinero?</Text>
                 </View>
                 {user ? (
@@ -118,7 +118,7 @@ export default function ComparadorScreen() {
             />
 
             <View style={styles.sortRow}>
-              <Text style={styles.sectionLabel}>Ordenar por</Text>
+              <Text style={styles.sectionLabel}>Ordenar</Text>
               <View style={styles.sortButtons}>
                 {SORT_OPTIONS.map((s) => (
                   <TouchableOpacity
@@ -171,47 +171,145 @@ const styles = StyleSheet.create({
   listWithBar: { paddingBottom: 100 },
   header: { marginBottom: 20 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  appTitle: { fontSize: 26, fontWeight: '800', color: Colors.primary },
-  subtitle: { fontSize: 14, color: Colors.textSecondary, marginTop: 2 },
-  accountBtn: { backgroundColor: Colors.primary, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8 },
-  accountBtnText: { fontSize: 13, fontWeight: '700', color: '#FFF' },
-  sectionLabel: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 },
+  appTitle: {
+    fontSize: 26,
+    fontFamily: 'SpaceGrotesk_700Bold',
+    color: Colors.primary,
+  },
+  subtitle: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  accountBtn: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  accountBtnText: {
+    fontSize: 13,
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textSecondary,
+  },
+  sectionLabel: {
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
+    color: Colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
   chips: { paddingBottom: 12, gap: 8 },
-  chip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 20,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   chipActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  chipText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '500' },
-  chipTextActive: { color: '#FFF', fontWeight: '700' },
+  chipText: {
+    fontSize: 13,
+    fontFamily: 'Inter_500Medium',
+    color: Colors.textSecondary,
+  },
+  chipTextActive: {
+    fontFamily: 'Inter_700Bold',
+    color: Colors.background,
+  },
   sortRow: { marginBottom: 8 },
   sortButtons: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  sortChip: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
-  sortChipActive: { backgroundColor: Colors.accent, borderColor: Colors.accent },
-  sortText: { fontSize: 12, color: Colors.textSecondary },
-  sortTextActive: { color: '#FFF', fontWeight: '700' },
-  resultCount: { fontSize: 12, color: Colors.textMuted, marginBottom: 8 },
-  compareTip: { fontSize: 12, color: Colors.primaryLight, marginBottom: 6, fontStyle: 'italic' },
+  sortChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  sortChipActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
+  sortText: {
+    fontSize: 12,
+    fontFamily: 'Inter_500Medium',
+    color: Colors.textSecondary,
+  },
+  sortTextActive: {
+    fontFamily: 'Inter_700Bold',
+    color: Colors.background,
+  },
+  resultCount: {
+    fontSize: 12,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textMuted,
+    marginBottom: 8,
+  },
+  compareTip: {
+    fontSize: 12,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textMuted,
+    marginBottom: 6,
+  },
 
   floatingBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: Colors.primary + '40',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 10,
   },
   floatingLeft: { flex: 1 },
-  floatingCount: { fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: '600' },
-  floatingNames: { fontSize: 14, color: '#FFF', fontWeight: '700', marginTop: 2 },
+  floatingCount: {
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textMuted,
+  },
+  floatingNames: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: Colors.textPrimary,
+    marginTop: 2,
+  },
   floatingBtns: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  clearBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  clearBtnText: { fontSize: 14, color: '#FFF', fontWeight: '700' },
-  compareBtn: { backgroundColor: Colors.accent, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10 },
-  compareBtnText: { fontSize: 14, fontWeight: '800', color: '#FFF' },
+  clearBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: Colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  clearBtnText: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: Colors.textSecondary,
+  },
+  compareBtn: {
+    backgroundColor: Colors.primary,
+    borderRadius: 20,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+  },
+  compareBtnText: {
+    fontSize: 14,
+    fontFamily: 'Inter_700Bold',
+    color: Colors.background,
+  },
 });

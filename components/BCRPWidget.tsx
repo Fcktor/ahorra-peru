@@ -11,9 +11,9 @@ interface Props {
 export default function BCRPWidget({ data, loading }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>📊 Datos en tiempo real · BCRP</Text>
+      <Text style={styles.title}>BCRP · TIEMPO REAL</Text>
       {loading ? (
-        <ActivityIndicator color={Colors.primaryLight} style={{ marginTop: 8 }} />
+        <ActivityIndicator color={Colors.primary} style={{ marginTop: 8 }} />
       ) : (
         <View style={styles.row}>
           <Stat
@@ -51,18 +51,19 @@ function Stat({ label, value, hint }: { label: string; value: string; hint: stri
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.primary + '30',
   },
   title: {
-    color: 'rgba(255,255,255,0.75)',
-    fontSize: 11,
-    fontWeight: '600',
-    marginBottom: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    color: Colors.primary,
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
+    marginBottom: 14,
+    letterSpacing: 1.5,
   },
   row: {
     flexDirection: 'row',
@@ -70,8 +71,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   stat: { alignItems: 'center', flex: 1 },
-  statValue: { fontSize: 20, fontWeight: '800', color: '#FFFFFF' },
-  statLabel: { fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: '600', marginTop: 2 },
-  statHint: { fontSize: 9, color: 'rgba(255,255,255,0.5)', textAlign: 'center', marginTop: 1 },
-  divider: { width: 1, height: 36, backgroundColor: 'rgba(255,255,255,0.2)' },
+  statValue: {
+    fontSize: 22,
+    fontFamily: 'SpaceGrotesk_700Bold',
+    color: Colors.primary,
+  },
+  statLabel: {
+    fontSize: 10,
+    fontFamily: 'Inter_600SemiBold',
+    color: Colors.textSecondary,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  statHint: {
+    fontSize: 9,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textMuted,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  divider: {
+    width: 1,
+    height: 36,
+    backgroundColor: Colors.border,
+  },
 });

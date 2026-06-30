@@ -26,7 +26,7 @@ export default function GlosarioScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.term}
@@ -35,9 +35,7 @@ export default function GlosarioScreen() {
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.title}>Glosario Financiero</Text>
-            <Text style={styles.subtitle}>
-              Todo lo que necesitas saber para invertir con confianza
-            </Text>
+            <Text style={styles.subtitle}>Todo lo que necesitas saber para invertir con confianza</Text>
             <View style={styles.searchContainer}>
               <Text style={styles.searchIcon}>🔍</Text>
               <TextInput
@@ -81,8 +79,8 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   list: { padding: 16, paddingBottom: 40 },
   header: { marginBottom: 16 },
-  title: { fontSize: 24, fontWeight: '800', color: Colors.primary, marginBottom: 4 },
-  subtitle: { fontSize: 14, color: Colors.textSecondary, marginBottom: 16 },
+  title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 4 },
+  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 16 },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -93,7 +91,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
-  searchInput: { flex: 1, fontSize: 15, color: Colors.textPrimary, paddingVertical: 12 },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textPrimary,
+    paddingVertical: 12,
+  },
   card: {
     backgroundColor: Colors.surface,
     borderRadius: 14,
@@ -103,17 +107,17 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  term: { fontSize: 16, fontWeight: '700', color: Colors.primary, flex: 1 },
+  term: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.primary, flex: 1 },
   chevron: { fontSize: 12, color: Colors.textMuted },
-  definition: { fontSize: 14, color: Colors.textSecondary, lineHeight: 21, marginTop: 10 },
+  definition: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21, marginTop: 10 },
   exampleBox: {
     marginTop: 10,
-    backgroundColor: Colors.accent + '15',
+    backgroundColor: Colors.primary + '15',
     borderRadius: 8,
     padding: 10,
     borderLeftWidth: 3,
-    borderLeftColor: Colors.accent,
+    borderLeftColor: Colors.primary,
   },
-  exampleLabel: { fontSize: 10, fontWeight: '700', color: Colors.accent, textTransform: 'uppercase', marginBottom: 4 },
-  example: { fontSize: 13, color: Colors.textSecondary, lineHeight: 19 },
+  exampleLabel: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
+  example: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 19 },
 });

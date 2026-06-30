@@ -13,26 +13,10 @@ import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
 
 const FEATURES = [
-  {
-    icon: '📊',
-    title: 'Compara tasas en tiempo real',
-    desc: 'Depósitos a plazo, fondos mutuos, CTS y más. Datos actualizados del BCRP.',
-  },
-  {
-    icon: '🧮',
-    title: 'Calculadora de intereses',
-    desc: 'Simula cuánto ganarás con cualquier monto, tasa y plazo.',
-  },
-  {
-    icon: '📈',
-    title: 'Tu plan de ahorro personalizado',
-    desc: 'Estrategia en capas según tu fase financiera. Fondo de emergencia primero.',
-  },
-  {
-    icon: '📚',
-    title: 'Glosario financiero',
-    desc: 'TREA, FSD, fondos mutuos... todo explicado en simple.',
-  },
+  { icon: '📊', title: 'Compara tasas en tiempo real', desc: 'Depósitos a plazo, fondos mutuos, CTS y más. Datos actualizados del BCRP.' },
+  { icon: '🧮', title: 'Calculadora de intereses', desc: 'Simula cuánto ganarás con cualquier monto, tasa y plazo.' },
+  { icon: '📈', title: 'Tu plan de ahorro personalizado', desc: 'Estrategia en capas según tu fase financiera. Fondo de emergencia primero.' },
+  { icon: '📚', title: 'Glosario financiero', desc: 'TREA, FSD, fondos mutuos... todo explicado en simple.' },
 ];
 
 const INSTITUTIONS = ['BCP', 'Interbank', 'BBVA', 'CMAC Arequipa', 'Credifondos', 'Interfondos', 'AFP Habitat', 'Scotiabank'];
@@ -48,12 +32,12 @@ export default function LandingScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
         {/* NAV */}
         <View style={styles.nav}>
-          <Text style={styles.navLogo}>💰 AhorraPeru</Text>
+          <Text style={styles.navLogo}>AhorraPeru</Text>
           <TouchableOpacity onPress={() => router.push('/login')}>
             <Text style={styles.navLink}>{user ? 'Ir a la app →' : 'Iniciar sesión'}</Text>
           </TouchableOpacity>
@@ -130,7 +114,7 @@ export default function LandingScreen() {
             <Text style={styles.planPrice}>S/ 0<Text style={styles.planPer}>/mes</Text></Text>
             {['Comparador de tasas', 'Calculadora', 'Mi Plan básico', 'Glosario'].map((f) => (
               <View key={f} style={styles.planFeatureRow}>
-                <Text style={styles.checkGreen}>✓</Text>
+                <Text style={styles.checkFree}>✓</Text>
                 <Text style={styles.planFeatureText}>{f}</Text>
               </View>
             ))}
@@ -141,12 +125,12 @@ export default function LandingScreen() {
 
           <View style={[styles.pricingCard, styles.pricingCardPro]}>
             <View style={styles.proBadge}><Text style={styles.proBadgeText}>PRO</Text></View>
-            <Text style={[styles.planName, { color: '#FFF' }]}>Pro</Text>
-            <Text style={[styles.planPrice, { color: '#FFF' }]}>S/ 12<Text style={[styles.planPer, { color: 'rgba(255,255,255,0.6)' }]}>/mes</Text></Text>
+            <Text style={[styles.planName, { color: Colors.textPrimary }]}>Pro</Text>
+            <Text style={[styles.planPrice, { color: Colors.primary }]}>S/ 12<Text style={[styles.planPer, { color: Colors.textMuted }]}>/mes</Text></Text>
             {['Todo lo de gratis', 'Guardar múltiples planes', 'Alertas de tasa', 'Historial de tasas', 'Exportar plan a PDF'].map((f) => (
               <View key={f} style={styles.planFeatureRow}>
-                <Text style={styles.checkWhite}>✓</Text>
-                <Text style={[styles.planFeatureText, { color: 'rgba(255,255,255,0.85)' }]}>{f}</Text>
+                <Text style={styles.checkPro}>✓</Text>
+                <Text style={[styles.planFeatureText, { color: Colors.textSecondary }]}>{f}</Text>
               </View>
             ))}
             <TouchableOpacity style={styles.planBtnPro} onPress={() => router.push('/upgrade')}>
@@ -179,7 +163,7 @@ export default function LandingScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.primary },
+  safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { paddingBottom: 0 },
 
   nav: {
@@ -190,8 +174,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
   },
-  navLogo: { fontSize: 18, fontWeight: '800', color: '#FFF' },
-  navLink: { fontSize: 14, color: 'rgba(255,255,255,0.8)', fontWeight: '600' },
+  navLogo: { fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  navLink: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
 
   hero: {
     paddingHorizontal: 24,
@@ -200,67 +184,83 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   heroBadge: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: Colors.primary + '20',
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 5,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.primary + '40',
   },
-  heroBadgeText: { fontSize: 12, color: 'rgba(255,255,255,0.9)', fontWeight: '600' },
-  heroTitle: { fontSize: 38, fontWeight: '900', color: '#FFF', lineHeight: 46, marginBottom: 14 },
-  heroSub: { fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 23, marginBottom: 28 },
+  heroBadgeText: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.primary },
+  heroTitle: {
+    fontSize: 38,
+    fontFamily: 'SpaceGrotesk_700Bold',
+    color: Colors.textPrimary,
+    lineHeight: 46,
+    marginBottom: 14,
+  },
+  heroSub: {
+    fontSize: 15,
+    fontFamily: 'Inter_400Regular',
+    color: Colors.textSecondary,
+    lineHeight: 23,
+    marginBottom: 28,
+  },
   heroCTA: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 16,
     paddingHorizontal: 28,
     paddingVertical: 16,
     marginBottom: 12,
   },
-  heroCTAText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
-  heroNote: { fontSize: 12, color: 'rgba(255,255,255,0.5)' },
+  heroCTAText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  heroNote: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 
   statsRow: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: Colors.surfaceHigh,
     marginHorizontal: 20,
     borderRadius: 16,
     padding: 20,
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   statItem: { flex: 1, alignItems: 'center' },
-  statNum: { fontSize: 26, fontWeight: '900', color: '#FFF' },
-  statLabel: { fontSize: 11, color: 'rgba(255,255,255,0.6)', marginTop: 2, textAlign: 'center' },
-  statDivider: { width: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginHorizontal: 8 },
+  statNum: { fontSize: 26, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  statLabel: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 2, textAlign: 'center' },
+  statDivider: { width: 1, backgroundColor: Colors.border, marginHorizontal: 8 },
 
   section: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.surface,
     marginTop: 8,
     padding: 24,
   },
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
     marginBottom: 16,
   },
 
   institutionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   institutionChip: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  institutionText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '600' },
+  institutionText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
 
   featureCard: {
     flexDirection: 'row',
     gap: 14,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 14,
     padding: 16,
     marginBottom: 10,
@@ -269,11 +269,11 @@ const styles = StyleSheet.create({
   },
   featureIcon: { fontSize: 28 },
   featureText: { flex: 1 },
-  featureTitle: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary, marginBottom: 4 },
-  featureDesc: { fontSize: 13, color: Colors.textSecondary, lineHeight: 19 },
+  featureTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 4 },
+  featureDesc: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 19 },
 
   pricingCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
     padding: 20,
     marginBottom: 12,
@@ -281,63 +281,66 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   pricingCardPro: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    borderColor: Colors.primary + '60',
+    borderWidth: 2,
   },
   proBadge: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
     alignSelf: 'flex-start',
     marginBottom: 8,
   },
-  proBadgeText: { fontSize: 10, fontWeight: '800', color: '#FFF', letterSpacing: 1 },
-  planName: { fontSize: 16, fontWeight: '700', color: Colors.textSecondary, marginBottom: 4 },
-  planPrice: { fontSize: 40, fontWeight: '900', color: Colors.primary, marginBottom: 16 },
-  planPer: { fontSize: 16, color: Colors.textMuted },
+  proBadgeText: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
+  planName: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 4 },
+  planPrice: { fontSize: 40, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textSecondary, marginBottom: 16 },
+  planPer: { fontSize: 16, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
   planFeatureRow: { flexDirection: 'row', gap: 10, marginBottom: 8, alignItems: 'center' },
-  checkGreen: { fontSize: 14, color: Colors.accent, fontWeight: '800' },
-  checkWhite: { fontSize: 14, color: 'rgba(255,255,255,0.7)', fontWeight: '800' },
-  planFeatureText: { fontSize: 14, color: Colors.textSecondary },
+  checkFree: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textMuted },
+  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  planFeatureText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
   planBtnFree: {
-    borderWidth: 2,
-    borderColor: Colors.primary,
+    borderWidth: 1,
+    borderColor: Colors.border,
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
     marginTop: 16,
   },
-  planBtnFreeText: { fontSize: 15, fontWeight: '700', color: Colors.primary },
+  planBtnFreeText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
   planBtnPro: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
     marginTop: 16,
   },
-  planBtnProText: { fontSize: 15, fontWeight: '700', color: '#FFF' },
+  planBtnProText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
 
   finalCTA: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.surfaceHigh,
     padding: 32,
     alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: Colors.primary + '30',
+    marginTop: 8,
   },
-  finalTitle: { fontSize: 22, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 10 },
-  finalSub: { fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center', lineHeight: 21, marginBottom: 24 },
+  finalTitle: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center', marginBottom: 10 },
+  finalSub: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 21, marginBottom: 24 },
   finalBtn: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.primary,
     borderRadius: 16,
     paddingHorizontal: 24,
     paddingVertical: 16,
   },
-  finalBtnText: { fontSize: 15, fontWeight: '800', color: Colors.accent },
+  finalBtnText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
 
   footer: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surface,
     padding: 24,
     alignItems: 'center',
     gap: 6,
   },
-  footerText: { fontSize: 11, color: 'rgba(255,255,255,0.4)', textAlign: 'center' },
+  footerText: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'center' },
 });

@@ -63,18 +63,16 @@ export default function UpgradeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
           <Text style={styles.closeText}>✕</Text>
         </TouchableOpacity>
 
         <View style={styles.hero}>
-          <Text style={styles.badge}>PRO</Text>
+          <View style={styles.proBadge}><Text style={styles.proBadgeText}>PRO</Text></View>
           <Text style={styles.title}>Hazte Pro</Text>
-          <Text style={styles.subtitle}>
-            Accede a todas las herramientas para maximizar tus ahorros
-          </Text>
+          <Text style={styles.subtitle}>Accede a todas las herramientas para maximizar tus ahorros</Text>
         </View>
 
         <View style={styles.priceCard}>
@@ -112,7 +110,7 @@ export default function UpgradeScreen() {
         ) : (
           <TouchableOpacity style={styles.cta} onPress={handleUpgrade} disabled={loading}>
             {loading
-              ? <ActivityIndicator color="#FFF" />
+              ? <ActivityIndicator color={Colors.background} />
               : <Text style={styles.ctaText}>Suscribirme por S/ 12/mes</Text>
             }
           </TouchableOpacity>
@@ -130,25 +128,22 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 20, paddingBottom: 48 },
   closeBtn: { alignSelf: 'flex-end', padding: 4, marginBottom: 8 },
-  closeText: { fontSize: 20, color: Colors.textMuted },
+  closeText: { fontSize: 20, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 
   hero: { alignItems: 'center', marginBottom: 24 },
-  badge: {
-    backgroundColor: Colors.accent,
-    color: '#FFF',
-    fontSize: 11,
-    fontWeight: '800',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+  proBadge: {
+    backgroundColor: Colors.primary,
     borderRadius: 20,
-    letterSpacing: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     marginBottom: 12,
   },
-  title: { fontSize: 30, fontWeight: '900', color: Colors.primary, textAlign: 'center' },
-  subtitle: { fontSize: 14, color: Colors.textSecondary, textAlign: 'center', marginTop: 6, lineHeight: 20 },
+  proBadgeText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
+  title: { fontSize: 30, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center' },
+  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', marginTop: 6, lineHeight: 20 },
 
   priceCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
     padding: 24,
     alignItems: 'center',
@@ -156,10 +151,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.primary + '40',
   },
-  price: { fontSize: 48, fontWeight: '900', color: '#FFF' },
-  pricePer: { fontSize: 18, color: 'rgba(255,255,255,0.7)', alignSelf: 'flex-end', marginBottom: 8 },
-  priceSub: { position: 'absolute', bottom: 10, fontSize: 12, color: 'rgba(255,255,255,0.5)' },
+  price: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  pricePer: { fontSize: 18, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, alignSelf: 'flex-end', marginBottom: 10 },
+  priceSub: { position: 'absolute', bottom: 10, fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 
   featuresCard: {
     backgroundColor: Colors.surface,
@@ -169,33 +166,32 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  featuresCardPro: {
-    borderColor: Colors.accent,
-    borderWidth: 2,
-  },
-  featuresTitle: { fontSize: 13, fontWeight: '700', color: Colors.textMuted, marginBottom: 12, textTransform: 'uppercase' },
-  featuresTitlePro: { fontSize: 13, fontWeight: '700', color: Colors.accent, marginBottom: 12, textTransform: 'uppercase' },
+  featuresCardPro: { borderColor: Colors.primary + '60', borderWidth: 2 },
+  featuresTitle: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
+  featuresTitlePro: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
   featureRow: { flexDirection: 'row', gap: 10, marginBottom: 8, alignItems: 'center' },
-  checkFree: { fontSize: 14, color: Colors.textMuted },
-  checkPro: { fontSize: 14, color: Colors.accent, fontWeight: '800' },
-  featureText: { fontSize: 14, color: Colors.textSecondary, flex: 1 },
+  checkFree: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textMuted },
+  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  featureText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1 },
 
   cta: {
-    backgroundColor: Colors.accent,
-    borderRadius: 16,
-    padding: 18,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  ctaText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
-  ctaSecondary: {
     backgroundColor: Colors.primary,
     borderRadius: 16,
     padding: 18,
     alignItems: 'center',
     marginTop: 8,
   },
-  ctaSecondaryText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
-  disclaimer: { fontSize: 11, color: Colors.textMuted, textAlign: 'center', marginTop: 16 },
-  error: { fontSize: 13, color: Colors.danger, textAlign: 'center', marginTop: 8 },
+  ctaText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaSecondary: {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    padding: 18,
+    alignItems: 'center',
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  ctaSecondaryText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  disclaimer: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'center', marginTop: 16 },
+  error: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.danger, textAlign: 'center', marginTop: 8 },
 });

@@ -41,22 +41,22 @@ interface Option {
 function getOptions(months: number): Option[] {
   if (months <= 3) return [
     { label: 'Cuenta de ahorros', trea: 2, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Cuenta de ahorros', steps: ['Abre o usa tu cuenta de ahorros existente en BCP, Interbank o BBVA', 'Configura una transferencia automática el día que cobras tu sueldo', 'No toques este dinero hasta alcanzar la meta'] },
-    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Descarga la app Credifondos (BCP) o entra a interfondos.com.pe', 'Abre tu cuenta en 10 minutos con tu DNI', 'Configura aportes automáticos mensuales', 'Los retiros tardan 1-3 días hábiles'] },
+    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: Colors.riskBajo, category: 'Fondo mutuo', steps: ['Descarga la app Credifondos (BCP) o entra a interfondos.com.pe', 'Abre tu cuenta en 10 minutos con tu DNI', 'Configura aportes automáticos mensuales', 'Los retiros tardan 1-3 días hábiles'] },
   ];
   if (months <= 6) return [
     { label: 'Depósito a plazo 90-180 días', trea: 7.5, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Entra a la app del BCP o Interbank', 'Ve a "Inversiones" → "Depósito a plazo"', 'Elige 90 o 180 días según tu plazo exacto', 'Al vencer, renueva automáticamente hasta llegar a tu meta'] },
     { label: 'CMAC (Caja Municipal)', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Visita una agencia de CMAC Arequipa o CMAC Piura', 'Lleva tu DNI y el monto inicial (desde S/ 250)', 'Abre un depósito a 180 días', 'Renueva al vencimiento añadiendo tu ahorro mensual'] },
-    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Entra a credifondos.com.pe o interfondos.com.pe', 'Crea tu cuenta con DNI en 10 minutos', 'Haz aportes mensuales automáticos', 'Rescata cuando llegues a tu meta (1-3 días hábiles)'] },
+    { label: 'Fondo mutuo conservador', trea: 6, risk: 'Bajo', riskColor: Colors.riskBajo, category: 'Fondo mutuo', steps: ['Entra a credifondos.com.pe o interfondos.com.pe', 'Crea tu cuenta con DNI en 10 minutos', 'Haz aportes mensuales automáticos', 'Rescata cuando llegues a tu meta (1-3 días hábiles)'] },
   ];
   if (months <= 12) return [
     { label: 'CMAC Depósito a plazo', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Ve a una agencia de CMAC Arequipa o CMAC Piura', 'Abre depósito a 360 días (mejor tasa)', 'Al vencer, renueva y añade tus ahorros acumulados', 'Activa la renovación automática para no perder días'] },
-    { label: 'Fondo mutuo conservador', trea: 6.5, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Descarga Credifondos o entra a Interfondos', 'Abre cuenta con tu DNI', 'Configura aporte automático mensual', 'Deja que el interés compuesto trabaje para ti'] },
+    { label: 'Fondo mutuo conservador', trea: 6.5, risk: 'Bajo', riskColor: Colors.riskBajo, category: 'Fondo mutuo', steps: ['Descarga Credifondos o entra a Interfondos', 'Abre cuenta con tu DNI', 'Configura aporte automático mensual', 'Deja que el interés compuesto trabaje para ti'] },
     { label: 'Depósito a plazo BCP/Interbank', trea: 8.5, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Usa la app de tu banco de confianza', 'Elige 360 días para la mejor tasa', 'Renueva automáticamente al vencimiento', 'Acumula tus aportes en cuenta de ahorros y deposita en bloque'] },
   ];
   if (months <= 36) return [
     { label: 'CMAC ladder (escalonado)', trea: 10, risk: 'Muy bajo', riskColor: Colors.accent, category: 'Depósito a plazo', steps: ['Divide tu ahorro en 3 partes iguales', 'Deposita la 1ra a 90 días, 2da a 180 días, 3ra a 360 días en CMAC', 'Al vencer cada tramo, renueva añadiendo tu ahorro mensual', 'Así tienes liquidez parcial cada 3 meses con tasa alta'] },
-    { label: 'Fondo mutuo conservador', trea: 7, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Abre cuenta en Credifondos, Interfondos o BBVA AM', 'Configura aporte automático el día que cobras', 'No rescates ante pequeñas caídas — son temporales', 'Rescata todo al llegar a tu meta'] },
-    { label: 'Mix CMAC 60% + Fondo 40%', trea: 9, risk: 'Bajo', riskColor: '#5DADE2', category: 'Fondo mutuo', steps: ['Abre depósito en CMAC con el 60% de tu ahorro mensual', 'Invierte el 40% restante en fondo mutuo conservador', 'El CMAC da tasa garantizada, el fondo añade potencial extra', 'Revisa el balance cada 6 meses'] },
+    { label: 'Fondo mutuo conservador', trea: 7, risk: 'Bajo', riskColor: Colors.riskBajo, category: 'Fondo mutuo', steps: ['Abre cuenta en Credifondos, Interfondos o BBVA AM', 'Configura aporte automático el día que cobras', 'No rescates ante pequeñas caídas — son temporales', 'Rescata todo al llegar a tu meta'] },
+    { label: 'Mix CMAC 60% + Fondo 40%', trea: 9, risk: 'Bajo', riskColor: Colors.riskBajo, category: 'Fondo mutuo', steps: ['Abre depósito en CMAC con el 60% de tu ahorro mensual', 'Invierte el 40% restante en fondo mutuo conservador', 'El CMAC da tasa garantizada, el fondo añade potencial extra', 'Revisa el balance cada 6 meses'] },
   ];
   return [
     { label: 'Fondo mutuo moderado', trea: 10.5, risk: 'Medio', riskColor: Colors.warning, category: 'Fondo mutuo', steps: ['Abre cuenta en Interfondos, SURA o Credifondos', 'Elige el fondo moderado (mezcla bonos + acciones)', 'Configura aporte automático mensual', 'No retires ante caídas — a 3+ años el mercado siempre sube', 'Rescata gradualmente cuando te acerques a la meta'] },
@@ -92,13 +92,11 @@ export default function CalculadoraScreen() {
   const [mode, setMode] = useState<'interes' | 'meta'>('interes');
   const [selectedOption, setSelectedOption] = useState(0);
 
-  // Modo interés
   const [capital, setCapital] = useState('10000');
   const [trea, setTrea] = useState('8');
   const [months, setMonths] = useState(12);
   const [compound, setCompound] = useState(true);
 
-  // Modo meta
   const [meta, setMeta] = useState('20000');
   const [ahorroActual, setAhorroActual] = useState('0');
   const [goalMonths, setGoalMonths] = useState(24);
@@ -133,13 +131,11 @@ export default function CalculadoraScreen() {
     const totalIntereses = FV - totalAportado;
     const progress = Math.min(100, (PV / FV) * 100);
 
-    // Escenarios ahorro más/menos
     const pmtPlus25 = pmt * 1.25;
     const pmtMinus25 = pmt * 0.75;
     const monthsPlus25 = monthsToReach(FV, PV, pmtPlus25, opt.trea);
     const monthsMinus25 = monthsToReach(FV, PV, pmtMinus25, opt.trea);
 
-    // Gráfico de crecimiento por hitos
     const checkpoints = [0.25, 0.5, 0.75, 1.0].map((pct) => {
       const target = FV * pct;
       const m = monthsToReach(target, PV, pmt, opt.trea);
@@ -153,11 +149,10 @@ export default function CalculadoraScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Calculadora</Text>
 
-        {/* MODE TOGGLE */}
         <View style={styles.modeToggle}>
           <TouchableOpacity
             style={[styles.modeBtn, mode === 'interes' && styles.modeBtnActive]}
@@ -215,7 +210,7 @@ export default function CalculadoraScreen() {
                   <Text style={styles.resultTotalValue}>{fmt2(interesResult.total)}</Text>
                 </View>
                 <View style={styles.separator} />
-                <Text style={styles.realLabel}>📉 Considerando inflación (~3.5% anual)</Text>
+                <Text style={styles.realLabel}>Considerando inflación (~3.5% anual)</Text>
                 <View style={styles.resultRow}>
                   <Text style={styles.resultLabel}>Ganancia real</Text>
                   <Text style={[styles.resultValue, { color: interesResult.gananciaReal >= 0 ? Colors.accent : Colors.danger }]}>
@@ -223,7 +218,7 @@ export default function CalculadoraScreen() {
                   </Text>
                 </View>
                 {interesResult.gananciaReal < 0 && (
-                  <Text style={styles.warning}>⚠️ Con esta tasa pierdes poder adquisitivo frente a la inflación. Busca opciones por encima del 3.5%.</Text>
+                  <Text style={styles.warning}>Con esta tasa pierdes poder adquisitivo frente a la inflación. Busca opciones por encima del 3.5%.</Text>
                 )}
               </View>
             )}
@@ -256,14 +251,12 @@ export default function CalculadoraScreen() {
 
             {metaResult && (
               <>
-                {/* 1. RESULTADO PRINCIPAL */}
                 <View style={styles.metaHero}>
                   <Text style={styles.metaHeroLabel}>Necesitas ahorrar</Text>
                   <Text style={styles.metaHeroAmount}>{fmt(metaResult.pmt)}</Text>
                   <Text style={styles.metaHeroPer}>por mes durante {goalMonths} meses</Text>
                 </View>
 
-                {/* 2. MÚLTIPLES OPCIONES */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>Dónde invertir — elige tu estrategia</Text>
                   <Text style={styles.cardHint}>Toca una opción para ver el plan de acción</Text>
@@ -282,7 +275,7 @@ export default function CalculadoraScreen() {
                         </View>
                       </View>
                       <View style={styles.optionRight}>
-                        <Text style={[styles.optionTrea, selectedOption === i && { color: Colors.accent }]}>{opt.trea}%</Text>
+                        <Text style={[styles.optionTrea, selectedOption === i && { color: Colors.primary }]}>{opt.trea}%</Text>
                         <Text style={styles.optionTreaLabel}>TREA</Text>
                       </View>
                     </TouchableOpacity>
@@ -292,7 +285,6 @@ export default function CalculadoraScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {/* 3. PLAN DE ACCIÓN PASO A PASO */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>Plan de acción — {options[selectedOption]?.label}</Text>
                   {options[selectedOption]?.steps.map((step, i) => (
@@ -305,7 +297,6 @@ export default function CalculadoraScreen() {
                   ))}
                 </View>
 
-                {/* 4. ESCENARIOS */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>¿Qué pasa si ahorro más o menos?</Text>
                   <View style={styles.scenarioRow}>
@@ -327,7 +318,6 @@ export default function CalculadoraScreen() {
                   </View>
                 </View>
 
-                {/* 5. GRÁFICO DE CRECIMIENTO */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>Tu camino a {fmt(parseFloat(meta))}</Text>
                   <Text style={styles.cardHint}>Hitos del recorrido</Text>
@@ -338,7 +328,7 @@ export default function CalculadoraScreen() {
                         <Text style={styles.checkpointAmount}>{fmt(cp.amount)}</Text>
                       </View>
                       <View style={styles.checkpointBarBg}>
-                        <View style={[styles.checkpointBarFill, { width: `${cp.pct * 100}%` as any, backgroundColor: cp.pct === 1 ? Colors.accent : Colors.primaryLight }]} />
+                        <View style={[styles.checkpointBarFill, { width: `${cp.pct * 100}%` as any, backgroundColor: cp.pct === 1 ? Colors.primary : Colors.primaryLight }]} />
                       </View>
                       <Text style={styles.checkpointMonths}>mes {cp.months}</Text>
                     </View>
@@ -358,7 +348,6 @@ export default function CalculadoraScreen() {
                   )}
                 </View>
 
-                {/* DESGLOSE */}
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>Desglose al llegar a la meta</Text>
                   <View style={styles.resultRow}>
@@ -390,92 +379,187 @@ function Label({ text }: { text: string }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 16, paddingBottom: 40 },
-  title: { fontSize: 24, fontWeight: '800', color: Colors.primary, marginBottom: 12 },
-  subtitle: { fontSize: 14, color: Colors.textSecondary, marginBottom: 16 },
+  title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 12 },
+  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 16 },
 
-  modeToggle: { flexDirection: 'row', backgroundColor: Colors.surface, borderRadius: 14, padding: 4, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
+  modeToggle: {
+    flexDirection: 'row',
+    backgroundColor: Colors.surface,
+    borderRadius: 14,
+    padding: 4,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   modeBtn: { flex: 1, paddingVertical: 10, borderRadius: 10, alignItems: 'center' },
   modeBtnActive: { backgroundColor: Colors.primary },
-  modeBtnText: { fontSize: 13, fontWeight: '600', color: Colors.textMuted },
-  modeBtnTextActive: { color: '#FFF', fontWeight: '700' },
+  modeBtnText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted },
+  modeBtnTextActive: { fontFamily: 'Inter_700Bold', color: Colors.background },
 
-  card: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: Colors.border },
-  cardTitle: { fontSize: 15, fontWeight: '700', color: Colors.textPrimary, marginBottom: 4 },
-  cardHint: { fontSize: 12, color: Colors.textMuted, marginBottom: 12 },
-  label: { fontSize: 13, fontWeight: '600', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
-  input: { backgroundColor: Colors.background, borderRadius: 10, padding: 12, fontSize: 18, fontWeight: '700', color: Colors.textPrimary, borderWidth: 1, borderColor: Colors.border },
+  card: {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  cardTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 4 },
+  cardHint: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 12 },
+  label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
+  input: {
+    backgroundColor: Colors.surfaceHigh,
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 18,
+    fontFamily: 'SpaceGrotesk_700Bold',
+    color: Colors.textPrimary,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   presets: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  preset: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, backgroundColor: Colors.background, borderWidth: 1, borderColor: Colors.border },
+  preset: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 20,
+    backgroundColor: Colors.surfaceHigh,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   presetActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  presetText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '500' },
-  presetTextActive: { color: '#FFF', fontWeight: '700' },
+  presetText: { fontSize: 13, fontFamily: 'Inter_500Medium', color: Colors.textSecondary },
+  presetTextActive: { fontFamily: 'Inter_700Bold', color: Colors.background },
   switchRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 },
-  switchLabel: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary },
-  toggle: { width: 48, height: 28, borderRadius: 14, backgroundColor: Colors.border, justifyContent: 'center', padding: 2 },
-  toggleOn: { backgroundColor: Colors.accent },
-  toggleThumb: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFF', shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
+  switchLabel: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary },
+  toggle: {
+    width: 48,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.border,
+    justifyContent: 'center',
+    padding: 2,
+  },
+  toggleOn: { backgroundColor: Colors.primary },
+  toggleThumb: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   toggleThumbOn: { alignSelf: 'flex-end' },
-  switchHint: { fontSize: 11, color: Colors.textMuted, marginTop: 4 },
+  switchHint: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 4 },
 
-  resultsCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 2, borderColor: Colors.accent + '40' },
-  resultsTitle: { fontSize: 16, fontWeight: '800', color: Colors.textPrimary, marginBottom: 12 },
+  resultsCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: Colors.primary + '40',
+  },
+  resultsTitle: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 12 },
   resultRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  resultLabel: { fontSize: 14, color: Colors.textSecondary },
-  resultValue: { fontSize: 14, fontWeight: '700', color: Colors.textPrimary },
+  resultLabel: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
+  resultValue: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
   resultTotal: { marginTop: 4 },
-  resultTotalLabel: { fontSize: 16, fontWeight: '800', color: Colors.textPrimary },
-  resultTotalValue: { fontSize: 20, fontWeight: '800', color: Colors.primary },
+  resultTotalLabel: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
+  resultTotalValue: { fontSize: 20, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
   separator: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
-  realLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 8 },
-  warning: { fontSize: 12, color: Colors.danger, marginTop: 6, lineHeight: 18 },
-  infoCard: { backgroundColor: Colors.primaryLight + '15', borderRadius: 12, padding: 14, borderLeftWidth: 3, borderLeftColor: Colors.primaryLight },
-  infoTitle: { fontSize: 13, fontWeight: '700', color: Colors.primary, marginBottom: 6 },
-  infoText: { fontSize: 12, color: Colors.textSecondary, lineHeight: 18 },
+  realLabel: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 8 },
+  warning: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.danger, marginTop: 6, lineHeight: 18 },
+  infoCard: {
+    backgroundColor: Colors.surfaceHigh,
+    borderRadius: 12,
+    padding: 14,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary,
+  },
+  infoTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 6 },
+  infoText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
 
-  metaHero: { backgroundColor: Colors.primary, borderRadius: 20, padding: 24, alignItems: 'center', marginBottom: 14 },
-  metaHeroLabel: { fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
-  metaHeroAmount: { fontSize: 48, fontWeight: '900', color: '#A8E6CF', marginTop: 4 },
-  metaHeroPer: { fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 4 },
+  metaHero: {
+    backgroundColor: Colors.surfaceHigh,
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: Colors.primary + '40',
+  },
+  metaHeroLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
+  metaHeroAmount: { fontSize: 48, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginTop: 4 },
+  metaHeroPer: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4 },
 
-  optionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 8, backgroundColor: Colors.background },
-  optionRowActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '08' },
+  optionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: 8,
+    backgroundColor: Colors.surfaceHigh,
+  },
+  optionRowActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '15' },
   optionLeft: { flex: 1 },
-  optionName: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary, marginBottom: 4 },
-  optionNameActive: { color: Colors.primary, fontWeight: '700' },
+  optionName: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, marginBottom: 4 },
+  optionNameActive: { color: Colors.primary, fontFamily: 'Inter_700Bold' },
   optionMeta: { flexDirection: 'row', gap: 6 },
   riskBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
-  riskText: { fontSize: 11, fontWeight: '700' },
+  riskText: { fontSize: 11, fontFamily: 'Inter_700Bold' },
   optionRight: { alignItems: 'flex-end' },
-  optionTrea: { fontSize: 20, fontWeight: '900', color: Colors.textMuted },
-  optionTreaLabel: { fontSize: 10, color: Colors.textMuted },
+  optionTrea: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textMuted },
+  optionTreaLabel: { fontSize: 10, fontFamily: 'Inter_500Medium', color: Colors.textMuted },
   verComparadorBtn: { marginTop: 8, padding: 10, alignItems: 'center' },
-  verComparadorText: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
+  verComparadorText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.primary },
 
   stepRow: { flexDirection: 'row', gap: 12, marginBottom: 12, alignItems: 'flex-start' },
-  stepNum: { width: 26, height: 26, borderRadius: 13, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },
-  stepNumText: { fontSize: 12, fontWeight: '800', color: '#FFF' },
-  stepText: { fontSize: 13, color: Colors.textSecondary, lineHeight: 20, flex: 1 },
+  stepNum: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: Colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    marginTop: 1,
+  },
+  stepNumText: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.background },
+  stepText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20, flex: 1 },
 
   scenarioRow: { flexDirection: 'row', gap: 8 },
-  scenarioBox: { flex: 1, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, padding: 10, alignItems: 'center', backgroundColor: Colors.background },
-  scenarioCurrent: { borderColor: Colors.primary, backgroundColor: Colors.primary + '08' },
-  scenarioLabel: { fontSize: 11, color: Colors.textMuted, marginBottom: 4, fontWeight: '600' },
-  scenarioAmount: { fontSize: 14, fontWeight: '800', textAlign: 'center' },
-  scenarioMonths: { fontSize: 10, color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
+  scenarioBox: {
+    flex: 1,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 10,
+    alignItems: 'center',
+    backgroundColor: Colors.surfaceHigh,
+  },
+  scenarioCurrent: { borderColor: Colors.primary, backgroundColor: Colors.primary + '15' },
+  scenarioLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted, marginBottom: 4 },
+  scenarioAmount: { fontSize: 14, fontFamily: 'SpaceGrotesk_700Bold', textAlign: 'center' },
+  scenarioMonths: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
 
   checkpointRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
   checkpointLeft: { width: 68 },
-  checkpointPct: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary },
-  checkpointAmount: { fontSize: 11, color: Colors.textMuted },
+  checkpointPct: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
+  checkpointAmount: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
   checkpointBarBg: { flex: 1, height: 10, backgroundColor: Colors.border, borderRadius: 5, overflow: 'hidden' },
   checkpointBarFill: { height: 10, borderRadius: 5 },
-  checkpointMonths: { fontSize: 11, color: Colors.textMuted, width: 44, textAlign: 'right' },
+  checkpointMonths: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, width: 44, textAlign: 'right' },
 
   progressBox: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Colors.border },
-  progressLabel: { fontSize: 12, fontWeight: '600', color: Colors.textSecondary, marginBottom: 6 },
+  progressLabel: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 6 },
   progressBarBg: { height: 10, backgroundColor: Colors.border, borderRadius: 5, marginBottom: 6, overflow: 'hidden' },
-  progressBarFill: { height: 10, backgroundColor: Colors.accent, borderRadius: 5 },
+  progressBarFill: { height: 10, backgroundColor: Colors.primary, borderRadius: 5 },
   progressLabels: { flexDirection: 'row', justifyContent: 'space-between' },
-  progressCurrent: { fontSize: 12, fontWeight: '700', color: Colors.accent },
-  progressGoal: { fontSize: 12, color: Colors.textMuted },
+  progressCurrent: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  progressGoal: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 });

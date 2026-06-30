@@ -9,7 +9,7 @@ const MAX_RATE = 13;
 
 const RISK_COLORS: Record<string, string> = {
   'muy bajo': Colors.riskLow,
-  bajo: '#5DADE2',
+  bajo: Colors.riskBajo,
   medio: Colors.riskMedium,
   alto: Colors.riskHigh,
 };
@@ -26,16 +26,14 @@ const sorted = [...SAVINGS_OPTIONS].sort((a, b) => b.rateMax - a.rateMax);
 export default function HistorialScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
-        {/* Encabezado */}
         <View style={styles.header}>
           <Text style={styles.title}>Ranking de tasas</Text>
           <Text style={styles.subtitle}>Rendimiento anual por producto de ahorro en Perú</Text>
         </View>
 
-        {/* Leyenda */}
         <View style={styles.legend}>
           <Text style={styles.legendTitle}>Riesgo</Text>
           <View style={styles.legendRow}>
@@ -48,7 +46,6 @@ export default function HistorialScreen() {
           </View>
         </View>
 
-        {/* Barras */}
         <View style={styles.chartBlock}>
           <View style={styles.chartScaleRow}>
             {[0, 3, 6, 9, 12].map((v) => (
@@ -65,55 +62,31 @@ export default function HistorialScreen() {
 
             return (
               <View key={opt.id} style={[styles.row, i % 2 === 0 && styles.rowAlt]}>
-                {/* Etiqueta izquierda */}
                 <View style={styles.rowLabel}>
                   <Text style={styles.rowInstitution} numberOfLines={1}>{opt.institution}</Text>
                   <Text style={styles.rowName} numberOfLines={1}>{opt.name}</Text>
                 </View>
-
-                {/* Barra */}
                 <View style={styles.barContainer}>
-                  {/* Líneas de guía */}
                   {[3, 6, 9, 12].map((v) => (
                     <View
                       key={v}
                       style={[styles.gridLine, { left: `${(v / MAX_RATE) * 100}%` as any }]}
                     />
                   ))}
-
-                  {/* Barra base (rateMin) */}
-                  <View
-                    style={[
-                      styles.barBase,
-                      { width: `${barMin}%`, backgroundColor: color, opacity: 0.35 },
-                    ]}
-                  />
-                  {/* Extensión (rateMin → rateMax) */}
-                  <View
-                    style={[
-                      styles.barExt,
-                      { left: `${barMin}%`, width: `${barExt}%`, backgroundColor: color },
-                    ]}
-                  />
+                  <View style={[styles.barBase, { width: `${barMin}%`, backgroundColor: color, opacity: 0.3 }]} />
+                  <View style={[styles.barExt, { left: `${barMin}%`, width: `${barExt}%`, backgroundColor: color }]} />
                 </View>
-
-                {/* Tasa y riesgo */}
                 <View style={styles.rowRight}>
                   <Text style={[styles.rateText, { color }]}>
-                    {opt.rateMin === opt.rateMax
-                      ? `${opt.rateMin}%`
-                      : `${opt.rateMin}–${opt.rateMax}%`}
+                    {opt.rateMin === opt.rateMax ? `${opt.rateMin}%` : `${opt.rateMin}–${opt.rateMax}%`}
                   </Text>
-                  {opt.rateLabel && (
-                    <Text style={styles.rateLabel}>{opt.rateLabel}</Text>
-                  )}
+                  {opt.rateLabel && <Text style={styles.rateLabel}>{opt.rateLabel}</Text>}
                 </View>
               </View>
             );
           })}
         </View>
 
-        {/* Notas */}
         <View style={styles.notes}>
           <Text style={styles.notesTitle}>¿Cómo leer este gráfico?</Text>
           <Text style={styles.notesText}>
@@ -124,7 +97,6 @@ export default function HistorialScreen() {
           </Text>
         </View>
 
-        {/* Definición rápida TREA */}
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>¿Qué es la TREA?</Text>
           <Text style={styles.infoText}>
@@ -142,13 +114,15 @@ const styles = StyleSheet.create({
   scroll: { paddingBottom: 40 },
 
   header: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     paddingHorizontal: 16,
     paddingTop: 20,
     paddingBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
-  title: { fontSize: 22, fontWeight: '900', color: '#FFF' },
-  subtitle: { fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 4 },
+  title: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  subtitle: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4 },
 
   legend: {
     backgroundColor: Colors.surface,
@@ -157,11 +131,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  legendTitle: { fontSize: 11, fontWeight: '700', color: Colors.textMuted, textTransform: 'uppercase', marginBottom: 6 },
+  legendTitle: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 },
   legendRow: { flexDirection: 'row', gap: 16 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { fontSize: 12, color: Colors.textSecondary },
+  legendText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
 
   chartBlock: { backgroundColor: Colors.surface, marginTop: 8, paddingBottom: 8 },
 
@@ -176,6 +150,7 @@ const styles = StyleSheet.create({
   scaleLabel: {
     position: 'absolute',
     fontSize: 10,
+    fontFamily: 'Inter_400Regular',
     color: Colors.textMuted,
     transform: [{ translateX: -10 }],
   },
@@ -187,11 +162,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     minHeight: 54,
   },
-  rowAlt: { backgroundColor: '#F7FAFC' },
+  rowAlt: { backgroundColor: Colors.surfaceHigh },
 
   rowLabel: { width: 98, paddingRight: 8 },
-  rowInstitution: { fontSize: 11, fontWeight: '800', color: Colors.textPrimary },
-  rowName: { fontSize: 10, color: Colors.textMuted, marginTop: 1 },
+  rowInstitution: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
+  rowName: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 1 },
 
   barContainer: {
     flex: 1,
@@ -206,40 +181,27 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 1,
-    backgroundColor: 'rgba(255,255,255,0.5)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
-  barBase: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    borderRadius: 4,
-  },
-  barExt: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    borderRadius: 4,
-  },
+  barBase: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 4 },
+  barExt: { position: 'absolute', top: 0, bottom: 0, borderRadius: 4 },
 
   rowRight: { width: 62, paddingLeft: 8, alignItems: 'flex-end' },
-  rateText: { fontSize: 12, fontWeight: '800' },
-  rateLabel: { fontSize: 9, color: Colors.textMuted, textAlign: 'right' },
+  rateText: { fontSize: 12, fontFamily: 'SpaceGrotesk_700Bold' },
+  rateLabel: { fontSize: 9, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'right' },
 
-  notes: {
-    backgroundColor: Colors.surface,
-    marginTop: 8,
-    padding: 16,
-  },
-  notesTitle: { fontSize: 13, fontWeight: '700', color: Colors.textPrimary, marginBottom: 8 },
-  notesText: { fontSize: 12, color: Colors.textSecondary, lineHeight: 20 },
+  notes: { backgroundColor: Colors.surface, marginTop: 8, padding: 16 },
+  notesTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 8 },
+  notesText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20 },
 
   infoCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surfaceHigh,
     margin: 16,
     borderRadius: 14,
     padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.primary + '30',
   },
-  infoTitle: { fontSize: 14, fontWeight: '800', color: '#FFF', marginBottom: 6 },
-  infoText: { fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 20 },
+  infoTitle: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 6 },
+  infoText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20 },
 });
