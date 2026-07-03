@@ -63,7 +63,7 @@ export default function UpgradeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
           <Text style={styles.closeText}>✕</Text>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
 
   hero: { alignItems: 'center', marginBottom: 24 },
   proBadge: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.highlightDark,
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 4,
@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 4,
     borderWidth: 1,
-    borderColor: Colors.primary + '40',
+    borderColor: Colors.highlight + '40',
   },
-  price: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  price: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.highlightDark },
   pricePer: { fontSize: 18, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, alignSelf: 'flex-end', marginBottom: 10 },
   priceSub: { position: 'absolute', bottom: 10, fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 
@@ -166,12 +166,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  featuresCardPro: { borderColor: Colors.primary + '60', borderWidth: 2 },
+  featuresCardPro: { borderColor: Colors.highlight + '60', borderWidth: 2 },
   featuresTitle: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
-  featuresTitlePro: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
+  featuresTitlePro: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.highlightDark, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
   featureRow: { flexDirection: 'row', gap: 10, marginBottom: 8, alignItems: 'center' },
   checkFree: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textMuted },
-  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.highlightDark },
   featureText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1 },
 
   cta: {

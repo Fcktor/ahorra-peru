@@ -64,7 +64,7 @@ export default function ComparadorScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}

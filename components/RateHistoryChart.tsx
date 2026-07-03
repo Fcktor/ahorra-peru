@@ -73,10 +73,10 @@ function MiniLineChart({ series }: { series: SeriesConfig }) {
                 strokeWidth={1.5}
               />
             ))}
-            <SvgText x={2} y={PADDING_TOP - 4} fill={Colors.textMuted} fontSize={9}>
+            <SvgText x={2} y={PADDING_TOP - 4} fill={Colors.textSecondary} fontSize={9}>
               {max.toFixed(2)}%
             </SvgText>
-            <SvgText x={2} y={PADDING_TOP + innerHeight + 12} fill={Colors.textMuted} fontSize={9}>
+            <SvgText x={2} y={PADDING_TOP + innerHeight + 12} fill={Colors.textSecondary} fontSize={9}>
               {min.toFixed(2)}%
             </SvgText>
           </Svg>
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
   chartCurrent: { fontSize: 14, fontFamily: 'SpaceGrotesk_700Bold' },
 
   axisRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 2 },
-  axisLabel: { fontSize: 9, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  axisLabel: { fontSize: 9, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
   axisLabelHidden: { opacity: 0 },
 
-  source: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
+  source: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4, textAlign: 'center' },
 });

@@ -43,7 +43,7 @@ export default function PagoExitosoScreen() {
       <View style={styles.center}>
         {checking ? (
           <>
-            <ActivityIndicator size="large" color={Colors.accent} />
+            <ActivityIndicator size="large" color={Colors.primary} />
             <Text style={styles.checking}>Verificando tu pago...</Text>
             <Text style={styles.sub}>Esto toma unos segundos</Text>
           </>
@@ -79,15 +79,15 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
   icon: { fontSize: 64, marginBottom: 20 },
-  checking: { fontSize: 18, fontWeight: '700', color: Colors.textPrimary, marginTop: 20 },
-  title: { fontSize: 28, fontWeight: '900', color: Colors.primary, textAlign: 'center', marginBottom: 12 },
-  sub: { fontSize: 13, color: Colors.textMuted, marginTop: 8 },
-  body: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
+  checking: { fontSize: 18, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginTop: 20 },
+  title: { fontSize: 28, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, textAlign: 'center', marginBottom: 12 },
+  sub: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 8 },
+  body: { fontSize: 15, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
   btn: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 40,
   },
-  btnText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
+  btnText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
 });

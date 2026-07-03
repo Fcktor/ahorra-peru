@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginVertical: 6,
     borderWidth: 1,
-    borderColor: Colors.primary + '40',
+    borderColor: Colors.highlight + '40',
     gap: 10,
   },
   icon: { fontSize: 20 },

@@ -45,7 +45,7 @@ export default function CompararScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <Stack.Screen options={{ title: 'Comparar', headerBackTitle: 'Volver', headerTintColor: Colors.primary }} />
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
         {/* CABECERA */}

@@ -27,7 +27,7 @@ const sorted = [...SAVINGS_OPTIONS].sort((a, b) => b.rateMax - a.rateMax);
 export default function HistorialScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
         <View style={styles.header}>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 1,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(22,33,27,0.12)',
   },
   barBase: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 4 },
   barExt: { position: 'absolute', top: 0, bottom: 0, borderRadius: 4 },

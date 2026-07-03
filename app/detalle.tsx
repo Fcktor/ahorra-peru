@@ -41,7 +41,7 @@ export default function DetalleScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <Stack.Screen options={{ title: option.institution }} />
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
         <View style={styles.heroCard}>

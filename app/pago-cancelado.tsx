@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
   icon: { fontSize: 64, marginBottom: 20 },
-  title: { fontSize: 28, fontWeight: '900', color: Colors.primary, textAlign: 'center', marginBottom: 12 },
-  body: { fontSize: 15, color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
+  title: { fontSize: 28, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, textAlign: 'center', marginBottom: 12 },
+  body: { fontSize: 15, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
   btnPrimary: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 40,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  btnPrimaryText: { fontSize: 16, fontWeight: '800', color: '#FFF' },
+  btnPrimaryText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
   btnSecondary: {
     borderRadius: 16,
     paddingVertical: 14,
@@ -48,5 +48,5 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  btnSecondaryText: { fontSize: 15, color: Colors.textMuted, fontWeight: '600' },
+  btnSecondaryText: { fontSize: 15, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
 });

@@ -87,7 +87,7 @@ export default function PlanScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Mi Plan de Ahorro</Text>
         <Text style={styles.subtitle}>Personaliza tu estrategia y ve crecer tu dinero</Text>
