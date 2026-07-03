@@ -4,6 +4,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/colors';
 import { SAVINGS_OPTIONS } from '@/constants/savings';
+import { RateHistoryChart } from '@/components/RateHistoryChart';
 
 const MAX_RATE = 13;
 
@@ -33,6 +34,8 @@ export default function HistorialScreen() {
           <Text style={styles.title}>Ranking de tasas</Text>
           <Text style={styles.subtitle}>Rendimiento anual por producto de ahorro en Perú</Text>
         </View>
+
+        <RateHistoryChart />
 
         <View style={styles.legend}>
           <Text style={styles.legendTitle}>Riesgo</Text>
