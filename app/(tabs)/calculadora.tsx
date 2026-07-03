@@ -408,9 +408,10 @@ const styles = StyleSheet.create({
   cardHint: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 12 },
   label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
   input: {
-    backgroundColor: Colors.surfaceHigh,
+    backgroundColor: Colors.surface,
     borderRadius: 10,
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
     fontSize: 18,
     fontFamily: 'SpaceGrotesk_700Bold',
     color: Colors.textPrimary,

@@ -68,6 +68,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="tarjetas"
+        options={{
+          title: 'Tarjetas',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="card-outline" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

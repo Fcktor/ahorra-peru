@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   cardHint: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 12 },
 
   label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 6, marginTop: 10 },
-  input: { backgroundColor: Colors.surfaceHigh, borderRadius: 10, padding: 12, fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, borderWidth: 1, borderColor: Colors.border },
+  input: { backgroundColor: Colors.surface, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, borderWidth: 1, borderColor: Colors.border },
 
   disponibleBox: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: Colors.accent + '15', borderRadius: 10, padding: 12, marginTop: 12 },
   disponibleLabel: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.accent },
