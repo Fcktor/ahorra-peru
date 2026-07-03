@@ -1,29 +1,82 @@
-import React from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
+  Pressable,
   StatusBar,
+  Animated,
+  Easing,
+  useWindowDimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
+import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
 
+const GLASS = 'rgba(255,255,255,0.03)';
+const GLASS_BORDER = 'rgba(255,255,255,0.08)';
+const HAIRLINE = 'rgba(255,255,255,0.07)';
+const EASE = Easing.bezier(0.32, 0.72, 0, 1);
+
 const FEATURES = [
-  { icon: '📊', title: 'Compara tasas en tiempo real', desc: 'Depósitos a plazo, fondos mutuos, CTS y más. Datos actualizados del BCRP.' },
-  { icon: '🧮', title: 'Calculadora de intereses', desc: 'Simula cuánto ganarás con cualquier monto, tasa y plazo.' },
-  { icon: '📈', title: 'Tu plan de ahorro personalizado', desc: 'Estrategia en capas según tu fase financiera. Fondo de emergencia primero.' },
-  { icon: '📚', title: 'Glosario financiero', desc: 'TREA, FSD, fondos mutuos... todo explicado en simple.' },
+  { icon: 'stats-chart-outline' as const, title: 'Compara tasas en tiempo real', desc: 'Depósitos a plazo, fondos mutuos, CTS y más. Datos actualizados del BCRP.' },
+  { icon: 'calculator-outline' as const, title: 'Calculadora de intereses', desc: 'Simula cuánto ganarás con cualquier monto, tasa y plazo.' },
+  { icon: 'trending-up-outline' as const, title: 'Tu plan de ahorro personalizado', desc: 'Estrategia en capas según tu fase financiera. Fondo de emergencia primero.' },
+  { icon: 'book-outline' as const, title: 'Glosario financiero', desc: 'TREA, FSD, fondos mutuos... todo explicado en simple.' },
 ];
 
 const INSTITUTIONS = ['BCP', 'Interbank', 'BBVA', 'CMAC Arequipa', 'Credifondos', 'Interfondos', 'AFP Habitat', 'Scotiabank'];
 
+function PressScale({
+  children,
+  onPress,
+  style,
+}: {
+  children: ReactNode;
+  onPress: () => void;
+  style?: any;
+}) {
+  const scale = useRef(new Animated.Value(1)).current;
+  const press = (to: number) =>
+    Animated.spring(scale, { toValue: to, useNativeDriver: true, speed: 40, bounciness: 6 }).start();
+
+  return (
+    <Pressable onPress={onPress} onPressIn={() => press(0.97)} onPressOut={() => press(1)} style={style}>
+      <Animated.View style={{ transform: [{ scale }] }}>{children}</Animated.View>
+    </Pressable>
+  );
+}
+
+function useCascade(count: number, stagger = 90) {
+  const values = useRef(Array.from({ length: count }, () => new Animated.Value(0))).current;
+  useEffect(() => {
+    Animated.stagger(
+      stagger,
+      values.map((v) => Animated.timing(v, { toValue: 1, duration: 700, easing: EASE, useNativeDriver: true }))
+    ).start();
+  }, []);
+  return values;
+}
+
+function reveal(v: Animated.Value) {
+  return {
+    opacity: v,
+    transform: [{ translateY: v.interpolate({ inputRange: [0, 1], outputRange: [18, 0] }) }],
+  };
+}
+
 export default function LandingScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { width } = useWindowDimensions();
+  const twoCols = width >= 480;
+
+  const cascade = useCascade(5);
 
   const handleCTA = () => {
     if (user) router.replace('/');
@@ -33,51 +86,70 @@ export default function LandingScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
-        {/* NAV */}
-        <View style={styles.nav}>
-          <Text style={styles.navLogo}>AhorraPeru</Text>
-          <TouchableOpacity onPress={() => router.push('/login')}>
-            <Text style={styles.navLink}>{user ? 'Ir a la app →' : 'Iniciar sesión'}</Text>
-          </TouchableOpacity>
-        </View>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
         {/* HERO */}
         <View style={styles.hero}>
-          <View style={styles.heroBadge}>
-            <Text style={styles.heroBadgeText}>Datos reales del BCRP</Text>
-          </View>
-          <Text style={styles.heroTitle}>
+          <View style={[styles.orb, styles.orbGold, styles.noEvents]} />
+          <View style={[styles.orb, styles.orbBlue, styles.noEvents]} />
+
+          <Animated.View style={reveal(cascade[0])}>
+            <View style={styles.heroBadge}>
+              <Ionicons name="sparkles-outline" size={12} color={Colors.primary} />
+              <Text style={styles.heroBadgeText}>Datos reales del BCRP</Text>
+            </View>
+          </Animated.View>
+
+          <Animated.Text style={[styles.heroTitle, reveal(cascade[1])]}>
             ¿Dónde hacer{'\n'}crecer tus soles?
-          </Text>
-          <Text style={styles.heroSub}>
+          </Animated.Text>
+
+          <Animated.Text style={[styles.heroSub, reveal(cascade[2])]}>
             Compara tasas de bancos, cajas y fondos mutuos en Perú.
             Toma decisiones financieras con información real, no suposiciones.
-          </Text>
-          <TouchableOpacity style={styles.heroCTA} onPress={handleCTA}>
-            <Text style={styles.heroCTAText}>Empezar gratis →</Text>
-          </TouchableOpacity>
-          <Text style={styles.heroNote}>Sin tarjeta de crédito. Siempre gratis para empezar.</Text>
+          </Animated.Text>
+
+          <Animated.View style={reveal(cascade[3])}>
+            <PressScale onPress={handleCTA} style={styles.ctaWrap}>
+              <LinearGradient
+                colors={[Colors.primary, Colors.primaryLight]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.heroCTA}
+              >
+                <Text style={styles.heroCTAText}>Empezar gratis</Text>
+                <View style={styles.ctaIcon}>
+                  <Ionicons name="arrow-forward" size={16} color={Colors.background} />
+                </View>
+              </LinearGradient>
+            </PressScale>
+            <Text style={styles.heroNote}>Sin tarjeta de crédito. Siempre gratis para empezar.</Text>
+          </Animated.View>
         </View>
 
-        {/* STATS */}
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNum}>8+</Text>
-            <Text style={styles.statLabel}>Opciones de ahorro</Text>
+        {/* STATS — double bezel */}
+        <Animated.View style={[styles.bezelOuter, styles.statsOuter, reveal(cascade[4])]}>
+          <View style={styles.bezelInner}>
+            <View style={styles.hairline} />
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={styles.statNum}>8+</Text>
+                <Text style={styles.statLabel}>Opciones de ahorro</Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={styles.statNum}>12%</Text>
+                <Text style={styles.statLabel}>Tasa máxima TREA</Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={styles.statNum}>100%</Text>
+                <Text style={styles.statLabel}>Datos del BCRP</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={styles.statNum}>12%</Text>
-            <Text style={styles.statLabel}>Tasa máxima TREA</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={styles.statNum}>100%</Text>
-            <Text style={styles.statLabel}>Datos del BCRP</Text>
-          </View>
-        </View>
+        </Animated.View>
 
         {/* INSTITUCIONES */}
         <View style={styles.section}>
@@ -91,64 +163,96 @@ export default function LandingScreen() {
           </View>
         </View>
 
-        {/* FEATURES */}
+        {/* FEATURES — bento */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Todo lo que necesitas</Text>
-          {FEATURES.map((f) => (
-            <View key={f.title} style={styles.featureCard}>
-              <Text style={styles.featureIcon}>{f.icon}</Text>
-              <View style={styles.featureText}>
+          <View style={styles.featuresGrid}>
+            {FEATURES.map((f) => (
+              <View key={f.title} style={[styles.featureCard, { width: twoCols ? '48%' : '100%' }]}>
+                <View style={styles.featureIconCircle}>
+                  <Ionicons name={f.icon} size={20} color={Colors.primary} />
+                </View>
                 <Text style={styles.featureTitle}>{f.title}</Text>
                 <Text style={styles.featureDesc}>{f.desc}</Text>
               </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
         {/* PRICING */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Planes</Text>
 
-          <View style={styles.pricingCard}>
-            <Text style={styles.planName}>Gratis</Text>
-            <Text style={styles.planPrice}>S/ 0<Text style={styles.planPer}>/mes</Text></Text>
-            {['Comparador de tasas', 'Calculadora', 'Mi Plan básico', 'Glosario'].map((f) => (
-              <View key={f} style={styles.planFeatureRow}>
-                <Text style={styles.checkFree}>✓</Text>
-                <Text style={styles.planFeatureText}>{f}</Text>
-              </View>
-            ))}
-            <TouchableOpacity style={styles.planBtnFree} onPress={handleCTA}>
-              <Text style={styles.planBtnFreeText}>Empezar gratis</Text>
-            </TouchableOpacity>
+          <View style={[styles.bezelOuter, styles.pricingOuter]}>
+            <View style={styles.bezelInner}>
+              <View style={styles.hairline} />
+              <Text style={styles.planName}>Gratis</Text>
+              <Text style={styles.planPrice}>S/ 0<Text style={styles.planPer}>/mes</Text></Text>
+              {['Comparador de tasas', 'Calculadora', 'Mi Plan básico', 'Glosario'].map((f) => (
+                <View key={f} style={styles.planFeatureRow}>
+                  <Ionicons name="checkmark" size={16} color={Colors.textMuted} />
+                  <Text style={styles.planFeatureText}>{f}</Text>
+                </View>
+              ))}
+              <PressScale onPress={handleCTA} style={styles.planBtnFree}>
+                <Text style={styles.planBtnFreeText}>Empezar gratis</Text>
+              </PressScale>
+            </View>
           </View>
 
-          <View style={[styles.pricingCard, styles.pricingCardPro]}>
-            <View style={styles.proBadge}><Text style={styles.proBadgeText}>PRO</Text></View>
-            <Text style={[styles.planName, { color: Colors.textPrimary }]}>Pro</Text>
-            <Text style={[styles.planPrice, { color: Colors.primary }]}>S/ 12<Text style={[styles.planPer, { color: Colors.textMuted }]}>/mes</Text></Text>
-            {['Todo lo de gratis', 'Guardar múltiples planes', 'Alertas de tasa', 'Historial de tasas', 'Exportar plan a PDF'].map((f) => (
-              <View key={f} style={styles.planFeatureRow}>
-                <Text style={styles.checkPro}>✓</Text>
-                <Text style={[styles.planFeatureText, { color: Colors.textSecondary }]}>{f}</Text>
+          <View style={[styles.bezelOuter, styles.pricingOuter, styles.pricingOuterPro]}>
+            <View style={[styles.orb, styles.orbGoldSmall, styles.noEvents]} />
+            <View style={[styles.bezelInner, styles.bezelInnerPro]}>
+              <View style={styles.hairline} />
+              <View style={styles.proBadge}>
+                <Text style={styles.proBadgeText}>PRO</Text>
               </View>
-            ))}
-            <TouchableOpacity style={styles.planBtnPro} onPress={() => router.push('/upgrade')}>
-              <Text style={styles.planBtnProText}>Suscribirme</Text>
-            </TouchableOpacity>
+              <Text style={[styles.planName, { color: Colors.textPrimary }]}>Pro</Text>
+              <Text style={[styles.planPrice, { color: Colors.primary }]}>S/ 12<Text style={[styles.planPer, { color: Colors.textMuted }]}>/mes</Text></Text>
+              {['Todo lo de gratis', 'Guardar múltiples planes', 'Alertas de tasa', 'Historial de tasas', 'Exportar plan a PDF'].map((f) => (
+                <View key={f} style={styles.planFeatureRow}>
+                  <Ionicons name="checkmark" size={16} color={Colors.primary} />
+                  <Text style={[styles.planFeatureText, { color: Colors.textSecondary }]}>{f}</Text>
+                </View>
+              ))}
+              <PressScale onPress={() => router.push('/upgrade')} style={styles.ctaWrap}>
+                <LinearGradient
+                  colors={[Colors.primary, Colors.primaryLight]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.heroCTA}
+                >
+                  <Text style={styles.heroCTAText}>Suscribirme</Text>
+                  <View style={styles.ctaIcon}>
+                    <Ionicons name="arrow-forward" size={16} color={Colors.background} />
+                  </View>
+                </LinearGradient>
+              </PressScale>
+            </View>
           </View>
         </View>
 
         {/* FINAL CTA */}
         <View style={styles.finalCTA}>
+          <View style={[styles.orb, styles.orbGold, styles.noEvents, { top: -60, left: -60 }]} />
           <Text style={styles.finalTitle}>Tu dinero puede trabajar más</Text>
           <Text style={styles.finalSub}>
             La diferencia entre una cuenta de ahorros al 1% y un depósito a plazo al 10%
             en S/ 10,000 es S/ 900 al año. Empieza hoy.
           </Text>
-          <TouchableOpacity style={styles.finalBtn} onPress={handleCTA}>
-            <Text style={styles.finalBtnText}>Comparar ahora — es gratis</Text>
-          </TouchableOpacity>
+          <PressScale onPress={handleCTA} style={styles.ctaWrap}>
+            <LinearGradient
+              colors={[Colors.primary, Colors.primaryLight]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroCTA}
+            >
+              <Text style={styles.heroCTAText}>Comparar ahora — es gratis</Text>
+              <View style={styles.ctaIcon}>
+                <Ionicons name="arrow-forward" size={16} color={Colors.background} />
+              </View>
+            </LinearGradient>
+          </PressScale>
         </View>
 
         {/* FOOTER */}
@@ -158,47 +262,81 @@ export default function LandingScreen() {
         </View>
 
       </ScrollView>
+
+      {/* FLOATING GLASS NAV */}
+      <BlurView intensity={40} tint="dark" style={styles.navBlur}>
+        <Text style={styles.navLogo}>AhorraPeru</Text>
+        <Pressable onPress={() => router.push('/login')} style={styles.navLinkRow}>
+          <Text style={styles.navLink}>{user ? 'Ir a la app' : 'Iniciar sesión'}</Text>
+          <Ionicons name="arrow-forward" size={13} color={Colors.textSecondary} />
+        </Pressable>
+      </BlurView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
-  scroll: { paddingBottom: 0 },
+  scroll: { paddingTop: 88, paddingBottom: 0 },
 
-  nav: {
+  navBlur: {
+    position: 'absolute',
+    top: 12,
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 16,
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingVertical: 12,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
+    overflow: 'hidden',
+    minWidth: '86%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 24,
+    elevation: 6,
   },
-  navLogo: { fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  navLink: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
+  navLogo: { fontSize: 16, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  navLinkRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  navLink: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
 
   hero: {
     paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingTop: 16,
+    paddingBottom: 44,
     alignItems: 'flex-start',
+    overflow: 'hidden',
   },
+  orb: { position: 'absolute', borderRadius: 999 },
+  noEvents: { pointerEvents: 'none' },
+  orbGold: { top: -90, right: -70, width: 260, height: 260, backgroundColor: Colors.primary, opacity: 0.16 },
+  orbGoldSmall: { top: -50, right: -50, width: 160, height: 160, backgroundColor: Colors.primary, opacity: 0.16 },
+  orbBlue: { top: 160, left: -110, width: 220, height: 220, backgroundColor: Colors.riskBajo, opacity: 0.08 },
+
   heroBadge: {
-    backgroundColor: Colors.primary + '20',
-    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.primary + '18',
+    borderRadius: 999,
     paddingHorizontal: 12,
-    paddingVertical: 5,
-    marginBottom: 16,
+    paddingVertical: 6,
+    marginBottom: 20,
     borderWidth: 1,
-    borderColor: Colors.primary + '40',
+    borderColor: Colors.primary + '35',
   },
-  heroBadgeText: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.primary },
+  heroBadgeText: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 1 },
   heroTitle: {
-    fontSize: 38,
+    fontSize: 42,
     fontFamily: 'SpaceGrotesk_700Bold',
     color: Colors.textPrimary,
-    lineHeight: 46,
-    marginBottom: 14,
+    lineHeight: 49,
+    marginBottom: 16,
+    letterSpacing: -0.5,
   },
   heroSub: {
     fontSize: 15,
@@ -207,35 +345,64 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     marginBottom: 28,
   },
-  heroCTA: {
-    backgroundColor: Colors.primary,
-    borderRadius: 16,
-    paddingHorizontal: 28,
-    paddingVertical: 16,
-    marginBottom: 12,
-  },
-  heroCTAText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
-  heroNote: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
 
-  statsRow: {
+  ctaWrap: { alignSelf: 'flex-start' },
+  heroCTA: {
     flexDirection: 'row',
-    backgroundColor: Colors.surfaceHigh,
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 8,
+    alignItems: 'center',
+    gap: 14,
+    borderRadius: 999,
+    paddingLeft: 26,
+    paddingRight: 6,
+    paddingVertical: 6,
+  },
+  heroCTAText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(0,0,0,0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroNote: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 12 },
+
+  bezelOuter: {
+    padding: 5,
+    borderRadius: 28,
+    backgroundColor: GLASS,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
+    overflow: 'hidden',
+  },
+  bezelInner: {
+    borderRadius: 23,
+    backgroundColor: Colors.surface,
     borderWidth: 1,
     borderColor: Colors.border,
+    padding: 22,
+    overflow: 'hidden',
   },
+  bezelInnerPro: { backgroundColor: Colors.surfaceHigh },
+  hairline: {
+    position: 'absolute',
+    top: 0,
+    left: 16,
+    right: 16,
+    height: 1,
+    backgroundColor: HAIRLINE,
+  },
+
+  statsOuter: { marginHorizontal: 20, marginBottom: 4 },
+  statsRow: { flexDirection: 'row' },
   statItem: { flex: 1, alignItems: 'center' },
   statNum: { fontSize: 26, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
   statLabel: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 2, textAlign: 'center' },
   statDivider: { width: 1, backgroundColor: Colors.border, marginHorizontal: 8 },
 
   section: {
-    backgroundColor: Colors.surface,
-    marginTop: 8,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
   },
   sectionLabel: {
     fontSize: 10,
@@ -243,102 +410,77 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
-    marginBottom: 16,
+    marginBottom: 18,
   },
 
   institutionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   institutionChip: {
-    backgroundColor: Colors.surfaceHigh,
-    borderRadius: 20,
+    backgroundColor: GLASS,
+    borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: GLASS_BORDER,
   },
   institutionText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
 
+  featuresGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   featureCard: {
-    flexDirection: 'row',
-    gap: 14,
-    backgroundColor: Colors.surfaceHigh,
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  featureIcon: { fontSize: 28 },
-  featureText: { flex: 1 },
-  featureTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 4 },
-  featureDesc: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 19 },
-
-  pricingCard: {
-    backgroundColor: Colors.surfaceHigh,
+    backgroundColor: GLASS,
     borderRadius: 20,
-    padding: 20,
-    marginBottom: 12,
+    padding: 18,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: GLASS_BORDER,
   },
-  pricingCardPro: {
-    borderColor: Colors.primary + '60',
-    borderWidth: 2,
+  featureIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 14,
+    backgroundColor: Colors.primary + '15',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
   },
+  featureTitle: { fontSize: 14.5, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 6, lineHeight: 20 },
+  featureDesc: { fontSize: 12.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
+
+  pricingOuter: { marginBottom: 14 },
+  pricingOuterPro: { borderColor: Colors.primary + '40' },
   proBadge: {
     backgroundColor: Colors.primary,
-    borderRadius: 20,
+    borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 3,
     alignSelf: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   proBadgeText: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
-  planName: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 4 },
-  planPrice: { fontSize: 40, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textSecondary, marginBottom: 16 },
-  planPer: { fontSize: 16, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
-  planFeatureRow: { flexDirection: 'row', gap: 10, marginBottom: 8, alignItems: 'center' },
-  checkFree: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textMuted },
-  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary },
-  planFeatureText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
+  planName: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 4 },
+  planPrice: { fontSize: 38, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textSecondary, marginBottom: 18 },
+  planPer: { fontSize: 15, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  planFeatureRow: { flexDirection: 'row', gap: 10, marginBottom: 10, alignItems: 'center' },
+  planFeatureText: { fontSize: 13.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
   planBtnFree: {
     borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 12,
-    padding: 14,
+    borderColor: GLASS_BORDER,
+    borderRadius: 999,
+    paddingVertical: 15,
     alignItems: 'center',
     marginTop: 16,
   },
-  planBtnFreeText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
-  planBtnPro: {
-    backgroundColor: Colors.primary,
-    borderRadius: 12,
-    padding: 14,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  planBtnProText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
+  planBtnFreeText: { fontSize: 14.5, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
 
   finalCTA: {
-    backgroundColor: Colors.surfaceHigh,
     padding: 32,
+    paddingVertical: 56,
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: Colors.primary + '30',
-    marginTop: 8,
+    overflow: 'hidden',
   },
-  finalTitle: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center', marginBottom: 10 },
-  finalSub: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 21, marginBottom: 24 },
-  finalBtn: {
-    backgroundColor: Colors.primary,
-    borderRadius: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-  },
-  finalBtnText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
+  finalTitle: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center', marginBottom: 12 },
+  finalSub: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 21, marginBottom: 28, maxWidth: 340 },
 
   footer: {
-    backgroundColor: Colors.surface,
-    padding: 24,
+    padding: 28,
     alignItems: 'center',
     gap: 6,
   },
