@@ -5,14 +5,17 @@ import {
   StyleSheet,
   SafeAreaView,
   FlatList,
+  ScrollView,
   TouchableOpacity,
   TextInput,
   StatusBar,
 } from 'react-native';
 import { Colors } from '@/constants/colors';
 import { GLOSSARY, GlossaryTerm } from '@/constants/glossary';
+import { GlossaryQuiz } from '@/components/GlossaryQuiz';
 
 export default function GlosarioScreen() {
+  const [mode, setMode] = useState<'explorar' | 'quiz'>('explorar');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -24,6 +27,53 @@ export default function GlosarioScreen() {
 
   const toggle = (term: string) => setExpanded(expanded === term ? null : term);
 
+  const header = (
+    <View style={styles.header}>
+      <Text style={styles.title}>Glosario Financiero</Text>
+      <Text style={styles.subtitle}>Todo lo que necesitas saber para invertir con confianza</Text>
+
+      <View style={styles.modeSwitch}>
+        <TouchableOpacity
+          style={[styles.modeButton, mode === 'explorar' && styles.modeButtonActive]}
+          onPress={() => setMode('explorar')}
+        >
+          <Text style={[styles.modeButtonText, mode === 'explorar' && styles.modeButtonTextActive]}>Explorar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.modeButton, mode === 'quiz' && styles.modeButtonActive]}
+          onPress={() => setMode('quiz')}
+        >
+          <Text style={[styles.modeButtonText, mode === 'quiz' && styles.modeButtonTextActive]}>Quiz 🎯</Text>
+        </TouchableOpacity>
+      </View>
+
+      {mode === 'explorar' && (
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchIcon}>🔍</Text>
+          <TextInput
+            style={styles.searchInput}
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Buscar término..."
+            placeholderTextColor={Colors.textMuted}
+          />
+        </View>
+      )}
+    </View>
+  );
+
+  if (mode === 'quiz') {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+        <ScrollView contentContainerStyle={styles.list}>
+          {header}
+          <GlossaryQuiz />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
@@ -32,22 +82,7 @@ export default function GlosarioScreen() {
         keyExtractor={(item) => item.term}
         renderItem={({ item }) => <TermCard term={item} expanded={expanded === item.term} onPress={() => toggle(item.term)} />}
         contentContainerStyle={styles.list}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.title}>Glosario Financiero</Text>
-            <Text style={styles.subtitle}>Todo lo que necesitas saber para invertir con confianza</Text>
-            <View style={styles.searchContainer}>
-              <Text style={styles.searchIcon}>🔍</Text>
-              <TextInput
-                style={styles.searchInput}
-                value={search}
-                onChangeText={setSearch}
-                placeholder="Buscar término..."
-                placeholderTextColor={Colors.textMuted}
-              />
-            </View>
-          </View>
-        }
+        ListHeaderComponent={header}
       />
     </SafeAreaView>
   );
@@ -81,6 +116,19 @@ const styles = StyleSheet.create({
   header: { marginBottom: 16 },
   title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 4 },
   subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 16 },
+  modeSwitch: {
+    flexDirection: 'row',
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 4,
+    marginBottom: 16,
+  },
+  modeButton: { flex: 1, paddingVertical: 10, borderRadius: 9, alignItems: 'center' },
+  modeButtonActive: { backgroundColor: Colors.primary },
+  modeButtonText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
+  modeButtonTextActive: { color: Colors.background },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
