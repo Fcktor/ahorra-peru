@@ -46,7 +46,11 @@ export default function UpgradeScreen() {
       const { data, error: fnError } = await supabase.functions.invoke('create-mp-preference', {
         body: { userId: user.id, userEmail: user.email },
       });
-      if (fnError) throw fnError;
+      if (fnError) {
+        const body = await fnError.context?.json?.().catch(() => null);
+        throw new Error(body?.error ?? fnError.message);
+      }
+      if (!data?.init_point) throw new Error('La pasarela de pago no devolvió un link de pago');
 
       const initPoint: string = data.init_point;
       if (Platform.OS === 'web') {
@@ -55,7 +59,8 @@ export default function UpgradeScreen() {
         Linking.openURL(initPoint);
         setLoading(false);
       }
-    } catch {
+    } catch (err) {
+      console.error('Error al crear preferencia de pago:', err);
       setError('Error al conectar con el sistema de pago. Intenta nuevamente.');
       setLoading(false);
     }

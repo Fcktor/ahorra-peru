@@ -84,6 +84,13 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+          name="estado-cuenta"
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="comparar"
           options={{
             title: 'Comparar',

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
 import PaywallBanner from '@/components/PaywallBanner';
@@ -58,6 +59,7 @@ function projectGrowth(monthly: number, trea: number, years: number): number {
 const fmt = (n: number) => 'S/ ' + Math.round(n).toLocaleString('es-PE');
 
 export default function PlanScreen() {
+  const router = useRouter();
   const { isPro } = useAuth();
   const [ingreso, setIngreso] = useState('3000');
   const [gastos, setGastos] = useState('2000');
@@ -91,6 +93,14 @@ export default function PlanScreen() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Mi Plan de Ahorro</Text>
         <Text style={styles.subtitle}>Personaliza tu estrategia y ve crecer tu dinero</Text>
+
+        <TouchableOpacity style={styles.statementCard} onPress={() => router.push('/estado-cuenta')}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.statementTitle}>📄 Analiza tu estado de cuenta</Text>
+            <Text style={styles.statementSub}>Sube el PDF de tu banco y descubre en qué se te va la plata</Text>
+          </View>
+          <Text style={styles.statementArrow}>→</Text>
+        </TouchableOpacity>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Tu situación mensual</Text>
@@ -244,6 +254,19 @@ const styles = StyleSheet.create({
   scroll: { padding: 16, paddingBottom: 48 },
   title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 4 },
   subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 20 },
+
+  statementCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: Colors.primary,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+  },
+  statementTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
+  statementSub: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.background + 'DD', marginTop: 2, lineHeight: 17 },
+  statementArrow: { fontSize: 20, fontFamily: 'Inter_700Bold', color: Colors.background },
 
   card: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: Colors.border },
   cardTitle: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 4 },
