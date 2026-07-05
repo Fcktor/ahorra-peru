@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
   scroll: { padding: 16, paddingBottom: 40 },
 
   header: { marginBottom: 20 },
-  title: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  subtitle: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4, lineHeight: 19 },
+  title: { fontSize: 22, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
+  subtitle: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 4, lineHeight: 19 },
 
   progressRow: { flexDirection: 'row', gap: 6, marginBottom: 16 },
   progressDot: { flex: 1, height: 4, borderRadius: 2, backgroundColor: Colors.border },
@@ -162,8 +162,8 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 2,
   },
-  questionLabel: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
-  questionText: { fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, marginBottom: 18, lineHeight: 24 },
+  questionLabel: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
+  questionText: { fontSize: 18, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary, marginBottom: 18, lineHeight: 24 },
 
   optionsList: { gap: 10 },
   optionButton: {
@@ -177,10 +177,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
-  optionText: { fontSize: 14.5, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, flex: 1, marginRight: 8 },
+  optionText: { fontSize: 14.5, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, flex: 1, marginRight: 8 },
 
   backLink: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', marginTop: 16 },
-  backLinkText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
+  backLinkText: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary },
 
   matchBadge: {
     flexDirection: 'row',
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginBottom: 14,
   },
-  matchBadgeText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
+  matchBadgeText: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.background, letterSpacing: 1 },
 
   resultCard: {
     backgroundColor: Colors.surface,
@@ -207,18 +207,18 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 3,
   },
-  resultBank: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
-  resultName: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, marginTop: 4 },
-  resultBestFor: { fontSize: 13.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 8, lineHeight: 20 },
+  resultBank: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
+  resultName: { fontSize: 24, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary, marginTop: 4 },
+  resultBestFor: { fontSize: 13.5, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 8, lineHeight: 20 },
 
   resultDivider: { height: 1, backgroundColor: Colors.border, marginVertical: 16 },
 
   benefitRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginBottom: 10 },
-  benefitText: { fontSize: 13.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1, lineHeight: 19 },
+  benefitText: { fontSize: 13.5, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, flex: 1, lineHeight: 19 },
 
   feeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8, marginBottom: 18 },
-  feeLabel: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted },
-  feeValue: { fontSize: 12.5, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, flexShrink: 1, textAlign: 'right', marginLeft: 12 },
+  feeLabel: { fontSize: 12, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted },
+  feeValue: { fontSize: 12.5, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, flexShrink: 1, textAlign: 'right', marginLeft: 12 },
 
   ctaBtn: {
     flexDirection: 'row',
@@ -229,10 +229,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingVertical: 14,
   },
-  ctaBtnText: { fontSize: 14.5, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaBtnText: { fontSize: 14.5, fontFamily: 'Figtree_700Bold', color: Colors.background },
 
   altSection: { marginTop: 20 },
-  altLabel: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
+  altLabel: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 },
   altCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -246,10 +246,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   altInfo: {},
-  altBank: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 },
-  altName: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, marginTop: 2 },
-  altFee: { fontSize: 11.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flexShrink: 1, textAlign: 'right', marginLeft: 8 },
+  altBank: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 },
+  altName: { fontSize: 14, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, marginTop: 2 },
+  altFee: { fontSize: 11.5, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, flexShrink: 1, textAlign: 'right', marginLeft: 8 },
 
   restartBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', marginTop: 20 },
-  restartText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
+  restartText: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary },
 });

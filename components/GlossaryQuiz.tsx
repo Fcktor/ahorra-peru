@@ -157,11 +157,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   stat: { flex: 1, alignItems: 'center' },
-  statValue: { fontSize: 18, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  statLabel: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 2 },
+  statValue: { fontSize: 18, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
+  statLabel: { fontSize: 10, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 2 },
 
   masteryRow: { marginBottom: 12 },
-  masteryLabel: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 6 },
+  masteryLabel: { fontSize: 12, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary, marginBottom: 6 },
   masteryTrack: { height: 6, borderRadius: 3, backgroundColor: Colors.border, overflow: 'hidden' },
   masteryFill: { height: 6, borderRadius: 3, backgroundColor: Colors.accent },
 
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  milestoneText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  milestoneText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.primary },
 
   questionCard: {
     backgroundColor: Colors.surfaceHigh,
@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     minHeight: 110,
   },
-  questionLabel: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
-  questionText: { fontSize: 15, fontFamily: 'Inter_400Regular', color: Colors.textPrimary, lineHeight: 22 },
+  questionLabel: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },
+  questionText: { fontSize: 15, fontFamily: 'Figtree_400Regular', color: Colors.textPrimary, lineHeight: 22 },
 
   optionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 24 },
   optionButton: {
@@ -202,5 +202,5 @@ const styles = StyleSheet.create({
   },
   optionCorrect: { backgroundColor: Colors.accent + '25', borderColor: Colors.accent },
   optionWrong: { backgroundColor: Colors.danger + '25', borderColor: Colors.danger },
-  optionText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, textAlign: 'center' },
+  optionText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, textAlign: 'center' },
 });

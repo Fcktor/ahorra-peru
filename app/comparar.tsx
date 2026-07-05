@@ -25,7 +25,7 @@ export default function CompararScreen() {
   if (!optA || !optB) {
     return (
       <SafeAreaView style={styles.safe}>
-        <Text style={{ padding: 20, fontFamily: 'Inter_400Regular', color: Colors.danger }}>Opciones no encontradas.</Text>
+        <Text style={{ padding: 20, fontFamily: 'Figtree_400Regular', color: Colors.danger }}>Opciones no encontradas.</Text>
       </SafeAreaView>
     );
   }
@@ -177,7 +177,7 @@ function CompareRow({ label, valA, valB, winner, colorA, colorB, sizeA = 14, siz
   return (
     <View style={styles.row}>
       <View style={[styles.rowSide, winner === 'a' && styles.rowWinnerBg]}>
-        <Text style={[styles.rowVal, { color: colorA, fontSize: sizeA, fontFamily: winner === 'a' ? 'SpaceGrotesk_700Bold' : 'Inter_600SemiBold' }]}>
+        <Text style={[styles.rowVal, { color: colorA, fontSize: sizeA, fontFamily: winner === 'a' ? 'Archivo_800ExtraBold' : 'Figtree_600SemiBold' }]}>
           {valA}
         </Text>
         {winner === 'a' && (
@@ -195,7 +195,7 @@ function CompareRow({ label, valA, valB, winner, colorA, colorB, sizeA = 14, siz
             <Text style={styles.badgeText}>Mejor ✓</Text>
           </View>
         )}
-        <Text style={[styles.rowVal, { color: colorB, fontSize: sizeB, fontFamily: winner === 'b' ? 'SpaceGrotesk_700Bold' : 'Inter_600SemiBold', textAlign: 'right' }]}>
+        <Text style={[styles.rowVal, { color: colorB, fontSize: sizeB, fontFamily: winner === 'b' ? 'Archivo_800ExtraBold' : 'Figtree_600SemiBold', textAlign: 'right' }]}>
           {valB}
         </Text>
       </View>
@@ -239,14 +239,14 @@ const styles = StyleSheet.create({
   headerColRight: { alignItems: 'flex-end' },
   headerInstitution: {
     fontSize: 10,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Figtree_600SemiBold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
-  headerName: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginTop: 3, lineHeight: 18 },
+  headerName: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginTop: 3, lineHeight: 18 },
   headerCenter: { width: 40, alignItems: 'center', paddingTop: 6 },
-  vsText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, letterSpacing: 1 },
+  vsText: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, letterSpacing: 1 },
   scoreChip: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary + '40',
   },
   scoreChipRight: { alignSelf: 'flex-end' },
-  scoreNum: { fontSize: 20, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  scoreLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted },
+  scoreNum: { fontSize: 20, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
+  scoreLabel: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted },
 
   winnerBanner: {
     backgroundColor: Colors.primary,
@@ -270,12 +270,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tieBanner: { backgroundColor: Colors.surfaceHigh },
-  winnerBannerText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.background },
+  winnerBannerText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.background },
 
   criteriaBlock: { backgroundColor: Colors.surface, marginTop: 8 },
   blockTitle: {
     fontSize: 10,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   rowCenterText: {
     fontSize: 10,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     textAlign: 'center',
@@ -326,12 +326,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   badgeRight: { alignSelf: 'flex-end' },
-  badgeText: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.background },
+  badgeText: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.background },
 
   section: { backgroundColor: Colors.surface, marginTop: 8, padding: 16 },
   colHeader: {
     fontSize: 10,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.primary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -342,8 +342,8 @@ const styles = StyleSheet.create({
   colDivider: { width: 1, backgroundColor: Colors.border },
   bulletRow: { flexDirection: 'row', gap: 6, marginBottom: 6 },
   bullet: { fontSize: 14, marginTop: 1 },
-  bulletText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18, flex: 1 },
-  howToText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
+  bulletText: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 18, flex: 1 },
+  howToText: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 18 },
 
   verdictCard: {
     backgroundColor: Colors.surfaceHigh,
@@ -353,11 +353,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary + '30',
   },
-  verdictTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 12 },
+  verdictTitle: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginBottom: 12 },
   verdictRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
   verdictIcon: { fontSize: 16 },
-  verdictLabel: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1 },
-  verdictWinner: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.primary },
+  verdictLabel: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, flex: 1 },
+  verdictWinner: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.primary },
 
   ctaRow: { flexDirection: 'row', gap: 10, marginHorizontal: 16 },
   ctaBtn: {
@@ -368,5 +368,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ctaBtnB: { backgroundColor: Colors.surfaceHigh, borderWidth: 1, borderColor: Colors.primary },
-  ctaBtnText: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaBtnText: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.background },
 });

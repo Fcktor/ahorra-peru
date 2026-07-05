@@ -4,18 +4,13 @@ import { AuthProvider } from '@/context/auth';
 import { Colors } from '@/constants/colors';
 import ChatBot from '@/components/ChatBot';
 import { useFonts } from 'expo-font';
+import { Archivo_800ExtraBold } from '@expo-google-fonts/archivo';
 import {
-  SpaceGrotesk_400Regular,
-  SpaceGrotesk_500Medium,
-  SpaceGrotesk_600SemiBold,
-  SpaceGrotesk_700Bold,
-} from '@expo-google-fonts/space-grotesk';
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter';
+  Figtree_400Regular,
+  Figtree_500Medium,
+  Figtree_600SemiBold,
+  Figtree_700Bold,
+} from '@expo-google-fonts/figtree';
 
 // Head solo disponible en web
 let Head: React.ComponentType<{ children: React.ReactNode }> | null = null;
@@ -25,14 +20,11 @@ if (Platform.OS === 'web') {
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    SpaceGrotesk_400Regular,
-    SpaceGrotesk_500Medium,
-    SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold,
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+    Archivo_800ExtraBold,
+    Figtree_400Regular,
+    Figtree_500Medium,
+    Figtree_600SemiBold,
+    Figtree_700Bold,
   });
 
   if (!fontsLoaded) return null;
@@ -45,7 +37,7 @@ export default function RootLayout() {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
           <meta name="description" content="Descubre dónde hacer crecer tus ahorros en soles. Compara tasas, calcula intereses y crea tu plan de ahorro con datos en tiempo real del BCRP." />
-          <meta name="theme-color" content="#F7F7F2" />
+          <meta name="theme-color" content="#F6F4EC" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />

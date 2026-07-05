@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,15 @@ import {
   StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Path, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 import { Colors } from '@/constants/colors';
+import { fetchBCRPData, BCRPData } from '@/services/bcrp';
+import { calcInterest } from '@/lib/interestMath';
+
+const ON_DARK_TEXT = '#EAF6EE';
+const ON_DARK_MUTED = '#A9D9BE';
+const SPARKLINE_COLOR = '#8FE3B0';
 
 const PRESETS = [
   { label: '1 mes', months: 1 },
@@ -101,18 +109,14 @@ export default function CalculadoraScreen() {
   const [ahorroActual, setAhorroActual] = useState('0');
   const [goalMonths, setGoalMonths] = useState(24);
 
-  const interesResult = useMemo(() => {
-    const P = parseFloat(capital) || 0;
-    const r = (parseFloat(trea) || 0) / 100;
-    const t = months / 12;
-    if (P <= 0 || r <= 0) return null;
-    const total = compound ? P * Math.pow(1 + r, t) : P * (1 + r * t);
-    const ganancia = total - P;
-    const tasaReal = r - 0.035;
-    const totalReal = P * Math.pow(1 + tasaReal, t);
-    const gananciaReal = totalReal - P;
-    return { total, ganancia, totalReal, gananciaReal };
-  }, [capital, trea, months, compound]);
+  const [bcrpData, setBcrpData] = useState<BCRPData | null>(null);
+  useEffect(() => { fetchBCRPData().then(setBcrpData); }, []);
+  const inflacionAnual = (bcrpData?.inflacion ?? 3.5) / 100;
+
+  const interesResult = useMemo(
+    () => calcInterest(parseFloat(capital) || 0, parseFloat(trea) || 0, months, compound, inflacionAnual),
+    [capital, trea, months, compound, inflacionAnual],
+  );
 
   const metaResult = useMemo(() => {
     const FV = parseFloat(meta) || 0;
@@ -195,32 +199,45 @@ export default function CalculadoraScreen() {
             </View>
 
             {interesResult && (
-              <View style={styles.resultsCard}>
-                <Text style={styles.resultsTitle}>Resultado</Text>
+              <LinearGradient
+                colors={[Colors.primary, Colors.primaryDark]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.35, y: 1 }}
+                style={styles.resultsCard}
+              >
+                <Text style={styles.resultsLabel}>EN {months >= 12 ? `${Math.round(months / 12)} AÑO${months >= 24 ? 'S' : ''}` : `${months} MES${months > 1 ? 'ES' : ''}`} TENDRÁS</Text>
+                <Text style={styles.resultsAmount}>{fmt2(interesResult.total)}</Text>
+
+                <Sparkline />
+
+                <View style={styles.resultsDivider} />
                 <View style={styles.resultRow}>
-                  <Text style={styles.resultLabel}>Capital inicial</Text>
-                  <Text style={styles.resultValue}>{fmt2(parseFloat(capital))}</Text>
+                  <View>
+                    <Text style={styles.resultLabelDark}>Capital inicial</Text>
+                    <Text style={styles.resultValueDark}>{fmt2(parseFloat(capital))}</Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={styles.resultLabelDark}>Intereses ganados</Text>
+                    <Text style={[styles.resultValueDark, { color: SPARKLINE_COLOR }]}>+{fmt2(interesResult.ganancia)}</Text>
+                  </View>
                 </View>
+                <View style={styles.resultsDivider} />
+                <Text style={styles.realLabel}>Considerando inflación real (~{(inflacionAnual * 100).toFixed(1)}% anual, BCRP)</Text>
                 <View style={styles.resultRow}>
-                  <Text style={styles.resultLabel}>Intereses ganados</Text>
-                  <Text style={[styles.resultValue, { color: Colors.accent }]}>+{fmt2(interesResult.ganancia)}</Text>
-                </View>
-                <View style={[styles.resultRow, styles.resultTotal]}>
-                  <Text style={styles.resultTotalLabel}>Total final</Text>
-                  <Text style={styles.resultTotalValue}>{fmt2(interesResult.total)}</Text>
-                </View>
-                <View style={styles.separator} />
-                <Text style={styles.realLabel}>Considerando inflación (~3.5% anual)</Text>
-                <View style={styles.resultRow}>
-                  <Text style={styles.resultLabel}>Ganancia real</Text>
-                  <Text style={[styles.resultValue, { color: interesResult.gananciaReal >= 0 ? Colors.accent : Colors.danger }]}>
+                  <Text style={styles.resultLabelDark}>Ganancia real</Text>
+                  <Text style={[styles.resultValueDark, { color: interesResult.gananciaReal >= 0 ? SPARKLINE_COLOR : '#F5A3A3' }]}>
                     {interesResult.gananciaReal >= 0 ? '+' : ''}{fmt2(interesResult.gananciaReal)}
                   </Text>
                 </View>
                 {interesResult.gananciaReal < 0 && (
-                  <Text style={styles.warning}>Con esta tasa pierdes poder adquisitivo frente a la inflación. Busca opciones por encima del 3.5%.</Text>
+                  <Text style={styles.warningOnDark}>Con esta tasa pierdes poder adquisitivo frente a la inflación.</Text>
                 )}
-              </View>
+              </LinearGradient>
+            )}
+            {interesResult && (
+              <TouchableOpacity style={styles.darkCta} onPress={() => router.push('/')}>
+                <Text style={styles.darkCtaText}>Ver opciones con esta tasa →</Text>
+              </TouchableOpacity>
             )}
             <View style={styles.infoCard}>
               <Text style={styles.infoTitle}>¿Qué es la TREA?</Text>
@@ -376,11 +393,26 @@ function Label({ text }: { text: string }) {
   return <Text style={styles.label}>{text}</Text>;
 }
 
+function Sparkline() {
+  return (
+    <Svg viewBox="0 0 300 70" preserveAspectRatio="none" style={{ width: '100%', height: 56, marginTop: 10 }}>
+      <Defs>
+        <SvgLinearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor={SPARKLINE_COLOR} stopOpacity={0.45} />
+          <Stop offset="1" stopColor={SPARKLINE_COLOR} stopOpacity={0} />
+        </SvgLinearGradient>
+      </Defs>
+      <Path d="M0,60 C60,54 110,44 160,32 C210,20 260,12 300,6 L300,70 L0,70 Z" fill="url(#sparkFill)" />
+      <Path d="M0,60 C60,54 110,44 160,32 C210,20 260,12 300,6" fill="none" stroke={SPARKLINE_COLOR} strokeWidth={2.5} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 16, paddingBottom: 40 },
-  title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 12 },
-  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 16 },
+  title: { fontSize: 24, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginBottom: 12 },
+  subtitle: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginBottom: 16 },
 
   modeToggle: {
     flexDirection: 'row',
@@ -393,8 +425,8 @@ const styles = StyleSheet.create({
   },
   modeBtn: { flex: 1, paddingVertical: 10, borderRadius: 10, alignItems: 'center' },
   modeBtnActive: { backgroundColor: Colors.primary },
-  modeBtnText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted },
-  modeBtnTextActive: { fontFamily: 'Inter_700Bold', color: Colors.background },
+  modeBtnText: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted },
+  modeBtnTextActive: { fontFamily: 'Figtree_700Bold', color: Colors.background },
 
   card: {
     backgroundColor: Colors.surface,
@@ -404,16 +436,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  cardTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 4 },
-  cardHint: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 12 },
-  label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
+  cardTitle: { fontSize: 15, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginBottom: 4 },
+  cardHint: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, marginBottom: 12 },
+  label: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary, marginBottom: 8, marginTop: 12 },
   input: {
     backgroundColor: Colors.surface,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 9,
     fontSize: 18,
-    fontFamily: 'SpaceGrotesk_700Bold',
+    fontFamily: 'Archivo_800ExtraBold',
     color: Colors.textPrimary,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -428,10 +460,10 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   presetActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  presetText: { fontSize: 13, fontFamily: 'Inter_500Medium', color: Colors.textSecondary },
-  presetTextActive: { fontFamily: 'Inter_700Bold', color: Colors.background },
+  presetText: { fontSize: 13, fontFamily: 'Figtree_500Medium', color: Colors.textSecondary },
+  presetTextActive: { fontFamily: 'Figtree_700Bold', color: Colors.background },
   switchRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 },
-  switchLabel: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary },
+  switchLabel: { fontSize: 14, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary },
   toggle: {
     width: 48,
     height: 28,
@@ -452,26 +484,30 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   toggleThumbOn: { alignSelf: 'flex-end' },
-  switchHint: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 4 },
+  switchHint: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, marginTop: 4 },
 
   resultsCard: {
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: Colors.primary + '40',
+    borderRadius: 24,
+    padding: 22,
+    marginBottom: 14,
   },
-  resultsTitle: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 12 },
+  resultsLabel: { fontSize: 12, fontFamily: 'Figtree_700Bold', color: ON_DARK_MUTED, letterSpacing: 1.2 },
+  resultsAmount: { fontSize: 38, fontFamily: 'Archivo_800ExtraBold', color: ON_DARK_TEXT, marginTop: 4, letterSpacing: -1 },
+  resultsDivider: { height: 1, backgroundColor: 'rgba(255,255,255,0.16)', marginVertical: 12 },
   resultRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  resultLabel: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
-  resultValue: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
+  resultLabel: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary },
+  resultValue: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary },
+  resultLabelDark: { fontSize: 11.5, fontFamily: 'Figtree_400Regular', color: ON_DARK_MUTED },
+  resultValueDark: { fontSize: 17, fontFamily: 'Archivo_800ExtraBold', color: ON_DARK_TEXT, marginTop: 2 },
   resultTotal: { marginTop: 4 },
-  resultTotalLabel: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
-  resultTotalValue: { fontSize: 20, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  resultTotalLabel: { fontSize: 16, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary },
+  resultTotalValue: { fontSize: 20, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
   separator: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
-  realLabel: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginBottom: 8 },
-  warning: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.danger, marginTop: 6, lineHeight: 18 },
+  realLabel: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: ON_DARK_MUTED, marginBottom: 8 },
+  warning: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.danger, marginTop: 6, lineHeight: 18 },
+  warningOnDark: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: '#F5A3A3', marginTop: 6, lineHeight: 18 },
+  darkCta: { backgroundColor: Colors.textPrimary, borderRadius: 18, padding: 16, alignItems: 'center', marginBottom: 16 },
+  darkCtaText: { fontSize: 15, fontFamily: 'Archivo_800ExtraBold', color: Colors.background },
   infoCard: {
     backgroundColor: Colors.surfaceHigh,
     borderRadius: 12,
@@ -479,8 +515,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: Colors.primary,
   },
-  infoTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 6 },
-  infoText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
+  infoTitle: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.primary, marginBottom: 6 },
+  infoText: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 18 },
 
   metaHero: {
     backgroundColor: Colors.surfaceHigh,
@@ -491,9 +527,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary + '40',
   },
-  metaHeroLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
-  metaHeroAmount: { fontSize: 48, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginTop: 4 },
-  metaHeroPer: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4 },
+  metaHeroLabel: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
+  metaHeroAmount: { fontSize: 48, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginTop: 4 },
+  metaHeroPer: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 4 },
 
   optionRow: {
     flexDirection: 'row',
@@ -508,16 +544,16 @@ const styles = StyleSheet.create({
   },
   optionRowActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '15' },
   optionLeft: { flex: 1 },
-  optionName: { fontSize: 14, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, marginBottom: 4 },
-  optionNameActive: { color: Colors.primary, fontFamily: 'Inter_700Bold' },
+  optionName: { fontSize: 14, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, marginBottom: 4 },
+  optionNameActive: { color: Colors.primary, fontFamily: 'Figtree_700Bold' },
   optionMeta: { flexDirection: 'row', gap: 6 },
   riskBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
-  riskText: { fontSize: 11, fontFamily: 'Inter_700Bold' },
+  riskText: { fontSize: 11, fontFamily: 'Figtree_700Bold' },
   optionRight: { alignItems: 'flex-end' },
-  optionTrea: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textMuted },
-  optionTreaLabel: { fontSize: 10, fontFamily: 'Inter_500Medium', color: Colors.textMuted },
+  optionTrea: { fontSize: 22, fontFamily: 'Archivo_800ExtraBold', color: Colors.textMuted },
+  optionTreaLabel: { fontSize: 10, fontFamily: 'Figtree_500Medium', color: Colors.textMuted },
   verComparadorBtn: { marginTop: 8, padding: 10, alignItems: 'center' },
-  verComparadorText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.primary },
+  verComparadorText: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.primary },
 
   stepRow: { flexDirection: 'row', gap: 12, marginBottom: 12, alignItems: 'flex-start' },
   stepNum: {
@@ -530,8 +566,8 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     marginTop: 1,
   },
-  stepNumText: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.background },
-  stepText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20, flex: 1 },
+  stepNumText: { fontSize: 12, fontFamily: 'Figtree_700Bold', color: Colors.background },
+  stepText: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 20, flex: 1 },
 
   scenarioRow: { flexDirection: 'row', gap: 8 },
   scenarioBox: {
@@ -544,23 +580,23 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surfaceHigh,
   },
   scenarioCurrent: { borderColor: Colors.primary, backgroundColor: Colors.primary + '15' },
-  scenarioLabel: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.textMuted, marginBottom: 4 },
-  scenarioAmount: { fontSize: 14, fontFamily: 'SpaceGrotesk_700Bold', textAlign: 'center' },
-  scenarioMonths: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
+  scenarioLabel: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted, marginBottom: 4 },
+  scenarioAmount: { fontSize: 14, fontFamily: 'Archivo_800ExtraBold', textAlign: 'center' },
+  scenarioMonths: { fontSize: 10, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, marginTop: 4, textAlign: 'center' },
 
   checkpointRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
   checkpointLeft: { width: 68 },
-  checkpointPct: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
-  checkpointAmount: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  checkpointPct: { fontSize: 12, fontFamily: 'Figtree_700Bold', color: Colors.textSecondary },
+  checkpointAmount: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
   checkpointBarBg: { flex: 1, height: 10, backgroundColor: Colors.border, borderRadius: 5, overflow: 'hidden' },
   checkpointBarFill: { height: 10, borderRadius: 5 },
-  checkpointMonths: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, width: 44, textAlign: 'right' },
+  checkpointMonths: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, width: 44, textAlign: 'right' },
 
   progressBox: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Colors.border },
-  progressLabel: { fontSize: 12, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary, marginBottom: 6 },
+  progressLabel: { fontSize: 12, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary, marginBottom: 6 },
   progressBarBg: { height: 10, backgroundColor: Colors.border, borderRadius: 5, marginBottom: 6, overflow: 'hidden' },
   progressBarFill: { height: 10, backgroundColor: Colors.primary, borderRadius: 5 },
   progressLabels: { flexDirection: 'row', justifyContent: 'space-between' },
-  progressCurrent: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.primary },
-  progressGoal: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  progressCurrent: { fontSize: 12, fontFamily: 'Figtree_700Bold', color: Colors.primary },
+  progressGoal: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
 });

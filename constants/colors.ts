@@ -1,30 +1,31 @@
 export const Colors = {
-  // Brand / interactive — emerald green
-  primary:       '#0E7A54',   // Verde marca — único color apto para botón sólido + texto blanco
+  // Brand / interactive — verde oscuro fintech
+  primary:       '#0E7A47',   // Verde marca — botón sólido + texto blanco
   primaryLight:  '#34B378',   // Verde claro — NO usar con texto blanco, solo fondos de chip/badge/gradiente
-  // Positive / success semantic — usado en toda la app para ganancias, aciertos, "pros", riesgo muy bajo
-  accent:        '#10B981',   // Verde distinto al primary (evita confundir "marca" con "resultado positivo")
+  primaryDark:   '#0A5233',   // Verde más oscuro — segundo stop de gradientes, texto de badges "riesgo muy bajo"
+  // Positive / success semantic — ganancias, aciertos, "pros", riesgo muy bajo
+  accent:        '#10B981',
   accentLight:   '#A7F3D0',
-  // Decorative secondary accent — naranja inspirado en la referencia, solo landing y badge "PRO"
+  // Decorative secondary accent — naranja, ya no protagonista pero se conserva para landing y badge "PRO"
   highlight:      '#E8842E',
   highlightLight: '#F7C99A',
-  highlightDark:  '#B5661E',  // Única variante de naranja apta para texto blanco
+  highlightDark:  '#B5661E',
   // Semantic
-  warning:       '#F59E0B',   // Ámbar — riesgo medio / caución. NO usar con texto blanco encima
+  warning:       '#C8891C',   // Ámbar cálido — riesgo medio / caución. NO usar con texto blanco encima
   danger:        '#DC2626',   // Rojo — errores, "cons", riesgo alto
-  // Surfaces — light
-  background:    '#F7F7F2',   // Blanco cálido — fondo de pantalla
-  surface:       '#FFFFFF',   // Tarjetas
-  surfaceHigh:   '#E8F3EC',   // Elevado / seleccionado — verde muy pálido
+  // Surfaces — crema cálido
+  background:    '#F6F4EC',   // Fondo de pantalla
+  surface:       '#FFFDF7',   // Tarjetas
+  surfaceHigh:   '#F0EDE2',   // Elevado / seleccionado / chips neutros
   // Borders
-  border:        '#E4E7E1',   // Borde sutil claro
+  border:        '#E2DECF',   // Borde sutil cálido
   // Text
-  textPrimary:   '#16211B',   // Casi negro cálido
-  textSecondary: '#5B6B61',   // Cualquier texto con información real
-  textMuted:     '#6E7D74',   // Solo decorativo/disabled — nunca dato real
-  // Risk colors — alias de los semánticos de arriba (igual que en la paleta anterior)
+  textPrimary:   '#12211B',   // Casi negro cálido
+  textSecondary: '#5B6B62',   // Cualquier texto con información real
+  textMuted:     '#8A9188',   // Solo decorativo/disabled — nunca dato real
+  // Risk colors — alias de los semánticos de arriba
   riskLow:       '#10B981',   // = accent
   riskBajo:      '#2F80ED',   // azul, concepto propio
-  riskMedium:    '#F59E0B',   // = warning
+  riskMedium:    '#C8891C',   // = warning
   riskHigh:      '#DC2626',   // = danger
 };

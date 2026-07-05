@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
   container: { gap: 14 },
   row: { gap: 6 },
   rowHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
-  rowLabel: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, flex: 1 },
-  rowAmount: { fontSize: 14, fontFamily: 'SpaceGrotesk_700Bold' },
+  rowLabel: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, flex: 1 },
+  rowAmount: { fontSize: 14, fontFamily: 'Archivo_800ExtraBold' },
   barBg: { height: 10, backgroundColor: Colors.border, borderRadius: 5 },
   barFill: { height: 10, borderRadius: 5 },
-  rowPercent: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  rowPercent: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
 });

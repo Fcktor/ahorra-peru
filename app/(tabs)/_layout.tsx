@@ -1,8 +1,24 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Slot } from 'expo-router';
+import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
+import DesktopSidebar from '@/components/DesktopSidebar';
 
 export default function TabLayout() {
+  const isDesktop = useIsDesktop();
+
+  if (isDesktop) {
+    return (
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: Colors.background }}>
+        <DesktopSidebar />
+        <View style={{ flex: 1 }}>
+          <Slot />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -18,7 +34,7 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 11,
-          fontFamily: 'Inter_600SemiBold',
+          fontFamily: 'Figtree_600SemiBold',
           marginBottom: 4,
         },
       }}

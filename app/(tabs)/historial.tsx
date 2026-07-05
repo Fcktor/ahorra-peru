@@ -1,10 +1,25 @@
+import { useCallback, useEffect, useState } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, StatusBar,
+  View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/colors';
 import { SAVINGS_OPTIONS } from '@/constants/savings';
 import { RateHistoryChart } from '@/components/RateHistoryChart';
+import { useAuth } from '@/context/auth';
+import { supabase } from '@/services/supabase';
+import PaywallBanner from '@/components/PaywallBanner';
+
+interface RateChange {
+  id: string;
+  product_id: string;
+  product_label: string;
+  old_rate_min: number | null;
+  old_rate_max: number | null;
+  new_rate_min: number;
+  new_rate_max: number;
+  created_at: string;
+}
 
 const MAX_RATE = 13;
 
@@ -25,6 +40,52 @@ const RISK_LABELS: Record<string, string> = {
 const sorted = [...SAVINGS_OPTIONS].sort((a, b) => b.rateMax - a.rateMax);
 
 export default function HistorialScreen() {
+  const { isPro, user } = useAuth();
+  const [followedIds, setFollowedIds] = useState<Set<string>>(new Set());
+  const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
+  const [alertsSeenAt, setAlertsSeenAt] = useState<string | null>(null);
+  const [loadingAlerts, setLoadingAlerts] = useState(false);
+
+  const loadAlertsData = useCallback(async () => {
+    if (!user) return;
+    setLoadingAlerts(true);
+    const [{ data: follows }, { data: changes }, { data: profile }] = await Promise.all([
+      supabase.from('followed_products').select('product_id').eq('user_id', user.id),
+      supabase.from('rate_changes').select('*').order('created_at', { ascending: false }).limit(30),
+      supabase.from('profiles').select('alerts_seen_at').eq('id', user.id).single(),
+    ]);
+    setFollowedIds(new Set((follows ?? []).map((f: { product_id: string }) => f.product_id)));
+    setRateChanges((changes as RateChange[]) ?? []);
+    setAlertsSeenAt(profile?.alerts_seen_at ?? null);
+    setLoadingAlerts(false);
+  }, [user]);
+
+  useEffect(() => { if (isPro) loadAlertsData(); }, [isPro, loadAlertsData]);
+
+  const toggleFollow = useCallback(async (productId: string) => {
+    if (!user) return;
+    const isFollowing = followedIds.has(productId);
+    setFollowedIds((prev) => {
+      const next = new Set(prev);
+      if (isFollowing) next.delete(productId); else next.add(productId);
+      return next;
+    });
+    if (isFollowing) {
+      await supabase.from('followed_products').delete().eq('user_id', user.id).eq('product_id', productId);
+    } else {
+      await supabase.from('followed_products').insert({ user_id: user.id, product_id: productId });
+    }
+  }, [user, followedIds]);
+
+  const newChanges = rateChanges.filter((c) => followedIds.has(c.product_id) && (!alertsSeenAt || c.created_at > alertsSeenAt));
+
+  const markAlertsSeen = useCallback(async () => {
+    if (!user) return;
+    const now = new Date().toISOString();
+    setAlertsSeenAt(now);
+    await supabase.from('profiles').update({ alerts_seen_at: now }).eq('id', user.id);
+  }, [user]);
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
@@ -48,6 +109,44 @@ export default function HistorialScreen() {
             ))}
           </View>
         </View>
+
+        {isPro ? (
+          <View style={styles.alertsCard}>
+            <View style={styles.alertsHeader}>
+              <Text style={styles.alertsTitle}>🔔 Novedades de tasas</Text>
+              {newChanges.length > 0 && (
+                <TouchableOpacity onPress={markAlertsSeen}>
+                  <Text style={styles.alertsSeenBtn}>Marcar como visto</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            {loadingAlerts ? (
+              <ActivityIndicator color={Colors.primary} />
+            ) : newChanges.length === 0 ? (
+              <Text style={styles.alertsEmpty}>
+                {followedIds.size === 0
+                  ? 'Toca el 🔕 junto a un producto para seguirlo y recibir avisos aquí cuando cambie su tasa.'
+                  : 'No hay cambios nuevos en los productos que sigues.'}
+              </Text>
+            ) : (
+              newChanges.map((c) => (
+                <View key={c.id} style={styles.alertRow}>
+                  <Text style={styles.alertProduct}>{c.product_label}</Text>
+                  <View style={styles.alertChangeRow}>
+                    <Text style={styles.alertChange}>
+                      {c.old_rate_min != null ? `${c.old_rate_min}–${c.old_rate_max}%` : '—'} → {c.new_rate_min}–{c.new_rate_max}%
+                    </Text>
+                    <Text style={styles.alertDate}>{new Date(c.created_at).toLocaleDateString('es-PE')}</Text>
+                  </View>
+                </View>
+              ))
+            )}
+          </View>
+        ) : (
+          <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+            <PaywallBanner feature="Alertas de cambio de tasa" />
+          </View>
+        )}
 
         <View style={styles.chartBlock}>
           <View style={styles.chartScaleRow}>
@@ -85,6 +184,11 @@ export default function HistorialScreen() {
                   </Text>
                   {opt.rateLabel && <Text style={styles.rateLabel}>{opt.rateLabel}</Text>}
                 </View>
+                {isPro && (
+                  <TouchableOpacity onPress={() => toggleFollow(opt.id)} style={styles.followBtn}>
+                    <Text style={styles.followIcon}>{followedIds.has(opt.id) ? '🔔' : '🔕'}</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             );
           })}
@@ -124,8 +228,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  title: { fontSize: 22, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  subtitle: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4 },
+  title: { fontSize: 22, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
+  subtitle: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 4 },
 
   legend: {
     backgroundColor: Colors.surface,
@@ -134,11 +238,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  legendTitle: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 },
+  legendTitle: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 },
   legendRow: { flexDirection: 'row', gap: 16 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
+  legendText: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary },
 
   chartBlock: { backgroundColor: Colors.surface, marginTop: 8, paddingBottom: 8 },
 
@@ -153,7 +257,7 @@ const styles = StyleSheet.create({
   scaleLabel: {
     position: 'absolute',
     fontSize: 10,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textMuted,
     transform: [{ translateX: -10 }],
   },
@@ -168,8 +272,8 @@ const styles = StyleSheet.create({
   rowAlt: { backgroundColor: Colors.surfaceHigh },
 
   rowLabel: { width: 98, paddingRight: 8 },
-  rowInstitution: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
-  rowName: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 1 },
+  rowInstitution: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary },
+  rowName: { fontSize: 10, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, marginTop: 1 },
 
   barContainer: {
     flex: 1,
@@ -190,12 +294,34 @@ const styles = StyleSheet.create({
   barExt: { position: 'absolute', top: 0, bottom: 0, borderRadius: 4 },
 
   rowRight: { width: 62, paddingLeft: 8, alignItems: 'flex-end' },
-  rateText: { fontSize: 12, fontFamily: 'SpaceGrotesk_700Bold' },
-  rateLabel: { fontSize: 9, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'right' },
+  rateText: { fontSize: 12, fontFamily: 'Archivo_800ExtraBold' },
+  rateLabel: { fontSize: 9, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, textAlign: 'right' },
+
+  followBtn: { paddingLeft: 8, paddingVertical: 4 },
+  followIcon: { fontSize: 16 },
+
+  alertsCard: {
+    backgroundColor: Colors.surface,
+    marginHorizontal: 16,
+    marginTop: 12,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  alertsHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  alertsTitle: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary },
+  alertsSeenBtn: { fontSize: 12, fontFamily: 'Figtree_600SemiBold', color: Colors.primary },
+  alertsEmpty: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, lineHeight: 18 },
+  alertRow: { paddingVertical: 8, borderTopWidth: 1, borderTopColor: Colors.border },
+  alertProduct: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary },
+  alertChangeRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 2 },
+  alertChange: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary },
+  alertDate: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
 
   notes: { backgroundColor: Colors.surface, marginTop: 8, padding: 16 },
-  notesTitle: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 8 },
-  notesText: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20 },
+  notesTitle: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginBottom: 8 },
+  notesText: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 20 },
 
   infoCard: {
     backgroundColor: Colors.surfaceHigh,
@@ -205,6 +331,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary + '30',
   },
-  infoTitle: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary, marginBottom: 6 },
-  infoText: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 20 },
+  infoTitle: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.primary, marginBottom: 6 },
+  infoText: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 20 },
 });

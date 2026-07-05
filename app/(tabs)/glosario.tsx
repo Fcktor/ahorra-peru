@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   list: { padding: 16, paddingBottom: 40 },
   header: { marginBottom: 16 },
-  title: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginBottom: 4 },
-  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginBottom: 16 },
+  title: { fontSize: 24, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginBottom: 4 },
+  subtitle: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginBottom: 16 },
   modeSwitch: {
     flexDirection: 'row',
     backgroundColor: Colors.surface,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   modeButton: { flex: 1, paddingVertical: 10, borderRadius: 9, alignItems: 'center' },
   modeButtonActive: { backgroundColor: Colors.primary },
-  modeButtonText: { fontSize: 13, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
+  modeButtonText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textSecondary },
   modeButtonTextActive: { color: Colors.background },
   searchContainer: {
     flexDirection: 'row',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 15,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textPrimary,
     paddingVertical: 12,
   },
@@ -155,9 +155,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  term: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.primary, flex: 1 },
+  term: { fontSize: 16, fontFamily: 'Figtree_700Bold', color: Colors.primary, flex: 1 },
   chevron: { fontSize: 12, color: Colors.textMuted },
-  definition: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21, marginTop: 10 },
+  definition: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 21, marginTop: 10 },
   exampleBox: {
     marginTop: 10,
     backgroundColor: Colors.primary + '15',
@@ -166,6 +166,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: Colors.primary,
   },
-  exampleLabel: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
-  example: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 19 },
+  exampleLabel: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
+  example: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 19 },
 });

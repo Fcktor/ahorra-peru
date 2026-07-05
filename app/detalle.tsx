@@ -125,7 +125,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 16, paddingBottom: 40 },
-  error: { fontSize: 16, fontFamily: 'Inter_400Regular', color: Colors.danger, padding: 20 },
+  error: { fontSize: 16, fontFamily: 'Figtree_400Regular', color: Colors.danger, padding: 20 },
   heroCard: {
     backgroundColor: Colors.surfaceHigh,
     borderRadius: 20,
@@ -137,14 +137,14 @@ const styles = StyleSheet.create({
   },
   institution: {
     fontSize: 11,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Figtree_600SemiBold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
-  name: { fontSize: 20, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginTop: 4, textAlign: 'center' },
-  rate: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary, marginTop: 12 },
-  rateLabel: { fontSize: 12, fontFamily: 'Inter_500Medium', color: Colors.textMuted, marginTop: 4 },
+  name: { fontSize: 20, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginTop: 4, textAlign: 'center' },
+  rate: { fontSize: 52, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginTop: 12 },
+  rateLabel: { fontSize: 12, fontFamily: 'Figtree_500Medium', color: Colors.textMuted, marginTop: 4 },
   statsRow: {
     flexDirection: 'row',
     gap: 10,
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  statValue: { fontSize: 13, fontFamily: 'Inter_700Bold', textAlign: 'center' },
-  statLabel: { fontSize: 10, fontFamily: 'Inter_500Medium', color: Colors.textMuted, marginTop: 2, textTransform: 'uppercase' },
+  statValue: { fontSize: 13, fontFamily: 'Figtree_700Bold', textAlign: 'center' },
+  statLabel: { fontSize: 10, fontFamily: 'Figtree_500Medium', color: Colors.textMuted, marginTop: 2, textTransform: 'uppercase' },
   section: {
     backgroundColor: Colors.surface,
     borderRadius: 14,
@@ -169,11 +169,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  sectionTitle: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 10 },
-  bodyText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21 },
+  sectionTitle: { fontSize: 15, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginBottom: 10 },
+  bodyText: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 21 },
   listRow: { flexDirection: 'row', marginBottom: 6, gap: 8 },
-  bullet: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.primary, marginTop: 1 },
-  listText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 21, flex: 1 },
+  bullet: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.primary, marginTop: 1 },
+  listText: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 21, flex: 1 },
   howToBox: {
     backgroundColor: Colors.primary + '15',
     borderRadius: 8,
@@ -191,6 +191,6 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  ctaText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaText: { fontSize: 16, fontFamily: 'Figtree_700Bold', color: Colors.background },
   ctaArrow: { fontSize: 18, color: Colors.background },
 });

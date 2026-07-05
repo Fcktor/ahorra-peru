@@ -10,14 +10,6 @@ const RISK_COLORS: Record<string, string> = {
   alto: Colors.riskHigh,
 };
 
-const LIQUIDITY_ICONS: Record<string, string> = {
-  inmediata: '⚡',
-  '1-3 días': '🕐',
-  'al vencimiento': '🔒',
-  restringida: '⛔',
-  'largo plazo': '🏗️',
-};
-
 interface Props {
   option: SavingsOption;
   onPress: (option: SavingsOption) => void;
@@ -28,7 +20,6 @@ interface Props {
 
 export default function OptionCard({ option, onPress, onSelect, selected, selectable }: Props) {
   const riskColor = RISK_COLORS[option.risk] ?? Colors.textMuted;
-  const liquidityIcon = LIQUIDITY_ICONS[option.liquidity] ?? '📅';
   const rateDisplay =
     option.rateMin === option.rateMax
       ? `${option.rateMin}%`
@@ -70,7 +61,6 @@ export default function OptionCard({ option, onPress, onSelect, selected, select
           <Text style={[styles.badgeText, { color: riskColor }]}>Riesgo {option.risk}</Text>
         </View>
         <View style={styles.liquidityBadge}>
-          <Text style={styles.liquidityIcon}>{liquidityIcon}</Text>
           <Text style={styles.liquidityText}>{option.liquidity}</Text>
         </View>
         {option.minAmount > 0 && (
@@ -84,11 +74,16 @@ export default function OptionCard({ option, onPress, onSelect, selected, select
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 10,
+    borderRadius: 22,
+    padding: 18,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: Colors.border,
+    shadowColor: Colors.primaryDark,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 2,
   },
   cardSelected: {
     borderColor: Colors.primary,
@@ -104,7 +99,7 @@ const styles = StyleSheet.create({
   titleBlock: { flex: 1, marginRight: 12 },
   institution: {
     fontSize: 11,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Figtree_600SemiBold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -112,7 +107,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textPrimary,
     lineHeight: 22,
   },
@@ -120,22 +115,22 @@ const styles = StyleSheet.create({
   rateBlock: { alignItems: 'flex-end' },
   rate: {
     fontSize: 36,
-    fontFamily: 'SpaceGrotesk_700Bold',
+    fontFamily: 'Archivo_800ExtraBold',
     color: Colors.primary,
     lineHeight: 40,
   },
   rateLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Figtree_500Medium',
     color: Colors.textMuted,
     marginTop: 2,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   selectBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     borderWidth: 1.5,
     borderColor: Colors.border,
     alignItems: 'center',
@@ -145,7 +140,7 @@ const styles = StyleSheet.create({
   selectBtnActive: { borderColor: Colors.primary, backgroundColor: Colors.primary },
   selectBtnText: {
     fontSize: 15,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textMuted,
   },
   selectBtnTextActive: { color: Colors.background },
@@ -158,34 +153,32 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 20,
     gap: 5,
   },
   dot: { width: 6, height: 6, borderRadius: 3 },
   badgeText: {
-    fontSize: 11,
-    fontFamily: 'Inter_600SemiBold',
+    fontSize: 12,
+    fontFamily: 'Figtree_600SemiBold',
   },
   liquidityBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    backgroundColor: Colors.surfaceHigh,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 20,
-    gap: 4,
   },
-  liquidityIcon: { fontSize: 11 },
   liquidityText: {
-    fontSize: 11,
-    fontFamily: 'Inter_500Medium',
+    fontSize: 12,
+    fontFamily: 'Figtree_600SemiBold',
     color: Colors.textSecondary,
   },
   minAmount: {
     fontSize: 11,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Figtree_500Medium',
     color: Colors.textMuted,
     marginLeft: 'auto',
   },

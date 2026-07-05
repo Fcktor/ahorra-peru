@@ -114,8 +114,8 @@ export function RateHistoryChart() {
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 8 },
-  title: { fontSize: 16, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary },
-  subtitle: { fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 2, marginBottom: 12 },
+  title: { fontSize: 16, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary },
+  subtitle: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 2, marginBottom: 12 },
 
   chartCard: {
     backgroundColor: Colors.surface,
@@ -128,12 +128,12 @@ const styles = StyleSheet.create({
   chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
   chartTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dot: { width: 8, height: 8, borderRadius: 4 },
-  chartTitle: { fontSize: 12, fontFamily: 'Inter_700Bold', color: Colors.textPrimary },
-  chartCurrent: { fontSize: 14, fontFamily: 'SpaceGrotesk_700Bold' },
+  chartTitle: { fontSize: 12, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary },
+  chartCurrent: { fontSize: 14, fontFamily: 'Archivo_800ExtraBold' },
 
   axisRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 2 },
-  axisLabel: { fontSize: 9, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
+  axisLabel: { fontSize: 9, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary },
   axisLabelHidden: { opacity: 0 },
 
-  source: { fontSize: 10, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, marginTop: 4, textAlign: 'center' },
+  source: { fontSize: 10, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginTop: 4, textAlign: 'center' },
 });

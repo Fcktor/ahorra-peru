@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { padding: 20, paddingBottom: 48 },
   closeBtn: { alignSelf: 'flex-end', padding: 4, marginBottom: 8 },
-  closeText: { fontSize: 20, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  closeText: { fontSize: 20, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
 
   hero: { alignItems: 'center', marginBottom: 24 },
   proBadge: {
@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     marginBottom: 12,
   },
-  proBadgeText: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
-  title: { fontSize: 30, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center' },
-  subtitle: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', marginTop: 6, lineHeight: 20 },
+  proBadgeText: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.background, letterSpacing: 1 },
+  title: { fontSize: 30, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary, textAlign: 'center' },
+  subtitle: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, textAlign: 'center', marginTop: 6, lineHeight: 20 },
 
   priceCard: {
     backgroundColor: Colors.surfaceHigh,
@@ -159,9 +159,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.highlight + '40',
   },
-  price: { fontSize: 52, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.highlightDark },
-  pricePer: { fontSize: 18, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, alignSelf: 'flex-end', marginBottom: 10 },
-  priceSub: { position: 'absolute', bottom: 10, fontSize: 12, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  price: { fontSize: 52, fontFamily: 'Archivo_800ExtraBold', color: Colors.highlightDark },
+  pricePer: { fontSize: 18, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, alignSelf: 'flex-end', marginBottom: 10 },
+  priceSub: { position: 'absolute', bottom: 10, fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
 
   featuresCard: {
     backgroundColor: Colors.surface,
@@ -172,12 +172,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   featuresCardPro: { borderColor: Colors.highlight + '60', borderWidth: 2 },
-  featuresTitle: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
-  featuresTitlePro: { fontSize: 11, fontFamily: 'Inter_700Bold', color: Colors.highlightDark, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
+  featuresTitle: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
+  featuresTitlePro: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.highlightDark, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.8 },
   featureRow: { flexDirection: 'row', gap: 10, marginBottom: 8, alignItems: 'center' },
-  checkFree: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.textMuted },
-  checkPro: { fontSize: 14, fontFamily: 'Inter_700Bold', color: Colors.highlightDark },
-  featureText: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, flex: 1 },
+  checkFree: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.textMuted },
+  checkPro: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.highlightDark },
+  featureText: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, flex: 1 },
 
   cta: {
     backgroundColor: Colors.primary,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  ctaText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.background },
+  ctaText: { fontSize: 16, fontFamily: 'Figtree_700Bold', color: Colors.background },
   ctaSecondary: {
     backgroundColor: Colors.surface,
     borderRadius: 16,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  ctaSecondaryText: { fontSize: 16, fontFamily: 'Inter_700Bold', color: Colors.primary },
-  disclaimer: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'center', marginTop: 16 },
-  error: { fontSize: 13, fontFamily: 'Inter_400Regular', color: Colors.danger, textAlign: 'center', marginTop: 8 },
+  ctaSecondaryText: { fontSize: 16, fontFamily: 'Figtree_700Bold', color: Colors.primary },
+  disclaimer: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, textAlign: 'center', marginTop: 16 },
+  error: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.danger, textAlign: 'center', marginTop: 8 },
 });

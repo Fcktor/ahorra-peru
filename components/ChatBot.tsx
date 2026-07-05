@@ -279,12 +279,12 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 15,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textPrimary,
   },
   headerSub: {
     fontSize: 11,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textMuted,
     marginTop: 1,
   },
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   },
   bubbleText: {
     fontSize: 14,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     lineHeight: 20,
   },
   bubbleTextBot: { color: Colors.textPrimary },
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   faqBlock: { marginTop: 8, gap: 6 },
   faqTitle: {
     fontSize: 10,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   },
   faqChipText: {
     fontSize: 13,
-    fontFamily: 'Inter_600SemiBold',
+    fontFamily: 'Figtree_600SemiBold',
     color: Colors.textPrimary,
     flex: 1,
   },
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 14,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textPrimary,
     maxHeight: 100,
   },

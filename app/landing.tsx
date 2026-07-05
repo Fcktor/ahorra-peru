@@ -325,9 +325,9 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 6,
   },
-  navLogo: { fontSize: 16, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
+  navLogo: { fontSize: 16, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
   navLinkRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  navLink: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
+  navLink: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary },
 
   hero: {
     paddingHorizontal: 24,
@@ -350,10 +350,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary + '30',
   },
-  heroBadgeText: { fontSize: 11, fontFamily: 'Inter_600SemiBold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 1 },
+  heroBadgeText: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 1 },
   heroTitle: {
     fontSize: 42,
-    fontFamily: 'SpaceGrotesk_700Bold',
+    fontFamily: 'Archivo_800ExtraBold',
     color: Colors.textPrimary,
     lineHeight: 49,
     marginBottom: 16,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   heroSub: {
     fontSize: 15,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textSecondary,
     lineHeight: 23,
     marginBottom: 28,
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   ctaSolid: { backgroundColor: Colors.primary },
-  heroCTAText: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.background },
+  heroCTAText: { fontSize: 15, fontFamily: 'Figtree_700Bold', color: Colors.background },
   ctaIcon: {
     width: 38,
     height: 38,
@@ -421,8 +421,8 @@ const styles = StyleSheet.create({
   statsOuter: { marginHorizontal: 20, marginBottom: 4 },
   statsRow: { flexDirection: 'row' },
   statItem: { flex: 1, alignItems: 'center' },
-  statNum: { fontSize: 26, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.primary },
-  statLabel: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, marginTop: 2, textAlign: 'center' },
+  statNum: { fontSize: 26, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
+  statLabel: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, marginTop: 2, textAlign: 'center' },
   statDivider: { width: 1, backgroundColor: Colors.border, marginHorizontal: 8 },
 
   section: {
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 10,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  institutionText: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: Colors.textSecondary },
+  institutionText: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary },
 
   featuresGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 24 },
   featureItem: {},
@@ -459,8 +459,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 14,
   },
-  featureTitle: { fontSize: 14.5, fontFamily: 'Inter_700Bold', color: Colors.textPrimary, marginBottom: 6, lineHeight: 20 },
-  featureDesc: { fontSize: 12.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, lineHeight: 18 },
+  featureTitle: { fontSize: 14.5, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginBottom: 6, lineHeight: 20 },
+  featureDesc: { fontSize: 12.5, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 18 },
 
   productsRow: { flexDirection: 'row', gap: 12 },
   productCard: {
@@ -484,10 +484,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 12,
   },
-  productInstitution: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 },
-  productName: { fontSize: 12.5, fontFamily: 'Inter_600SemiBold', color: Colors.textPrimary, marginTop: 3, marginBottom: 10, lineHeight: 17, minHeight: 34 },
+  productInstitution: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 },
+  productName: { fontSize: 12.5, fontFamily: 'Figtree_600SemiBold', color: Colors.textPrimary, marginTop: 3, marginBottom: 10, lineHeight: 17, minHeight: 34 },
   productBadge: { alignSelf: 'flex-start', borderRadius: 999, paddingHorizontal: 9, paddingVertical: 4 },
-  productBadgeText: { fontSize: 11, fontFamily: 'SpaceGrotesk_700Bold' },
+  productBadgeText: { fontSize: 11, fontFamily: 'Archivo_800ExtraBold' },
 
   pricingOuter: { marginBottom: 14 },
   pricingOuterPro: { borderColor: Colors.highlight + '30' },
@@ -499,12 +499,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: 10,
   },
-  proBadgeText: { fontSize: 10, fontFamily: 'Inter_700Bold', color: Colors.background, letterSpacing: 1 },
-  planName: { fontSize: 15, fontFamily: 'Inter_700Bold', color: Colors.textMuted, marginBottom: 4 },
-  planPrice: { fontSize: 38, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textSecondary, marginBottom: 18 },
-  planPer: { fontSize: 15, fontFamily: 'Inter_400Regular', color: Colors.textMuted },
+  proBadgeText: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.background, letterSpacing: 1 },
+  planName: { fontSize: 15, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, marginBottom: 4 },
+  planPrice: { fontSize: 38, fontFamily: 'Archivo_800ExtraBold', color: Colors.textSecondary, marginBottom: 18 },
+  planPer: { fontSize: 15, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
   planFeatureRow: { flexDirection: 'row', gap: 10, marginBottom: 10, alignItems: 'center' },
-  planFeatureText: { fontSize: 13.5, fontFamily: 'Inter_400Regular', color: Colors.textSecondary },
+  planFeatureText: { fontSize: 13.5, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary },
   planBtnFree: {
     borderWidth: 1,
     borderColor: Colors.border,
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   },
-  planBtnFreeText: { fontSize: 14.5, fontFamily: 'Inter_700Bold', color: Colors.textSecondary },
+  planBtnFreeText: { fontSize: 14.5, fontFamily: 'Figtree_700Bold', color: Colors.textSecondary },
 
   finalCTA: {
     padding: 32,
@@ -521,13 +521,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
-  finalTitle: { fontSize: 24, fontFamily: 'SpaceGrotesk_700Bold', color: Colors.textPrimary, textAlign: 'center', marginBottom: 12 },
-  finalSub: { fontSize: 14, fontFamily: 'Inter_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 21, marginBottom: 28, maxWidth: 340 },
+  finalTitle: { fontSize: 24, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary, textAlign: 'center', marginBottom: 12 },
+  finalSub: { fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, textAlign: 'center', lineHeight: 21, marginBottom: 28, maxWidth: 340 },
 
   footer: {
     padding: 28,
     alignItems: 'center',
     gap: 6,
   },
-  footerText: { fontSize: 11, fontFamily: 'Inter_400Regular', color: Colors.textMuted, textAlign: 'center' },
+  footerText: { fontSize: 11, fontFamily: 'Figtree_400Regular', color: Colors.textMuted, textAlign: 'center' },
 });

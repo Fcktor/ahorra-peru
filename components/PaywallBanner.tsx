@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
   text: { flex: 1 },
   title: {
     fontSize: 14,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.textPrimary,
   },
   sub: {
     fontSize: 12,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: 'Figtree_400Regular',
     color: Colors.textMuted,
     marginTop: 2,
   },
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 13,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Figtree_700Bold',
     color: Colors.background,
   },
 });
