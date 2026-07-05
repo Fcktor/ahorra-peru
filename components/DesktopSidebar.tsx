@@ -18,7 +18,7 @@ const NAV_ITEMS: { href: '/' | '/calculadora' | '/plan' | '/historial' | '/glosa
 export default function DesktopSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isPro } = useAuth();
+  const { user, isPro, signOut } = useAuth();
   const [bcrpData, setBcrpData] = useState<BCRPData | null>(null);
 
   useEffect(() => { fetchBCRPData().then(setBcrpData); }, []);
@@ -58,14 +58,20 @@ export default function DesktopSidebar() {
         </View>
       </View>
 
-      {user && (
-        <View style={styles.userRow}>
+      {user ? (
+        <Pressable style={styles.userRow} onPress={signOut}>
           <View style={styles.avatar}><Text style={styles.avatarText}>{initial}</Text></View>
           <View>
             <Text style={styles.userName}>{user.email}</Text>
             <Text style={styles.userPlan}>{isPro ? 'Plan Pro' : 'Plan gratuito'}</Text>
           </View>
-        </View>
+          <Ionicons name="log-out-outline" size={16} color="#9FB0A6" style={{ marginLeft: 'auto' }} />
+        </Pressable>
+      ) : (
+        <Pressable style={styles.loginRow} onPress={() => router.push('/login')}>
+          <Ionicons name="log-in-outline" size={17} color="#fff" />
+          <Text style={styles.loginText}>Iniciar sesión</Text>
+        </Pressable>
       )}
     </View>
   );
@@ -112,6 +118,16 @@ const styles = StyleSheet.create({
   bcrpLabel: { fontSize: 12.5, fontFamily: 'Figtree_400Regular', color: '#C8D2CB' },
   bcrpValue: { marginLeft: 'auto', fontFamily: 'Archivo_800ExtraBold', fontSize: 13, color: '#F6F4EC' },
   userRow: { flexDirection: 'row', alignItems: 'center', gap: 11, paddingHorizontal: 8 },
+  loginRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 9,
+    backgroundColor: Colors.primary,
+    borderRadius: 11,
+    paddingVertical: 12,
+  },
+  loginText: { fontSize: 14, fontFamily: 'Figtree_600SemiBold', color: '#fff' },
   avatar: {
     width: 34, height: 34, borderRadius: 17,
     backgroundColor: Colors.primary,
