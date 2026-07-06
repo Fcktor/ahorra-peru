@@ -24,8 +24,8 @@
       "name": "AhorraPeru",
       "shortName": "AhorraPeru",
       "description": "Descubre dónde hacer crecer tus ahorros en soles. Datos en tiempo real del BCRP.",
-      "themeColor": "#1A5276",
-      "backgroundColor": "#F4F6F9",
+      "themeColor": "#0E7A47",
+      "backgroundColor": "#F6F4EC",
       "output": "static",
       "bundler": "metro"
     },
