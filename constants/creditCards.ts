@@ -77,13 +77,15 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Gasto recurrente en súper, delivery o gasolina y quiere ahorro directo, no millas',
     tags: ['cashback', 'super', 'delivery'],
-    websiteUrl: 'https://interbank.pe',
+    websiteUrl: 'https://interbank.pe/tarjetas/tarjetas-credito/cashback',
   },
   {
     // Sin verificar: no aparece entre las 6 tarjetas del comparador oficial de BBVA
-    // capturado (Signature/Bfree/Platinum en Visa y Mastercard, más Infinite).
-    // Confirmar si sigue vigente y su TCEA real (BBVA no diferencia TCEA por nivel
-    // en su comparador — ver wiki de Finanzas Peru para detalle).
+    // capturado (Signature/Bfree/Platinum en Visa y Mastercard, más Infinite), ni en
+    // búsquedas del catálogo BBVA Perú — "Aqua" solo aparece como producto de BBVA
+    // España. Podría no existir como tarjeta de crédito en Perú; confirmar con el banco
+    // antes de seguir mostrándola. Mientras tanto el link va al catálogo real de BBVA
+    // Perú en vez de la home genérica.
     id: 'bbva-aqua',
     name: 'BBVA Aqua',
     bank: 'BBVA',
@@ -96,7 +98,7 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Primera tarjeta de crédito, quiere empezar a construir historial sin pagar de más',
     tags: ['puntos', 'principiante'],
-    websiteUrl: 'https://www.bbva.pe',
+    websiteUrl: 'https://www.bbva.pe/personas/productos/tarjetas/credito.html',
   },
   {
     // Nombre en el catálogo oficial de Scotiabank: "Visa Sin Membresía" (no confirmado
@@ -114,7 +116,7 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Quiere simplicidad total: nunca pagar membresía ni cumplir condiciones',
     tags: ['sin-membresia', 'principiante'],
-    websiteUrl: 'https://www.scotiabank.com.pe',
+    websiteUrl: 'https://www.scotiabank.com.pe/Personas/tarjetas/credito',
   },
   {
     // Sin verificar: fuera del alcance de la investigación de mercado hecha hasta
@@ -132,7 +134,7 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Ingreso bajo o sin historial crediticio, compra seguido en tiendas del grupo Falabella',
     tags: ['sin-membresia', 'principiante', 'cuotas'],
-    websiteUrl: 'https://tarjetas.pe/tarjeta-de-credito-falabella',
+    websiteUrl: 'https://www.bancofalabella.pe/tarjetas-credito-cmr',
   },
   {
     // Sin verificar: fuera del alcance de la investigación de mercado hecha hasta
@@ -150,6 +152,6 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Compras grandes (muebles, electrodomésticos, viajes) que quiere fraccionar sin pagar intereses',
     tags: ['cuotas', 'premium'],
-    websiteUrl: 'https://www.dinersclub.com.pe',
+    websiteUrl: 'https://www.dinersclub.pe',
   },
 ];

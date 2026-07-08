@@ -26,7 +26,7 @@ const FAQ = [
   },
   {
     question: '¿Qué es el FSD?',
-    answer: 'El Fondo de Seguro de Depósitos protege tu dinero hasta S/ 124,000 si el banco o financiera quiebra. Cubre bancos, financieras y cajas municipales reguladas por la SBS. Los fondos mutuos y AFP no están cubiertos por el FSD.',
+    answer: 'El Fondo de Seguro de Depósitos protege tu dinero hasta S/ 122,000 si el banco o financiera quiebra (el monto se actualiza trimestralmente). Cubre bancos, financieras, cajas municipales y cajas rurales reguladas por la SBS. Los fondos mutuos y AFP no están cubiertos por el FSD.',
   },
   {
     question: '¿Cuál me conviene?',

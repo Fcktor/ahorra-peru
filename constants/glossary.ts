@@ -22,7 +22,7 @@ export const GLOSSARY: GlossaryTerm[] = [
   },
   {
     term: 'FSD (Fondo de Seguro de Depósitos)',
-    definition: 'Es el seguro que protege tu dinero en bancos peruanos. Si un banco quiebra, el FSD te devuelve hasta S/ 124,000 por persona. Es por eso que los depósitos en bancos se consideran sin riesgo.',
+    definition: 'Es el seguro que protege tu dinero en bancos peruanos. Si un banco quiebra, el FSD te devuelve hasta S/ 122,000 por persona (el monto se actualiza trimestralmente). Es por eso que los depósitos en bancos se consideran sin riesgo.',
     example: 'Si tienes S/ 80,000 en BCP y el banco quebrara (algo casi imposible), el FSD te devolvería todo.',
   },
   {

@@ -27,7 +27,7 @@ FUNCIONES DE LA APP:
 
 CONCEPTOS:
 - TREA: Tasa de Rendimiento Efectiva Anual — lo que realmente ganas en 1 año con capitalización
-- FSD: Fondo de Seguro de Depósitos — protege hasta S/ 124,000 en bancos y financieras reguladas
+- FSD: Fondo de Seguro de Depósitos — protege hasta S/ 122,000 (se actualiza trimestralmente) en bancos, financieras, cajas municipales y rurales reguladas
 - CTS: Compensación por Tiempo de Servicios — beneficio laboral, mayo y noviembre
 - AFP: Administradora de Fondos de Pensiones — descuenta 10% del sueldo, para la jubilación
 
