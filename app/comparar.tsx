@@ -172,7 +172,7 @@ export default function CompararScreen() {
           )}
           {optB.websiteUrl && (
             <TouchableOpacity style={[styles.ctaBtn, styles.ctaBtnB]} onPress={() => Linking.openURL(optB.websiteUrl!)}>
-              <Text style={styles.ctaBtnText}>{optB.institution} →</Text>
+              <Text style={[styles.ctaBtnText, styles.ctaBtnTextB]}>{optB.institution} →</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -388,4 +388,5 @@ const styles = StyleSheet.create({
   },
   ctaBtnB: { backgroundColor: Colors.surfaceHigh, borderWidth: 1, borderColor: Colors.primary },
   ctaBtnText: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.background },
+  ctaBtnTextB: { color: Colors.primary },
 });
