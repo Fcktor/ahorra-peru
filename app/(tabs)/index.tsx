@@ -118,6 +118,27 @@ export default function ComparadorScreen() {
             ))}
           </View>
 
+          {selected.length > 0 && (
+            <View style={styles.desktopCompareBar}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.floatingCount}>{selected.length}/2 seleccionadas</Text>
+                <Text style={styles.floatingNames}>
+                  {selected.map((id) => SAVINGS_OPTIONS.find((o) => o.id === id)?.institution ?? id).join(' vs ')}
+                </Text>
+              </View>
+              <View style={styles.floatingBtns}>
+                <TouchableOpacity style={styles.clearBtn} onPress={() => setSelected([])}>
+                  <Text style={styles.clearBtnText}>✕</Text>
+                </TouchableOpacity>
+                {selected.length === 2 && (
+                  <TouchableOpacity style={styles.compareBtn} onPress={handleCompare}>
+                    <Text style={styles.compareBtnText}>Comparar →</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          )}
+
           <View style={styles.tableCard}>
             <View style={styles.tableHeaderRow}>
               <Text style={styles.tableHeaderCell}>Producto</Text>
@@ -266,6 +287,11 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, fontSize: 14, fontFamily: 'Figtree_400Regular', color: Colors.textPrimary, padding: 0 },
   filterBar: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 20 },
   sortByLabel: { marginLeft: 'auto', fontSize: 13.5, fontFamily: 'Figtree_400Regular', color: Colors.textMuted },
+  desktopCompareBar: {
+    flexDirection: 'row', alignItems: 'center', gap: 16,
+    backgroundColor: Colors.surfaceHigh, borderWidth: 1, borderColor: Colors.primary + '40',
+    borderRadius: 16, paddingVertical: 14, paddingHorizontal: 20, marginBottom: 20,
+  },
   tableCard: {
     backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border,
     borderRadius: 20, overflow: 'hidden',
