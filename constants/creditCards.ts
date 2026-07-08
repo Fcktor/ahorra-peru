@@ -10,7 +10,7 @@ export interface CreditCard {
   minIncome: number;
   /** TCEA oficial (soles), la cifra que de verdad hay que comparar entre tarjetas. Undefined si aún no se verificó contra fuente oficial del banco. */
   tcea?: string;
-  /** Red de pago, solo si está confirmada contra fuente oficial. Undefined si no se verificó (ej. BBVA Aqua). */
+  /** Red de pago, solo si está confirmada contra fuente oficial. Undefined si no se verificó. */
   network?: 'Visa' | 'Mastercard' | 'Amex' | 'Diners Club' | 'CMR';
   benefits: string[];
   bestFor: string;
@@ -63,48 +63,11 @@ export const CREDIT_CARDS: CreditCard[] = [
     websiteUrl: 'https://interbank.pe/tarjetas/tarjetas-credito/millas-benefit',
   },
   {
-    // Sin verificar contra fuente oficial: no aparece en la Hoja Resumen de Interbank
-    // ni en el catálogo web capturado. Confirmar nombre real, TCEA y minIncome.
-    id: 'interbank-cashback',
-    name: 'Tarjeta Cashback',
-    bank: 'Interbank',
-    annualFee: 'S/ 150-250/año según categoría',
-    minIncome: 1800,
-    benefits: [
-      'Hasta 5% de devolución en categorías seleccionadas',
-      'Cashback en supermercados, grifos y restaurantes',
-      'Sin necesidad de canjear puntos, el dinero vuelve directo',
-    ],
-    bestFor: 'Gasto recurrente en súper, delivery o gasolina y quiere ahorro directo, no millas',
-    tags: ['cashback', 'super', 'delivery'],
-    websiteUrl: 'https://interbank.pe/tarjetas/tarjetas-credito/cashback',
-  },
-  {
-    // Sin verificar: no aparece entre las 6 tarjetas del comparador oficial de BBVA
-    // capturado (Signature/Bfree/Platinum en Visa y Mastercard, más Infinite), ni en
-    // búsquedas del catálogo BBVA Perú — "Aqua" solo aparece como producto de BBVA
-    // España. Podría no existir como tarjeta de crédito en Perú; confirmar con el banco
-    // antes de seguir mostrándola. Mientras tanto el link va al catálogo real de BBVA
-    // Perú en vez de la home genérica.
-    id: 'bbva-aqua',
-    name: 'BBVA Aqua',
-    bank: 'BBVA',
-    annualFee: 'Gratis el primer año',
-    minIncome: 1500,
-    benefits: [
-      '1 punto BBVA por cada sol gastado desde la primera compra',
-      'Canje en descuentos, productos y experiencias del ecosistema BBVA',
-      'Buena puerta de entrada si nunca tuviste tarjeta',
-    ],
-    bestFor: 'Primera tarjeta de crédito, quiere empezar a construir historial sin pagar de más',
-    tags: ['puntos', 'principiante'],
-    websiteUrl: 'https://www.bbva.pe/personas/productos/tarjetas/credito.html',
-  },
-  {
-    // Nombre en el catálogo oficial de Scotiabank: "Visa Sin Membresía" (no confirmado
-    // al 100% que sea el mismo producto comercializado como "Tarjeta Zero").
-    id: 'scotiabank-zero',
-    name: 'Tarjeta Zero',
+    // Nombre oficial: "Tarjeta Visa Clásica Sin Membresía". Antes en el código figuraba
+    // como "Tarjeta Zero" (nombre no usado por Scotiabank); minIncome S/600 coincide con
+    // el requisito real publicado (clientes Club Sueldo).
+    id: 'scotiabank-sin-membresia',
+    name: 'Visa Clásica Sin Membresía',
     bank: 'Scotiabank',
     annualFee: 'S/ 0 — sin membresía, sin condiciones',
     minIncome: 600,
@@ -116,11 +79,13 @@ export const CREDIT_CARDS: CreditCard[] = [
     ],
     bestFor: 'Quiere simplicidad total: nunca pagar membresía ni cumplir condiciones',
     tags: ['sin-membresia', 'principiante'],
-    websiteUrl: 'https://www.scotiabank.com.pe/Personas/tarjetas/credito',
+    websiteUrl: 'https://www.scotiabank.com.pe/Personas/tarjetas/tarjeta-credito-visa/visa-clasica-sin-membresia',
   },
   {
-    // Sin verificar: fuera del alcance de la investigación de mercado hecha hasta
-    // ahora (BCP, Interbank, Scotiabank, BBVA). Pendiente en la bóveda Finanzas Peru.
+    // Producto real confirmado en bancofalabella.pe, aunque el catálogo oficial de Perú
+    // la nombra "CMR Visa" (no "CMR Falabella" a secas). TCEA e ingreso mínimo exacto
+    // siguen sin verificar contra fuente oficial (fuera del alcance de la investigación
+    // de mercado hecha hasta ahora). Pendiente en la bóveda Finanzas Peru.
     id: 'cmr-falabella',
     name: 'CMR Falabella',
     bank: 'Falabella',
@@ -137,8 +102,9 @@ export const CREDIT_CARDS: CreditCard[] = [
     websiteUrl: 'https://www.bancofalabella.pe/tarjetas-credito-cmr',
   },
   {
-    // Sin verificar: fuera del alcance de la investigación de mercado hecha hasta
-    // ahora. Pendiente en la bóveda Finanzas Peru.
+    // Producto base real confirmado en dinersclub.pe/tarjetas/diners-club (existen también
+    // Diners Club Free y Diners Club Miles). TCEA e ingreso mínimo exacto siguen sin
+    // verificar contra fuente oficial. Pendiente en la bóveda Finanzas Peru.
     id: 'diners-club',
     name: 'Diners Club Perú',
     bank: 'Diners Club',

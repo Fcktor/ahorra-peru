@@ -83,13 +83,19 @@ function CardRow({ card }: { card: CreditCard }) {
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <CardVisual card={card} />
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, minWidth: 0 }}>
           <Text style={styles.bank}>{card.bank}</Text>
           <Text style={styles.name}>{card.name}</Text>
         </View>
         <View style={styles.tceaBox}>
           <Text style={styles.tceaLabel}>TCEA</Text>
-          <Text style={[styles.tceaValue, !card.tcea && styles.tceaValueMuted]}>
+          <Text
+            style={[
+              styles.tceaValue,
+              !card.tcea && styles.tceaValueMuted,
+              (card.tcea?.length ?? 0) > 10 && styles.tceaValueLong,
+            ]}
+          >
             {card.tcea ?? 'No publicada'}
           </Text>
         </View>
@@ -161,10 +167,11 @@ const styles = StyleSheet.create({
   bank: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
   name: { fontSize: 17, fontFamily: 'Archivo_800ExtraBold', color: Colors.textPrimary, marginTop: 2 },
 
-  tceaBox: { alignItems: 'flex-end' },
+  tceaBox: { alignItems: 'flex-end', maxWidth: 108, flexShrink: 0 },
   tceaLabel: { fontSize: 9, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
-  tceaValue: { fontSize: 18, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginTop: 2 },
+  tceaValue: { fontSize: 18, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary, marginTop: 2, textAlign: 'right' },
   tceaValueMuted: { fontSize: 13, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted },
+  tceaValueLong: { fontSize: 12, lineHeight: 15 },
 
   metaRow: { flexDirection: 'row', gap: 20, marginTop: 14 },
   metaItem: {},
