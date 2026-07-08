@@ -4,8 +4,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/colors';
 import { SAVINGS_OPTIONS } from '@/constants/savings';
+
+const ON_DARK_TEXT = '#EAF6EE';
+const ON_DARK_MUTED = '#A9D9BE';
 
 const RISK_ORDER = ['muy bajo', 'bajo', 'medio', 'alto'];
 const LIQUIDITY_ORDER = ['inmediata', '1-3 días', 'al vencimiento', 'restringida', 'largo plazo'];
@@ -48,39 +52,47 @@ export default function CompararScreen() {
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
       <ScrollView contentContainerStyle={styles.scroll}>
 
-        {/* CABECERA */}
-        <View style={styles.header}>
-          <View style={styles.headerCol}>
-            <Text style={styles.headerInstitution}>{optA.institution}</Text>
-            <Text style={styles.headerName}>{optA.name}</Text>
-            <View style={styles.scoreChip}>
-              <Text style={styles.scoreNum}>{scoreA}</Text>
-              <Text style={styles.scoreLabel}> pts</Text>
-            </View>
-          </View>
-          <View style={styles.headerCenter}>
-            <Text style={styles.vsText}>VS</Text>
-          </View>
-          <View style={[styles.headerCol, styles.headerColRight]}>
-            <Text style={[styles.headerInstitution, { textAlign: 'right' }]}>{optB.institution}</Text>
-            <Text style={[styles.headerName, { textAlign: 'right' }]}>{optB.name}</Text>
-            <View style={[styles.scoreChip, styles.scoreChipRight]}>
-              <Text style={styles.scoreNum}>{scoreB}</Text>
-              <Text style={styles.scoreLabel}> pts</Text>
-            </View>
-          </View>
-        </View>
+        {/* HERO: cabecera + veredicto en una sola tarjeta con gradiente */}
+        <View style={styles.heroWrap}>
+          <LinearGradient
+            colors={[Colors.primary, Colors.primaryDark]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.hero}
+          >
+            <View style={styles.heroTop}>
+              <View style={styles.heroCol}>
+                <Text style={styles.heroInstitution}>{optA.institution}</Text>
+                <Text style={styles.heroName}>{optA.name}</Text>
+                <View style={[styles.heroScoreChip, scoreA > scoreB && styles.heroScoreChipWinner]}>
+                  <Text style={styles.heroScoreNum}>{scoreA}</Text>
+                  <Text style={styles.heroScoreLabel}> pts</Text>
+                  {scoreA > scoreB && <Text style={styles.heroTrophy}> 🏆</Text>}
+                </View>
+              </View>
 
-        {/* GANADOR */}
-        {overallWinner ? (
-          <View style={styles.winnerBanner}>
-            <Text style={styles.winnerBannerText}>🏆 {overallWinner} gana en más criterios</Text>
-          </View>
-        ) : (
-          <View style={[styles.winnerBanner, styles.tieBanner]}>
-            <Text style={styles.winnerBannerText}>⚖️ Empate — ambas opciones son equivalentes</Text>
-          </View>
-        )}
+              <View style={styles.heroVsBadge}>
+                <Text style={styles.heroVsText}>VS</Text>
+              </View>
+
+              <View style={[styles.heroCol, styles.heroColRight]}>
+                <Text style={[styles.heroInstitution, styles.heroTextRight]}>{optB.institution}</Text>
+                <Text style={[styles.heroName, styles.heroTextRight]}>{optB.name}</Text>
+                <View style={[styles.heroScoreChip, styles.heroScoreChipRight, scoreB > scoreA && styles.heroScoreChipWinner]}>
+                  {scoreB > scoreA && <Text style={styles.heroTrophy}>🏆 </Text>}
+                  <Text style={styles.heroScoreNum}>{scoreB}</Text>
+                  <Text style={styles.heroScoreLabel}> pts</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.heroVerdict}>
+              <Text style={styles.heroVerdictText}>
+                {overallWinner ? `🏆 ${overallWinner} gana en más criterios` : '⚖️ Empate — ambas opciones son equivalentes'}
+              </Text>
+            </View>
+          </LinearGradient>
+        </View>
 
         {/* CRITERIOS */}
         <View style={styles.criteriaBlock}>
@@ -226,51 +238,58 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   scroll: { paddingBottom: 48 },
 
-  header: {
-    flexDirection: 'row',
-    backgroundColor: Colors.surfaceHigh,
-    padding: 16,
-    paddingBottom: 20,
-    alignItems: 'flex-start',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  headerCol: { flex: 1 },
-  headerColRight: { alignItems: 'flex-end' },
-  headerInstitution: {
+  heroWrap: { marginHorizontal: 16, marginTop: 16, marginBottom: 8, borderRadius: 24, overflow: 'hidden' },
+  hero: { paddingTop: 22 },
+  heroTop: { flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: 20, paddingBottom: 18, gap: 10 },
+  heroCol: { flex: 1 },
+  heroColRight: { alignItems: 'flex-end' },
+  heroTextRight: { textAlign: 'right' },
+  heroInstitution: {
     fontSize: 10,
     fontFamily: 'Figtree_600SemiBold',
-    color: Colors.textMuted,
+    color: ON_DARK_MUTED,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
-  headerName: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.textPrimary, marginTop: 3, lineHeight: 18 },
-  headerCenter: { width: 40, alignItems: 'center', paddingTop: 6 },
-  vsText: { fontSize: 11, fontFamily: 'Figtree_700Bold', color: Colors.textMuted, letterSpacing: 1 },
-  scoreChip: {
+  heroName: { fontSize: 14, fontFamily: 'Archivo_800ExtraBold', color: ON_DARK_TEXT, marginTop: 4, lineHeight: 19 },
+  heroVsBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    marginTop: 2,
+    backgroundColor: 'rgba(255,255,255,0.14)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroVsText: { fontSize: 11, fontFamily: 'Archivo_800ExtraBold', color: '#fff', letterSpacing: 0.5 },
+  heroScoreChip: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    marginTop: 10,
-    backgroundColor: Colors.primary + '20',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    marginTop: 12,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     alignSelf: 'flex-start',
     borderWidth: 1,
-    borderColor: Colors.primary + '40',
+    borderColor: 'rgba(255,255,255,0.2)',
   },
-  scoreChipRight: { alignSelf: 'flex-end' },
-  scoreNum: { fontSize: 20, fontFamily: 'Archivo_800ExtraBold', color: Colors.primary },
-  scoreLabel: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.textMuted },
-
-  winnerBanner: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 10,
+  heroScoreChipRight: { alignSelf: 'flex-end' },
+  heroScoreChipWinner: { backgroundColor: 'rgba(255,255,255,0.22)', borderColor: '#fff' },
+  heroScoreNum: { fontSize: 20, fontFamily: 'Archivo_800ExtraBold', color: '#fff' },
+  heroScoreLabel: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: ON_DARK_MUTED },
+  heroTrophy: { fontSize: 13 },
+  heroVerdict: {
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.15)',
+    paddingVertical: 13,
     paddingHorizontal: 16,
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.08)',
   },
-  tieBanner: { backgroundColor: Colors.surfaceHigh },
-  winnerBannerText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: Colors.background },
+  heroVerdictText: { fontSize: 13, fontFamily: 'Figtree_700Bold', color: '#fff', textAlign: 'center' },
 
   criteriaBlock: { backgroundColor: Colors.surface, marginTop: 8 },
   blockTitle: {
