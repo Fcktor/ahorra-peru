@@ -15,10 +15,13 @@ import { Colors } from '@/constants/colors';
 import { GLOSSARY, GlossaryTerm } from '@/constants/glossary';
 import { GlossaryQuiz } from '@/components/GlossaryQuiz';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 
 export default function GlosarioScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { award } = useGamification();
   const [mode, setMode] = useState<'explorar' | 'quiz'>('explorar');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -29,7 +32,16 @@ export default function GlosarioScreen() {
       t.definition.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggle = (term: string) => setExpanded(expanded === term ? null : term);
+  const toggle = (term: string) => {
+    const next = expanded === term ? null : term;
+    setExpanded(next);
+    if (next && user) {
+      award(ACTION_KEYS.GLOSSARY_TERM_READ, 2, {
+        dedupeKey: `glossary_term_read:${term}`,
+        metadata: { term },
+      });
+    }
+  };
 
   const header = (
     <View style={styles.header}>
