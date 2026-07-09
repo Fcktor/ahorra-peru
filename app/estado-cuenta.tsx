@@ -122,7 +122,7 @@ export default function EstadoCuentaScreen() {
       setPicking(false);
       setAnalyzing(false);
     }
-  }, []);
+  }, [user, award]);
 
   const renderResult = (analysis: Analysis) => (
     <>
