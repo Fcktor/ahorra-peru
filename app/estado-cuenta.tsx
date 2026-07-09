@@ -7,6 +7,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
+import { getStatementMonthStreak } from '@/services/gamification';
 import { supabase } from '@/services/supabase';
 import PaywallBanner from '@/components/PaywallBanner';
 import { CategorySpendChart, CategoriaGasto } from '@/components/CategorySpendChart';
@@ -54,6 +57,7 @@ function readBlobAsBase64(blob: Blob): Promise<string> {
 export default function EstadoCuentaScreen() {
   const router = useRouter();
   const { user, isPro } = useAuth();
+  const { award } = useGamification();
   const [picking, setPicking] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
@@ -102,6 +106,15 @@ export default function EstadoCuentaScreen() {
 
       setResult(data as Analysis);
       setHistory((prev) => [data as Analysis, ...prev]);
+
+      if (user) {
+        await award(ACTION_KEYS.STATEMENT_UPLOADED, 20, { metadata: { analysisId: (data as Analysis).id } });
+        const monthStreak = await getStatementMonthStreak(user.id);
+        if (monthStreak >= 2) {
+          const monthBucket = new Date().toISOString().slice(0, 7);
+          await award(ACTION_KEYS.STATEMENT_STREAK, 25, { dedupeKey: `statement_streak:${monthBucket}` });
+        }
+      }
     } catch (err) {
       console.error('Error al analizar estado de cuenta:', err);
       setError('No pudimos analizar el PDF. Verifica que sea un estado de cuenta válido e intenta de nuevo.');
