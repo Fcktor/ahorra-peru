@@ -6,6 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/colors';
 import { CREDIT_CARDS, CreditCard } from '@/constants/creditCards';
+import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 
 // Ordenadas por TCEA ascendente (la más barata primero). Las tarjetas sin TCEA
 // verificada van al final, no se asume que sean más baratas ni más caras.
@@ -79,6 +82,16 @@ function CardVisual({ card }: { card: CreditCard }) {
 }
 
 function CardRow({ card }: { card: CreditCard }) {
+  const { user } = useAuth();
+  const { award } = useGamification();
+
+  const handleVisit = () => {
+    if (user) {
+      award(ACTION_KEYS.CARD_VIEWED, 5, { dedupeKey: `card_viewed:${card.id}` });
+    }
+    if (card.websiteUrl) Linking.openURL(card.websiteUrl);
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
@@ -122,7 +135,7 @@ function CardRow({ card }: { card: CreditCard }) {
       </View>
 
       {card.websiteUrl && (
-        <TouchableOpacity style={styles.linkRow} onPress={() => Linking.openURL(card.websiteUrl!)}>
+        <TouchableOpacity style={styles.linkRow} onPress={handleVisit}>
           <Text style={styles.linkText}>Ver en {card.bank}</Text>
           <Ionicons name="arrow-forward" size={14} color={Colors.primary} />
         </TouchableOpacity>
