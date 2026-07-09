@@ -17,7 +17,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     key: 'erudito',
     title: 'Erudito',
-    description: 'Domina 20 términos del glosario',
+    description: 'Domina 10 términos del glosario',
     icon: '📚',
   },
   {

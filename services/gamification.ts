@@ -96,7 +96,7 @@ export async function checkAndUnlockAchievements(userId: string): Promise<string
     termCounts[term] = (termCounts[term] ?? 0) + 1;
     if (termCounts[term] >= 2) masteredTerms.add(term);
   });
-  await maybeUnlock('erudito', masteredTerms.size >= 20);
+  await maybeUnlock('erudito', masteredTerms.size >= 10);
 
   const { count: comparisonCount } = await supabase
     .from('xp_events')

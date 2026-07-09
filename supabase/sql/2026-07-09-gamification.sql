@@ -7,6 +7,10 @@ alter table profiles
 alter table bank_statement_analyses
   add column if not exists gastos_evitables_aplicados integer[] not null default '{}';
 
+create policy "update own analyses" on bank_statement_analyses
+  for update using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
 create table if not exists xp_events (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
