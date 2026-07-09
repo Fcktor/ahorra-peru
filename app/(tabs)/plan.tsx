@@ -16,6 +16,8 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 import { supabase } from '@/services/supabase';
 import PaywallBanner from '@/components/PaywallBanner';
 
@@ -76,6 +78,7 @@ const fmt = (n: number) => 'S/ ' + Math.round(n).toLocaleString('es-PE');
 export default function PlanScreen() {
   const router = useRouter();
   const { isPro, user } = useAuth();
+  const { award } = useGamification();
   const [ingreso, setIngreso] = useState('3000');
   const [gastos, setGastos] = useState('2000');
   const [savingsRate, setSavingsRate] = useState(20);
@@ -136,16 +139,23 @@ export default function PlanScreen() {
     if (!error && data) {
       setSavedPlans((prev) => [data as SavedPlan, ...prev]);
       setPlanName('');
+      await award(ACTION_KEYS.PLAN_SAVED, 10, { metadata: { planId: data.id } });
     }
     setSavingPlan(false);
-  }, [planName, user, parsed.ing, parsed.gast, savingsRate, emergencyAchieved]);
+  }, [planName, user, parsed.ing, parsed.gast, savingsRate, emergencyAchieved, award]);
 
   const handleLoadPlan = useCallback((p: SavedPlan) => {
     setIngreso(String(p.ingreso));
     setGastos(String(p.gastos));
     setSavingsRate(p.savings_rate);
     setEmergencyAchieved(p.emergency_achieved);
-  }, []);
+
+    const daysSinceCreated = (Date.now() - new Date(p.created_at).getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceCreated >= 7) {
+      const weekBucket = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+      award(ACTION_KEYS.PLAN_REVIEWED, 8, { dedupeKey: `plan_reviewed:${p.id}:${weekBucket}` });
+    }
+  }, [award]);
 
   const handleDeletePlan = useCallback(async (id: string) => {
     setSavedPlans((prev) => prev.filter((p) => p.id !== id));
