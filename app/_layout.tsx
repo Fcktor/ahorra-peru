@@ -1,8 +1,11 @@
 import { Stack } from 'expo-router';
 import { Platform, View } from 'react-native';
 import { AuthProvider } from '@/context/auth';
+import { GamificationProvider } from '@/context/gamification';
 import { Colors } from '@/constants/colors';
 import ChatBot from '@/components/ChatBot';
+import GamificationBadge from '@/components/GamificationBadge';
+import XPToast from '@/components/XPToast';
 import { useFonts } from 'expo-font';
 import { Archivo_800ExtraBold } from '@expo-google-fonts/archivo';
 import {
@@ -31,6 +34,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
+    <GamificationProvider>
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       {Head && (
         <Head>
@@ -83,6 +87,13 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+          name="progreso"
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="comparar"
           options={{
             title: 'Comparar',
@@ -96,7 +107,10 @@ export default function RootLayout() {
         <Stack.Screen name="pago-cancelado" options={{ headerShown: false }} />
       </Stack>
       <ChatBot />
+      <GamificationBadge />
+      <XPToast />
     </View>
+    </GamificationProvider>
     </AuthProvider>
   );
 }

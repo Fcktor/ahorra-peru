@@ -38,6 +38,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# superpowers subagent-driven-development scratch
+.superpowers/
+
 # generated native folders
 /ios
 /android

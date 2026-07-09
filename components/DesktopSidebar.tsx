@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
 import { fetchBCRPData, BCRPData } from '@/services/bcrp';
 
 const NAV_ITEMS: { href: '/' | '/calculadora' | '/plan' | '/historial' | '/glosario' | '/tarjetas'; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
@@ -19,6 +20,7 @@ export default function DesktopSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isPro, signOut } = useAuth();
+  const { levelInfo } = useGamification();
   const [bcrpData, setBcrpData] = useState<BCRPData | null>(null);
 
   useEffect(() => { fetchBCRPData().then(setBcrpData); }, []);
@@ -44,6 +46,18 @@ export default function DesktopSidebar() {
       })}
 
       <View style={styles.spacer} />
+
+      {user && (
+        <Pressable style={styles.levelCard} onPress={() => router.push('/progreso')}>
+          <Text style={styles.levelTitle}>{levelInfo.name.toUpperCase()}</Text>
+          <View style={styles.levelRow}>
+            <Text style={styles.levelValue}>Nivel {levelInfo.level}</Text>
+          </View>
+          <View style={styles.levelTrack}>
+            <View style={[styles.levelFill, { width: `${Math.round(levelInfo.progress * 100)}%` }]} />
+          </View>
+        </Pressable>
+      )}
 
       <View style={styles.bcrpCard}>
         <Text style={styles.bcrpTitle}>BCRP · TIEMPO REAL</Text>
@@ -106,6 +120,17 @@ const styles = StyleSheet.create({
   navText: { fontSize: 14.5, fontFamily: 'Figtree_500Medium', color: '#9FB0A6' },
   navTextActive: { fontFamily: 'Figtree_600SemiBold', color: '#fff' },
   spacer: { flex: 1, minHeight: 20 },
+  levelCard: {
+    backgroundColor: '#1C3128',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 12,
+  },
+  levelTitle: { fontSize: 10, fontFamily: 'Figtree_600SemiBold', color: '#8FA79A', letterSpacing: 1, marginBottom: 6 },
+  levelRow: { flexDirection: 'row', marginBottom: 8 },
+  levelValue: { fontFamily: 'Archivo_800ExtraBold', fontSize: 14, color: '#F6F4EC' },
+  levelTrack: { height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.12)', overflow: 'hidden' },
+  levelFill: { height: 6, borderRadius: 3, backgroundColor: '#5BC98A' },
   bcrpCard: {
     backgroundColor: '#1C3128',
     borderRadius: 14,

@@ -421,7 +421,7 @@ const d = StyleSheet.create({
     backgroundColor: '#8FD3F4',
   },
   sky: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#B8E4F0',
   },
   sun: {

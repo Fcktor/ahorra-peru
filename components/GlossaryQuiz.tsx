@@ -1,8 +1,12 @@
+// components/GlossaryQuiz.tsx
 import { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/colors';
 import { GLOSSARY, GlossaryTerm } from '@/constants/glossary';
-import { loadQuizProgress, saveQuizProgress, QuizProgress } from '@/services/quizStorage';
+import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { fetchQuizStats, QuizStats } from '@/services/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 
 function shuffle<T>(arr: T[]): T[] {
   const copy = [...arr];
@@ -28,50 +32,41 @@ const STREAK_MILESTONES: Record<number, string> = {
 };
 
 export function GlossaryQuiz() {
-  const [progress, setProgress] = useState<QuizProgress | null>(null);
+  const { user } = useAuth();
+  const { award } = useGamification();
+  const [stats, setStats] = useState<QuizStats | null>(null);
   const [streak, setStreak] = useState(0);
   const [question, setQuestion] = useState(() => buildQuestion());
   const [selected, setSelected] = useState<string | null>(null);
   const [milestone, setMilestone] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadQuizProgress().then(setProgress);
-  }, []);
+  const loadStats = () => { if (user) fetchQuizStats(user.id).then(setStats); };
+  useEffect(() => { loadStats(); }, [user]);
 
   const masteredCount = useMemo(() => {
-    if (!progress) return 0;
-    return Object.values(progress.correctCounts).filter((n) => n >= 2).length;
-  }, [progress]);
+    if (!stats) return 0;
+    return Object.values(stats.correctCounts).filter((n) => n >= 2).length;
+  }, [stats]);
 
-  if (!progress) return null;
+  if (!user || !stats) return null;
 
   const isCorrect = (term: string) => term === question.answer.term;
 
-  const onAnswer = (term: GlossaryTerm) => {
+  const onAnswer = async (term: GlossaryTerm) => {
     if (selected) return;
     setSelected(term.term);
 
     const correct = isCorrect(term.term);
     const nextStreak = correct ? streak + 1 : 0;
     setStreak(nextStreak);
-    if (correct && STREAK_MILESTONES[nextStreak]) {
-      setMilestone(STREAK_MILESTONES[nextStreak]);
-    } else {
-      setMilestone(null);
-    }
+    setMilestone(correct && STREAK_MILESTONES[nextStreak] ? STREAK_MILESTONES[nextStreak] : null);
 
-    const nextCorrectCounts = { ...progress.correctCounts };
     if (correct) {
-      nextCorrectCounts[question.answer.term] = (nextCorrectCounts[question.answer.term] ?? 0) + 1;
+      await award(ACTION_KEYS.QUIZ_CORRECT, 5, { metadata: { term: question.answer.term } });
+    } else {
+      await award(ACTION_KEYS.QUIZ_WRONG, 0, { metadata: { term: question.answer.term } });
     }
-    const nextProgress: QuizProgress = {
-      bestStreak: Math.max(progress.bestStreak, nextStreak),
-      totalCorrect: progress.totalCorrect + (correct ? 1 : 0),
-      totalAnswered: progress.totalAnswered + 1,
-      correctCounts: nextCorrectCounts,
-    };
-    setProgress(nextProgress);
-    saveQuizProgress(nextProgress);
+    loadStats();
 
     setTimeout(() => {
       setQuestion(buildQuestion(question.answer.term));
@@ -79,16 +74,14 @@ export function GlossaryQuiz() {
     }, 1100);
   };
 
-  const accuracy = progress.totalAnswered > 0
-    ? Math.round((progress.totalCorrect / progress.totalAnswered) * 100)
-    : 0;
+  const accuracy = stats.totalAnswered > 0 ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : 0;
 
   return (
     <View style={styles.container}>
       <View style={styles.statsRow}>
         <Stat label="Racha actual" value={`${streak} 🔥`} />
-        <Stat label="Mejor racha" value={`${progress.bestStreak}`} />
-        <Stat label="Precisión" value={progress.totalAnswered > 0 ? `${accuracy}%` : '—'} />
+        <Stat label="Mejor racha" value={`${stats.bestStreak}`} />
+        <Stat label="Precisión" value={stats.totalAnswered > 0 ? `${accuracy}%` : '—'} />
       </View>
 
       <View style={styles.masteryRow}>

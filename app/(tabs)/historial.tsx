@@ -7,6 +7,8 @@ import { Colors } from '@/constants/colors';
 import { SAVINGS_OPTIONS } from '@/constants/savings';
 import { RateHistoryChart } from '@/components/RateHistoryChart';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 import { supabase } from '@/services/supabase';
 import PaywallBanner from '@/components/PaywallBanner';
 
@@ -41,6 +43,7 @@ const sorted = [...SAVINGS_OPTIONS].sort((a, b) => b.rateMax - a.rateMax);
 
 export default function HistorialScreen() {
   const { isPro, user } = useAuth();
+  const { award } = useGamification();
   const [followedIds, setFollowedIds] = useState<Set<string>>(new Set());
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [alertsSeenAt, setAlertsSeenAt] = useState<string | null>(null);
@@ -74,8 +77,9 @@ export default function HistorialScreen() {
       await supabase.from('followed_products').delete().eq('user_id', user.id).eq('product_id', productId);
     } else {
       await supabase.from('followed_products').insert({ user_id: user.id, product_id: productId });
+      await award(ACTION_KEYS.PRODUCT_FOLLOWED, 5, { dedupeKey: `product_followed:${productId}` });
     }
-  }, [user, followedIds]);
+  }, [user, followedIds, award]);
 
   const newChanges = rateChanges.filter((c) => followedIds.has(c.product_id) && (!alertsSeenAt || c.created_at > alertsSeenAt));
 

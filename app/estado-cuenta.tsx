@@ -7,6 +7,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
+import { getStatementMonthStreak } from '@/services/gamification';
 import { supabase } from '@/services/supabase';
 import PaywallBanner from '@/components/PaywallBanner';
 import { CategorySpendChart, CategoriaGasto } from '@/components/CategorySpendChart';
@@ -38,6 +41,7 @@ interface Analysis {
   gastos_evitables: GastoEvitable[];
   recomendaciones: string[];
   plan_ahorro: PlanAhorro;
+  gastos_evitables_aplicados?: number[];
 }
 
 const fmt = (n: number) => 'S/ ' + Math.round(n).toLocaleString('es-PE');
@@ -54,6 +58,7 @@ function readBlobAsBase64(blob: Blob): Promise<string> {
 export default function EstadoCuentaScreen() {
   const router = useRouter();
   const { user, isPro } = useAuth();
+  const { award } = useGamification();
   const [picking, setPicking] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
@@ -102,6 +107,15 @@ export default function EstadoCuentaScreen() {
 
       setResult(data as Analysis);
       setHistory((prev) => [data as Analysis, ...prev]);
+
+      if (user) {
+        await award(ACTION_KEYS.STATEMENT_UPLOADED, 20, { metadata: { analysisId: (data as Analysis).id } });
+        const monthStreak = await getStatementMonthStreak(user.id);
+        if (monthStreak >= 2) {
+          const monthBucket = new Date().toISOString().slice(0, 7);
+          await award(ACTION_KEYS.STATEMENT_STREAK, 25, { dedupeKey: `statement_streak:${monthBucket}` });
+        }
+      }
     } catch (err) {
       console.error('Error al analizar estado de cuenta:', err);
       setError('No pudimos analizar el PDF. Verifica que sea un estado de cuenta válido e intenta de nuevo.');
@@ -109,7 +123,25 @@ export default function EstadoCuentaScreen() {
       setPicking(false);
       setAnalyzing(false);
     }
-  }, []);
+  }, [user, award]);
+
+  const toggleAplicado = useCallback(async (analysis: Analysis, index: number) => {
+    const current = analysis.gastos_evitables_aplicados ?? [];
+    const already = current.includes(index);
+    const next = already ? current.filter((i) => i !== index) : [...current, index];
+
+    await supabase.from('bank_statement_analyses').update({ gastos_evitables_aplicados: next }).eq('id', analysis.id);
+
+    const updated = { ...analysis, gastos_evitables_aplicados: next };
+    setResult((prev) => (prev?.id === analysis.id ? updated : prev));
+    setHistory((prev) => prev.map((h) => (h.id === analysis.id ? updated : h)));
+
+    if (!already && user) {
+      await award(ACTION_KEYS.RECOMMENDATION_APPLIED, 15, {
+        dedupeKey: `recommendation_applied:${analysis.id}:${index}`,
+      });
+    }
+  }, [user, award]);
 
   const renderResult = (analysis: Analysis) => (
     <>
@@ -143,15 +175,23 @@ export default function EstadoCuentaScreen() {
           {analysis.gastos_evitables?.length > 0 && (
             <View style={styles.card}>
               <Text style={styles.cardTitle}>Gastos que podrías evitar</Text>
-              {analysis.gastos_evitables.map((g, i) => (
-                <View key={i} style={styles.evitableRow}>
-                  <View style={styles.evitableHeader}>
-                    <Text style={styles.listDesc} numberOfLines={1}>{g.descripcion}</Text>
-                    <Text style={[styles.listAmount, { color: Colors.danger }]}>{fmt(g.monto)}</Text>
+              {analysis.gastos_evitables.map((g, i) => {
+                const aplicado = (analysis.gastos_evitables_aplicados ?? []).includes(i);
+                return (
+                  <View key={i} style={styles.evitableRow}>
+                    <View style={styles.evitableHeader}>
+                      <Text style={styles.listDesc} numberOfLines={1}>{g.descripcion}</Text>
+                      <Text style={[styles.listAmount, { color: Colors.danger }]}>{fmt(g.monto)}</Text>
+                    </View>
+                    <Text style={styles.evitableMotivo}>{g.motivo}</Text>
+                    <TouchableOpacity style={styles.aplicadoBtn} onPress={() => toggleAplicado(analysis, i)}>
+                      <Text style={[styles.aplicadoText, aplicado && styles.aplicadoTextActive]}>
+                        {aplicado ? '✓ Aplicado' : 'Marcar como aplicado'}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  <Text style={styles.evitableMotivo}>{g.motivo}</Text>
-                </View>
-              ))}
+                );
+              })}
             </View>
           )}
 
@@ -277,6 +317,9 @@ const styles = StyleSheet.create({
   evitableRow: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: Colors.border, gap: 4 },
   evitableHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
   evitableMotivo: { fontSize: 12, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 17 },
+  aplicadoBtn: { alignSelf: 'flex-start', marginTop: 8, paddingVertical: 4, paddingHorizontal: 10, borderRadius: 10, backgroundColor: Colors.surfaceHigh, borderWidth: 1, borderColor: Colors.border },
+  aplicadoText: { fontSize: 11, fontFamily: 'Figtree_600SemiBold', color: Colors.textSecondary },
+  aplicadoTextActive: { color: Colors.accent },
 
   recoRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
   recoBullet: { fontSize: 14, fontFamily: 'Figtree_700Bold', color: Colors.primary },
