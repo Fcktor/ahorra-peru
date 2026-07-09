@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   View, Text, StyleSheet,
   ScrollView, StatusBar, TouchableOpacity, Linking,
@@ -7,6 +8,9 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/colors';
 import { SAVINGS_OPTIONS } from '@/constants/savings';
+import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 
 const ON_DARK_TEXT = '#EAF6EE';
 const ON_DARK_MUTED = '#A9D9BE';
@@ -23,8 +27,17 @@ const RISK_COLORS: Record<string, string> = {
 
 export default function CompararScreen() {
   const { a, b } = useLocalSearchParams<{ a: string; b: string }>();
+  const { user } = useAuth();
+  const { award } = useGamification();
   const optA = SAVINGS_OPTIONS.find((o) => o.id === a);
   const optB = SAVINGS_OPTIONS.find((o) => o.id === b);
+
+  useEffect(() => {
+    if (!user || !optA || !optB) return;
+    const pairKey = [optA.id, optB.id].sort().join(':');
+    award(ACTION_KEYS.PRODUCT_COMPARED, 5, { dedupeKey: `product_compared:${pairKey}` });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, optA?.id, optB?.id]);
 
   if (!optA || !optB) {
     return (
