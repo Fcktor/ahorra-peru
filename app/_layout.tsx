@@ -4,6 +4,8 @@ import { AuthProvider } from '@/context/auth';
 import { GamificationProvider } from '@/context/gamification';
 import { Colors } from '@/constants/colors';
 import ChatBot from '@/components/ChatBot';
+import GamificationBadge from '@/components/GamificationBadge';
+import XPToast from '@/components/XPToast';
 import { useFonts } from 'expo-font';
 import { Archivo_800ExtraBold } from '@expo-google-fonts/archivo';
 import {
@@ -98,6 +100,8 @@ export default function RootLayout() {
         <Stack.Screen name="pago-cancelado" options={{ headerShown: false }} />
       </Stack>
       <ChatBot />
+      <GamificationBadge />
+      <XPToast />
     </View>
     </GamificationProvider>
     </AuthProvider>
