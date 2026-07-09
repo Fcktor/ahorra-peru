@@ -15,6 +15,9 @@ import Svg, { Path, Defs, LinearGradient as SvgLinearGradient, Stop } from 'reac
 import { Colors } from '@/constants/colors';
 import { fetchBCRPData, BCRPData } from '@/services/bcrp';
 import { calcInterest } from '@/lib/interestMath';
+import { useAuth } from '@/context/auth';
+import { useGamification } from '@/context/gamification';
+import { ACTION_KEYS } from '@/lib/gamification';
 
 const ON_DARK_TEXT = '#EAF6EE';
 const ON_DARK_MUTED = '#A9D9BE';
@@ -97,6 +100,8 @@ const fmt2 = (n: number) => 'S/ ' + n.toLocaleString('es-PE', { minimumFractionD
 
 export default function CalculadoraScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const { award } = useGamification();
   const [mode, setMode] = useState<'interes' | 'meta'>('interes');
   const [selectedOption, setSelectedOption] = useState(0);
 
@@ -150,6 +155,21 @@ export default function CalculadoraScreen() {
   }, [meta, ahorroActual, goalMonths, selectedOption]);
 
   const options = useMemo(() => getOptions(goalMonths), [goalMonths]);
+
+  const today = new Date().toISOString().slice(0, 10);
+  useEffect(() => {
+    if (user && interesResult) {
+      award(ACTION_KEYS.CALCULATOR_USED, 3, { dedupeKey: `calculator_used:${today}` });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, !!interesResult]);
+
+  useEffect(() => {
+    if (user && metaResult) {
+      award(ACTION_KEYS.CALCULATOR_USED, 3, { dedupeKey: `calculator_used:${today}` });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, !!metaResult]);
 
   return (
     <SafeAreaView style={styles.safe}>
