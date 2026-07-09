@@ -10,11 +10,15 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { GLOSSARY, GlossaryTerm } from '@/constants/glossary';
 import { GlossaryQuiz } from '@/components/GlossaryQuiz';
+import { useAuth } from '@/context/auth';
 
 export default function GlosarioScreen() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [mode, setMode] = useState<'explorar' | 'quiz'>('explorar');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -68,7 +72,16 @@ export default function GlosarioScreen() {
         <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
         <ScrollView contentContainerStyle={styles.list}>
           {header}
-          <GlossaryQuiz />
+          {user ? (
+            <GlossaryQuiz />
+          ) : (
+            <View style={styles.gateCard}>
+              <Text style={styles.cardHint}>Necesitas una cuenta para jugar el quiz y guardar tu progreso.</Text>
+              <TouchableOpacity style={styles.cta} onPress={() => router.push('/login')}>
+                <Text style={styles.ctaText}>Crear cuenta o iniciar sesión</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     );
@@ -168,4 +181,8 @@ const styles = StyleSheet.create({
   },
   exampleLabel: { fontSize: 10, fontFamily: 'Figtree_700Bold', color: Colors.primary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   example: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, lineHeight: 19 },
+  gateCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: Colors.border },
+  cardHint: { fontSize: 13, fontFamily: 'Figtree_400Regular', color: Colors.textSecondary, marginBottom: 12 },
+  cta: { backgroundColor: Colors.primary, borderRadius: 14, padding: 16, alignItems: 'center' },
+  ctaText: { fontSize: 15, fontFamily: 'Figtree_700Bold', color: Colors.background },
 });
